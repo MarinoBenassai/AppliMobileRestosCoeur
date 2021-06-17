@@ -1,31 +1,44 @@
-import React from 'react';
-import { StyleSheet, Button, Text, View, Image, TextInput} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
+
+const contactScreen = () => {
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState('');
+
+  useEffect(() => {
+    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_CONTACT/P_IDBENEVOLE=1005')
+      .then((response) => response.text())
+      .then((texte) =>  {setData(texte); console.log(texte)})
+      .catch((error) => {
+        (setData(-1));
+      });
+  }, []);
+
+  
+
+  return (
+    <Text>{data}</Text>
+  );
+
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: StatusBar.currentHeight || 0,
   },
-    input: {
-    height: 40,
-	width : 200,
-    margin: 12,
-    borderWidth: 1,
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
-    logo: {
-    width: 200,
-    height: 200,
+  title: {
+    fontSize: 32,
   },
-});
+}); 
 
 
-export default function contactScreen() {
-	return (
-	  <View style={styles.container}>
-	    <Text>Ceci est l'écran des contacts</Text>
-	  </View>
-	);	
-}
 
+export default contactScreen;

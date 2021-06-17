@@ -1,5 +1,25 @@
-import React from 'react';
-import { StyleSheet, Button, Text, View, Image, TextInput} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
+
+const engagementScreen = () => {
+
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState('');
+
+  useEffect(() => {
+    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_PRE_BEN/P_IDBENEVOLE=1005')
+      .then((response) => response.text())
+      .then((texte) =>  {setData(texte); console.log(texte)})
+      .catch((error) => {
+        (setData(-1));
+      });
+  }, []);
+
+  return(
+    <Text>{data}</Text>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -21,11 +41,5 @@ const styles = StyleSheet.create({
 });
 
 
-export default function engagementScreen() {
-	return (
-	  <View style={styles.container}>
-	    <Text>Ceci est l'écran des engagements</Text>
-	  </View>
-	);	
-}
+export default engagementScreen;
 
