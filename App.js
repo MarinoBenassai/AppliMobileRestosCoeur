@@ -30,11 +30,11 @@ export default function App() {
 		</Stack.Screen>
 	  ) : (
 		<>
-
-	    <Stack.Screen name="Engagements" component={engagementScreen} options={{ title: "Liste des engagements" }} />
+    <Stack.Screen name="Contacts" component={contactScreen} options={{ title: "Mes Contacts" }} />
+	  <Stack.Screen name="Engagements" component={engagementScreen} options={{ title: "Liste des engagements" }} />
 		<Stack.Screen name="SynthRef" component={referentScreen} options={{ title: "Synthèse Référent" }} />
 		<Stack.Screen name="Compte" component={compteScreen} options={{ title: "Mon Compte" }} />
-		<Stack.Screen name="Contacts" component={contactScreen} options={{ title: "Mes Contacts" }} />
+		
 
 	    </>
 	  )}
