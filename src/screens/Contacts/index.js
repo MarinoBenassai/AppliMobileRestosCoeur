@@ -33,8 +33,8 @@ const contactScreen = () => {
       <View style={{ flexDirection: "column"}}>
         <Text>{item.split(/\t/)[3]}{"\t\t\t"}</Text>
         <Text>{item.split(/\t/)[4]}{"\t\t\t"}</Text>
-      {/* Conteneur 3eme colonne */}
       </View>
+      {/* Conteneur 3eme colonne */}
       <View style={{ flexDirection: "column"}}> 
       <Pressable title="AlertContact" onPress={() => Linking.openURL(`sms:${item.split(/\t/)[6]}`)} >
         <Text>message</Text>
