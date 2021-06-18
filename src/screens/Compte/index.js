@@ -26,7 +26,7 @@ const compteScreen = () => {
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
-      .then((texte) =>  {setDataEngagementDefaut(texte); console.log(texte)})
+      .then((texte) =>  {setDataEngagementDefaut(texte); console.log("Infos Engagement Défaut : chargées")})
       .catch((error) => {
         (setData(-1));
       });
@@ -36,7 +36,7 @@ const compteScreen = () => {
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
-      .then((texte) =>  {setDataPerso(texte); console.log(texte)})
+      .then((texte) =>  {setDataPerso(texte); console.log("Infos Perosnelles : chargées")})
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));;
   }, []);
@@ -191,7 +191,7 @@ const changeContact = (phone, mail) => {
     "New Contact information",
     "\nmail : " + mail + "\n\n" + "tel : " + phone + "\n(Menu Tmp)",
     [
-      { text: "OK", onPress: () => console.log("OK Pressed") }
+      { text: "OK", onPress: () => console.log("OK ContactPerso Pressed") }
     ]
 
   );
@@ -203,7 +203,7 @@ const changeMdP = (oldP, newP, verifP) => {
     "New MdP",
     "\n" + oldP + newP + verifP + "\n(Menu Tmp)",
     [
-      { text: "OK", onPress: () => console.log("OK Pressed") }
+      { text: "OK", onPress: () => console.log("OK MdP Pressed") }
     ]
   );
 }

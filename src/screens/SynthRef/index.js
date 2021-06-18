@@ -23,7 +23,7 @@ function referentScreen({navigation}) {
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log(texte)})
+      .then((texte) =>  {setData(texte); console.log("Infos Synthèse Réferent : chargées")})
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, []);

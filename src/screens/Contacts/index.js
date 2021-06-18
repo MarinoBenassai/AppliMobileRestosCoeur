@@ -85,7 +85,7 @@ const createContactAlert = (mail, phone) =>{
       "Contact information",
       "\nmail : " + mail + "\n\n" + "tel : " + phone,
       [
-        { text: "OK", onPress: () => console.log("OK Pressed") }
+        { text: "OK", onPress: () => console.log("OK  Contact Pressed") }
       ]
     );
 }
