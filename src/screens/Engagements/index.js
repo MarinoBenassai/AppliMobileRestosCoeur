@@ -4,10 +4,11 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
 
 import userContext from '../../contexts/userContext';
 
-const engagementScreen = ({navigation}) => {
+function engagementScreen({navigation}) {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
+  
 
   const userID = React.useContext(userContext).userID
 
@@ -61,13 +62,21 @@ const engagementScreen = ({navigation}) => {
 
 
   return (
+    <>
     <SafeAreaView style={styles.container}>
       <FlatList
         data={ligne}
         renderItem={renderItem}
         keyExtractor={item => item}
       />
+
     </SafeAreaView>
+	
+    {isLoading && 
+	<View style={styles.loading}>
+      <ActivityIndicator size="large" color="#00ff00" />
+	</View>}
+	</>
   );
 }
 
@@ -92,7 +101,17 @@ const styles = StyleSheet.create({
   },
   REFERENT: {
     backgroundColor: '#f9c2ff',
-  }
+  },
+      loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+	backgroundColor: '#F5FCFF88',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 const changerStatut = (statut) => {

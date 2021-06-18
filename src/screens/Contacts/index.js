@@ -6,7 +6,7 @@ import {Linking} from 'react-native';
 import userContext from '../../contexts/userContext';
 
 // Fonction Principale
-const contactScreen = () => {
+function contactScreen() {
   // on définit les états : data et loading
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
@@ -60,6 +60,7 @@ const contactScreen = () => {
 
   // on retourne la flatliste
   return (
+    <>
     <SafeAreaView style={styles.container}>
       {isLoading ? <ActivityIndicator/> : (
         <FlatList
@@ -69,6 +70,12 @@ const contactScreen = () => {
         />
       )}
     </SafeAreaView>
+	
+	{isLoading && 
+	<View style={styles.loading}>
+      <ActivityIndicator size="large" color="#00ff00" />
+	</View>}
+	</>
   );
 
 }
@@ -115,6 +122,16 @@ const styles = StyleSheet.create({
     flexDirection: "column", 
     marginVertical: 8, 
     justifyContent:"space-around",
+  },
+	loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+	backgroundColor: '#F5FCFF88',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }); 
 
