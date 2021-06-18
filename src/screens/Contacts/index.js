@@ -3,12 +3,16 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert} from 'react-native';
 import {Linking} from 'react-native';
 
+import userContext from '../../contexts/userContext';
+
 const contactScreen = () => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
 
+  const userID = React.useContext(userContext)
+
   useEffect(() => {
-    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_CONTACT/P_IDBENEVOLE=1005')
+    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_CONTACT/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log(texte)})
       .catch((error) => {
