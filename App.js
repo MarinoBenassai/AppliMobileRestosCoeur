@@ -21,9 +21,8 @@ const Drawer = createDrawerNavigator();
 export default function App() {
   const [userID,setUserID] = React.useState("");
   
-  const check_password = () => {
-	
-    setUserID("1234");
+  const changeID = (ID) => {
+    setUserID(ID);
   }
   
   return (
@@ -32,7 +31,7 @@ export default function App() {
 	  {userID === "" ? (
 	    <Drawer.Screen name="Identification">
 		  {(props) => (
-            <IdScreen onSignIn={check_password} />
+            <IdScreen onSignIn={changeID} />
           )}
 		</Drawer.Screen>
 	  ) : (

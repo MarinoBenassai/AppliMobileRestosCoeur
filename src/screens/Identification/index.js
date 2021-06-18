@@ -1,5 +1,6 @@
-import React from 'react';
-import { StyleSheet, Button, Text, View, Image, TextInput} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
+import * as Crypto from 'expo-crypto';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,19 +13,104 @@ const styles = StyleSheet.create({
     height: 40,
 	width : 200,
     margin: 12,
-    borderWidth: 1,
+	borderBottomColor: '#000000',
+	borderBottomWidth: 1,
   },
     logo: {
     width: 200,
     height: 200,
   },
+    texte : {
+    margin : 20
+  },
+    loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+	backgroundColor: '#F5FCFF88',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 
 export default function IdScreen({ onSignIn }) {
   const [textEmail, onChangeTextEmail] = React.useState('');
   const [textPassword, onChangeTextPassword] = React.useState('');
+  const [data, setData] = React.useState('');
+  const [hash, setHash] = React.useState('')
+  const [loading, setLoading] = React.useState(false);
+  
+  function checkPassword() {
+	if (textEmail != '' && textPassword != '') {
+		setLoading(true);
+		fetch('http://51.38.186.216/Axoptim.php/REQ/AP_ACCES_BEN/P_EMAIL=' + textEmail) //A changer
+		  .then((response) => response.text())
+		  .then((texte) =>  {setData(texte);setLoading(false);})
+		  .catch((error) => {
+			(setData(-1));
+			setLoading(false);
+		  });
+		Crypto.digestStringAsync(
+			Crypto.CryptoDigestAlgorithm.SHA256,
+			textPassword
+		  )
+		.then((hash1) => setHash(hash1))
+		.catch();
+		onChangeTextPassword(''); //On vide le champ mot de passe
+	}
+  }
+  
+  useEffect(() => {
+	if (data != "" && hash != "") {
+	  const hPassword = getPasswordFromData(data);
+	  if (hPassword != null) {
+		  if (hPassword === hash) {
+			  onSignIn(getIDFromData(data));
+		  }
+		  else {
+			alert("Mot de Passe incorrect !");
+		  }
+	  }
+	  else {
+		  alert("Identifiant incorrect");
+	  }
+	  setData("");
+	  setHash('');
+	}
+	
+  }, [data,hash]);
+  
+  function getPasswordFromData(data) {
+	const lignes = data.split(/\n/);
+	var i;
+	var hPassword = null;
+	for (i = 1; i<lignes.length; i++){
+		if (lignes[i] != ""){
+			const valeurs = lignes[i].split(/\t/);
+			hPassword = valeurs[2];
+		}
+	}
+	return hPassword;
+  }
+  
+  function getIDFromData(data) {
+	const lignes = data.split(/\n/);
+	var i;
+	var ID = null;
+	for (i = 1; i<lignes.length; i++){
+		if (lignes[i] != ""){
+			const valeurs = lignes[i].split(/\t/);
+			ID = valeurs[3];
+		}
+	}
+	return ID;
+  }
+  
   return (
+    <>
     <View style={styles.container}>
 	  <Image
 		style={styles.logo}
@@ -43,14 +129,34 @@ export default function IdScreen({ onSignIn }) {
 		style={styles.input}
 		secureTextEntry = {true}
         onChangeText={onChangeTextPassword}
+		value={textPassword}
 	  />
 	  <Button
-		onPress = {onSignIn} //{() => navigation.navigate('Engagements')}
+		onPress = {() => checkPassword()} //{() => navigation.navigate('Engagements')}
 		title="CONNEXION"
 		color="#841584"
 		accessibilityLabel="Bouton de connexion"
 	  />
+	  <Pressable title = "mdp" onPress = {() => alert("Test")} style={styles.texte}>
+		<Text>Mot de passe oublié ?</Text>
+	  </Pressable>
+	  	
+    <Button
+	  onPress = {() => onSignIn("1005")}
+	  title="PASSER"
+	  color="#041584"
+    />
     </View>
+	{loading &&
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color="#00ff00" />
+    </View>
+	}
+    </>
   );
 }
 
+
+	
+	
+	
