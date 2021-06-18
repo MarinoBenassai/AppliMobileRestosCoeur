@@ -23,25 +23,28 @@ const contactScreen = () => {
   const renderItem = ({ item }) => (
     // Conteneur Principal
     <View style={styles.item}>
+
       {/* Conteneur 1ere colonne */}
-      <View style={{ flexDirection: "column"}}>
+      <View style={{ flexDirection: "column", marginVertical: 16, justifyContent: 'flex-end',}}>
+        <Text>{item.split(/\t/)[3]}{"\t\t\t"}</Text>
+        <Text>{item.split(/\t/)[4]}{"\t\t\t"}</Text>
+      </View>
+
+      {/* Conteneur 2eme colonne */}
+      <View style={{ flexDirection: "column", marginVertical: 8,}}>
         <Text>{item.split(/\t/)[0]}{"\t\t\t"}</Text>
         <Text>{item.split(/\t/)[2]}{"\t\t\t"}</Text>
         <Text>{item.split(/\t/)[1]}{"\t\t\t"}</Text>
       </View>
-      {/* Conteneur 2eme colonne */}
-      <View style={{ flexDirection: "column"}}>
-        <Text>{item.split(/\t/)[3]}{"\t\t\t"}</Text>
-        <Text>{item.split(/\t/)[4]}{"\t\t\t"}</Text>
-      </View>
+
       {/* Conteneur 3eme colonne */}
-      <View style={{ flexDirection: "column"}}> 
-      <Pressable title="AlertContact" onPress={() => Linking.openURL(`sms:${item.split(/\t/)[6]}`)} >
-        <Text>message</Text>
-      </Pressable>
-      <Pressable title="AlertContact" onPress={() => createContactAlert(item.split(/\t/)[7], item.split(/\t/)[6])} >
-        <Text>contacter</Text>
-      </Pressable>
+      <View style={{ flexDirection: "column", marginVertical: 16, justifyContent: 'flex-start',}}> 
+        <Pressable title="AlertContact" onPress={() => createContactAlert(item.split(/\t/)[7], item.split(/\t/)[6])} >
+          <Text>contacter</Text>
+        </Pressable>
+        <Pressable title="AlertContact" onPress={() => Linking.openURL(`sms:${item.split(/\t/)[6]}`)} >
+          <Text>message</Text>
+        </Pressable>
       </View>
     </View>
   );
