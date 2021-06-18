@@ -4,12 +4,18 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
 
 import userContext from '../../contexts/userContext';
 
-const engagementScreen = () => {
+const engagementScreen = ({navigation}) => {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
 
   const userID = React.useContext(userContext).userID
+
+  function versActivite({navigation}) {
+  	navigation.navigate('Activite', {
+  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14'
+  	});
+  }
 
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID)
@@ -28,7 +34,7 @@ const engagementScreen = () => {
     <View style={[styles.item, styles[item.split(/\t/)[3]]]}>
 
       {/* Conteneur 1ere colonne */}
-      <Pressable onPressOut={versActivite} >
+      <Pressable onPressOut={() => versActivite({navigation})} >
       {({ pressed }) => (
         <View style={{flexDirection: "column"}}>
           <Text style={{color: pressed ? 'white' : 'black',}}>{item.split(/\t/)[2]}{"\t\t\t"}</Text>
@@ -88,12 +94,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9c2ff',
   }
 });
-
-
-
-const versActivite = (id) => {
-  console.log("versACtivité");
-}
 
 const changerStatut = (statut) => {
   console.log("changerStatut" + statut);

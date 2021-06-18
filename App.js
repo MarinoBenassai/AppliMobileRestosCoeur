@@ -10,6 +10,7 @@ import compteScreen from './src/screens/Compte';
 import contactScreen from './src/screens/Contacts';
 import engagementScreen from './src/screens/Engagements';
 import referentScreen from './src/screens/SynthRef';
+import activiteScreen from './src/screens/Activite';
 
 import userContext from './src/contexts/userContext';
 
@@ -74,11 +75,14 @@ const boutonLogOut = () => {
             />)
 } 
 
+
+
 function engagement({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})), headerRight: () => (boutonLogOut()),}}>
-	  <engagementStack.Screen name="Engagements" component={engagementScreen} options={{title: "Mes engagements"}}/>
+    <engagementStack.Navigator screenOptions={{headerRight: () => (boutonLogOut()),}}>
+	  <engagementStack.Screen name="Engagements" component={engagementScreen} options={{title: "Mes engagements", headerLeft: () => (boutonMenu({nav})),}}/>
+	  <engagementStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
     </engagementStack.Navigator>
   );
 }
@@ -86,8 +90,9 @@ function engagement({navigation}) {
 function referent({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})), headerRight: () => (boutonLogOut()),}}>
-	  <synthRefStack.Screen name="SynthRef" component={referentScreen} options={{ title: "Ma synthèse référent" }} />
+    <engagementStack.Navigator screenOptions={{headerRight: () => (boutonLogOut()),}}>
+	  <synthRefStack.Screen name="SynthRef" component={referentScreen} options={{headerLeft: () => (boutonMenu({nav})), title: "Ma synthèse référent" }} />
+	  <engagementStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
     </engagementStack.Navigator>
   );
 }

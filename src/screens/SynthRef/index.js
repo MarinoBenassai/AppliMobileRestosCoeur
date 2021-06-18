@@ -4,11 +4,18 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
 
 import userContext from '../../contexts/userContext';
 
-const referentScreen = () => {
+const referentScreen = ({navigation}) => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
 
   const userID = React.useContext(userContext).userID
+
+  function versActivite({navigation}) {
+  	navigation.navigate('Activite', {
+  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14'
+  	});
+  }
+
 
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID)
@@ -26,7 +33,7 @@ const referentScreen = () => {
   const renderItem = ({ item }) => (
     <View>
  
-      <Pressable onPressOut={flog} >
+      <Pressable onPressOut={() => versActivite({navigation})} >
       {({ pressed }) => (
         <Text style={styles.item} style={[{
           color: pressed ? 'white' : 'black',
