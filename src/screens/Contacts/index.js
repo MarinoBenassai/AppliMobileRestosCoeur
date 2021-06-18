@@ -26,10 +26,10 @@ const contactScreen = () => {
 
   const renderItem = ({ item }) => (
     // Conteneur Principal
-    <View style={styles.item}>
+    <View style={[styles.item, ]}>
 
       {/* Conteneur 1ere colonne */}
-      <View style={{ flexDirection: "column", marginVertical: 16, justifyContent: 'flex-end',}}>
+      <View style={{ flexDirection: "column", marginVertical: 16,}}>
         <Text>{item.split(/\t/)[3]}{"\t\t\t"}</Text>
         <Text>{item.split(/\t/)[4]}{"\t\t\t"}</Text>
       </View>
@@ -42,7 +42,7 @@ const contactScreen = () => {
       </View>
 
       {/* Conteneur 3eme colonne */}
-      <View style={{ flexDirection: "column", marginVertical: 16, justifyContent: 'flex-start',}}> 
+      <View style={{ flexDirection: "column", marginVertical: 16,}}> 
         <Pressable title="AlertContact" onPress={() => createContactAlert(item.split(/\t/)[7], item.split(/\t/)[6])} >
           <Text>contacter</Text>
         </Pressable>
@@ -89,6 +89,10 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
+    borderBottomRightRadius: 50,
+    borderBottomLeftRadius: 50,
   },
   title: {
     fontSize: 32,
