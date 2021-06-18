@@ -14,10 +14,9 @@ const contactScreen = () => {
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_CONTACT/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log(texte)})
-      .catch((error) => {
-        (setData(-1));
-      });
+      .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées")})
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   }, []);
 
   const ligne = data.split(/\n/);
@@ -26,23 +25,23 @@ const contactScreen = () => {
 
   const renderItem = ({ item }) => (
     // Conteneur Principal
-    <View style={[styles.item, ]}>
+    <View style={styles.item}>
 
       {/* Conteneur 1ere colonne */}
-      <View style={{ flexDirection: "column", marginVertical: 16,}}>
+      <View style={styles.colomn}>
         <Text>{item.split(/\t/)[3]}{"\t\t\t"}</Text>
         <Text>{item.split(/\t/)[4]}{"\t\t\t"}</Text>
       </View>
 
       {/* Conteneur 2eme colonne */}
-      <View style={{ flexDirection: "column", marginVertical: 8,}}>
+      <View style={styles.colomn}>
         <Text>{item.split(/\t/)[0]}{"\t\t\t"}</Text>
         <Text>{item.split(/\t/)[2]}{"\t\t\t"}</Text>
         <Text>{item.split(/\t/)[1]}{"\t\t\t"}</Text>
       </View>
 
       {/* Conteneur 3eme colonne */}
-      <View style={{ flexDirection: "column", marginVertical: 16,}}> 
+      <View style={styles.colomn}> 
         <Pressable title="AlertContact" onPress={() => createContactAlert(item.split(/\t/)[7], item.split(/\t/)[6])} >
           <Text>contacter</Text>
         </Pressable>
@@ -55,16 +54,17 @@ const contactScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={ligne}
-        renderItem={renderItem}
-        keyExtractor={item => item}
-      />
+      {isLoading ? <ActivityIndicator/> : (
+        <FlatList
+          data={ligne}
+          renderItem={renderItem}
+          keyExtractor={item => item}
+        />
+      )}
     </SafeAreaView>
   );
 
 }
-
 
 
 
@@ -78,12 +78,16 @@ const createContactAlert = (mail, phone) =>{
     );
 }
 
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
   },
   item: {
+    justifyContent:"space-around",
     flexDirection: "row",
     backgroundColor: '#00ffff',
     padding: 20,
@@ -94,8 +98,10 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 50,
     borderBottomLeftRadius: 50,
   },
-  title: {
-    fontSize: 32,
+  colomn: { 
+    flexDirection: "column", 
+    marginVertical: 8, 
+    justifyContent:"space-around",
   },
 }); 
 
