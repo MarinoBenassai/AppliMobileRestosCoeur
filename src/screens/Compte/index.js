@@ -4,20 +4,25 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput, Alert} from '
 
 import userContext from '../../contexts/userContext';
 
+// Fonction Principale
 const compteScreen = () => {
   const [isLoading, setLoading] = useState(true);
 
+  // Info perso et Info Engagement
   const [dataEngagementDefaut, setDataEngagementDefaut] = useState('');
   const [dataPerso, setDataPerso] = useState('');
 
+  // Champs remplissable
   const [phone, setPhone] = useState('');
   const [mail, setMail] = useState('');
   const [oldP, setOldP] = useState('');
   const [newP, setNewP] = useState('');
   const [verifP, setVerifP] = useState('');
   
+  // O récupère l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
 
+  // On récupère les informations d'engagement par défaut
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
@@ -27,46 +32,48 @@ const compteScreen = () => {
       });
   }, []);
 
+  // On récupère les informations personelles
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
       .then((texte) =>  {setDataPerso(texte); console.log(texte)})
-      .catch((error) => { (setData(-1)) } )
+      .catch((error) => console.error(error))
       .finally(() => setLoading(false));;
   }, []);
 
+  // On traite ces informations
   const ligneEngagementDefaut = dataEngagementDefaut.split(/\n/);
   ligneEngagementDefaut.shift(); //enlève le premier élement (et le retourne)
   ligneEngagementDefaut.pop();   //enlève le dernier élement (et le retourne)
 
   const lignePerso = dataPerso.split(/\n/);
 
+  // On crée le renderer pour la liste
   const renderItem = ({ item }) => (
-    <View>
- 
-      <Text style={styles.liste}>
-        <Text style={styles.item}>
-          {item.split(/\t/)[0]}{"\t\t\t"}
-          {item.split(/\t/)[1]}{"\t\t\t"}
-          {item.split(/\t/)[2]}{"\t\t\t"}
-          {item.split(/\t/)[3]}{"\t\t\t"} 
-          {item.split(/\t/)[4]}
-        </Text>
-      </Text>
+    <View style={[styles.item, styles[item.split(/\t/)[3]] ]}>
+      <View>
+        <Text>{item.split(/\t/)[0]}</Text>
+      </View>
+      <View>
+        <Text>{item.split(/\t/)[1]}</Text>
+      </View>
+      <View>
+        <Text>{item.split(/\t/)[2]}</Text>
+      </View>
     </View>
   );
 
+  // On retourne la flatliste
   return (
     <SafeAreaView style={styles.container}>
-      {isLoading ? (<Text>loading</Text>) : (
+      {isLoading ? <ActivityIndicator/> : (
         //View Principal, post chargement
-        <View style={{flex: 1,}}>
+        <View>
 
           {/* La vue des infos profil (au dessus des activités) se trouve dans le header de la flatlist */}
 
           {/* View des Activités */}
           <View>
-            
             <FlatList
               data={ligneEngagementDefaut}
               ListHeaderComponent={
@@ -175,6 +182,7 @@ const compteScreen = () => {
 }
 
 
+// Fonction de changement d'information de contact
 const changeContact = (phone, mail) => {
   Alert.alert(
     "New Contact information",
@@ -186,6 +194,7 @@ const changeContact = (phone, mail) => {
   );
 }
 
+// Fonction de changement de mot de passe
 const changeMdP = (oldP, newP, verifP) => {
   Alert.alert(
     "New MdP",
@@ -197,12 +206,15 @@ const changeMdP = (oldP, newP, verifP) => {
 }
 
 
+// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
   },
   item: {
+    justifyContent:"space-around",
+    flexDirection: "row",
     backgroundColor: '#f9c2ff',
     padding: 20,
     marginVertical: 8,
@@ -230,16 +242,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginVertical: 20,
   },
-  liste: {
+
+  // pour changer la couleur de la flatlist dynamiquement
+  BENEVOLE: {
+    backgroundColor: '#6fe3d2',
+  },
+  REFERENT: {
     backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-   }
+  }
 }); 
 
-const flog = () => {
-  console.log("oui");
-}
 
+
+// On exporte la fonction principale
 export default compteScreen;
