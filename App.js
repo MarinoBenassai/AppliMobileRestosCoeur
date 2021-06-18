@@ -104,7 +104,7 @@ function compte({navigation}) {
 function contact({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})),}}>
+    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})), headerRight: () => (boutonLogOut()),}}>
 	  <contactsStack.Screen name="Contacts" component={contactScreen} options={{ title: "Mes contacts" }} />
     </engagementStack.Navigator>
   );
