@@ -9,7 +9,7 @@ const engagementScreen = () => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
 
-  const userID = React.useContext(userContext)
+  const userID = React.useContext(userContext).userID
 
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID)

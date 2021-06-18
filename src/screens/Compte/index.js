@@ -16,7 +16,7 @@ const compteScreen = () => {
   const [newP, setNewP] = useState('');
   const [verifP, setVerifP] = useState('');
   
-  const userID = React.useContext(userContext)
+  const userID = React.useContext(userContext).userID
 
   useEffect(() => {
     fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID)
@@ -28,7 +28,7 @@ const compteScreen = () => {
   }, []);
 
   useEffect(() => {
-    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=1005')
+    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
       .then((texte) =>  {setDataPerso(texte); console.log(texte)})
       .catch((error) => { (setData(-1)) } )

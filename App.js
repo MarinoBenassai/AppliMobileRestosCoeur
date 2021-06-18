@@ -11,7 +11,6 @@ import contactScreen from './src/screens/Contacts';
 import engagementScreen from './src/screens/Engagements';
 import referentScreen from './src/screens/SynthRef';
 
-//export const userContext = React.createContext("");
 import userContext from './src/contexts/userContext';
 
 const engagementStack = createStackNavigator();
@@ -28,8 +27,15 @@ export default function App() {
     setUserID(ID);
   }
   
+  function logout() {
+	setUserID("");
+  }
+  
   return (
-    <userContext.Provider value={userID}>
+    <userContext.Provider value = {{
+      userID: userID,
+      logoutUser: logout
+    }}>
     <NavigationContainer>
       <Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
 	  {userID === "" ? (
@@ -60,10 +66,18 @@ const boutonMenu = ({nav}) => {
             />)
 }
 
+const boutonLogOut = () => {
+	return (<Button
+              onPress={React.useContext(userContext).logoutUser}
+              title="Se déconnecter"
+              color="#CC1701"
+            />)
+} 
+
 function engagement({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})),}}>
+    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})), headerRight: () => (boutonLogOut()),}}>
 	  <engagementStack.Screen name="Engagements" component={engagementScreen} options={{title: "Mes engagements"}}/>
     </engagementStack.Navigator>
   );
@@ -72,7 +86,7 @@ function engagement({navigation}) {
 function referent({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})),}}>
+    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})), headerRight: () => (boutonLogOut()),}}>
 	  <synthRefStack.Screen name="SynthRef" component={referentScreen} options={{ title: "Ma synthèse référent" }} />
     </engagementStack.Navigator>
   );
@@ -81,7 +95,7 @@ function referent({navigation}) {
 function compte({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})),}}>
+    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})), headerRight: () => (boutonLogOut()),}}>
 	  <compteStack.Screen name="Compte" component={compteScreen} options={{ title: "Mon compte" }} />
     </engagementStack.Navigator>
   );
