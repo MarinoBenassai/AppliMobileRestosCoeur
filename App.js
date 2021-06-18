@@ -11,6 +11,9 @@ import contactScreen from './src/screens/Contacts';
 import engagementScreen from './src/screens/Engagements';
 import referentScreen from './src/screens/SynthRef';
 
+//export const userContext = React.createContext("");
+import userContext from './src/contexts/userContext';
+
 const engagementStack = createStackNavigator();
 const synthRefStack = createStackNavigator();
 const compteStack = createStackNavigator();
@@ -26,6 +29,7 @@ export default function App() {
   }
   
   return (
+    <userContext.Provider value={userID}>
     <NavigationContainer>
       <Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
 	  {userID === "" ? (
@@ -44,6 +48,7 @@ export default function App() {
 	  )}
 	  </Drawer.Navigator>
     </NavigationContainer>
+	</userContext.Provider>
   );
 }
 
