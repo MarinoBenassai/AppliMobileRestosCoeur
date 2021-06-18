@@ -23,7 +23,7 @@ const contactScreen = () => {
   const renderItem = ({ item }) => (
     // Conteneur Principal
     <View style={styles.item}>
-       {/* Conteneur 1ere colonne */}
+      {/* Conteneur 1ere colonne */}
       <View style={{ flexDirection: "column"}}>
         <Text>{item.split(/\t/)[0]}{"\t\t\t"}</Text>
         <Text>{item.split(/\t/)[2]}{"\t\t\t"}</Text>
