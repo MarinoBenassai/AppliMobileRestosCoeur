@@ -66,7 +66,10 @@ const compteScreen = () => {
   // On retourne la flatliste
   return (
     <SafeAreaView style={styles.container}>
-      {isLoading ? <ActivityIndicator/> : (
+      {isLoading ? (
+        <View style={styles.loading}>
+         <ActivityIndicator size="large" color="#00ff00" />
+	      </View>) : (
         //View Principal, post chargement
         <View>
 
@@ -249,7 +252,19 @@ const styles = StyleSheet.create({
   },
   REFERENT: {
     backgroundColor: '#f9c2ff',
-  }
+  },
+
+  // Chargement
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+	  backgroundColor: '#F5FCFF88',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 }); 
 
 

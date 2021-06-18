@@ -62,7 +62,10 @@ function contactScreen() {
   return (
     <>
     <SafeAreaView style={styles.container}>
-      {isLoading ? <ActivityIndicator/> : (
+    {isLoading ? (
+        <View style={styles.loading}>
+         <ActivityIndicator size="large" color="#00ff00" />
+	      </View>) : (
         <FlatList
           data={ligne}
           renderItem={renderItem}
@@ -70,11 +73,6 @@ function contactScreen() {
         />
       )}
     </SafeAreaView>
-	
-	{isLoading && 
-	<View style={styles.loading}>
-      <ActivityIndicator size="large" color="#00ff00" />
-	</View>}
 	</>
   );
 
@@ -129,7 +127,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-	backgroundColor: '#F5FCFF88',
+	  backgroundColor: '#F5FCFF88',
     alignItems: 'center',
     justifyContent: 'center',
   },

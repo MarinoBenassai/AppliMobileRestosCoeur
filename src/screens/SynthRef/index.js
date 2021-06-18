@@ -5,7 +5,7 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
 import userContext from '../../contexts/userContext';
 
 // Fonction Principale
-const referentScreen = ({navigation}) => {
+function referentScreen({navigation}) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
 
@@ -36,7 +36,7 @@ const referentScreen = ({navigation}) => {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     <View>
-      <Pressable onPressOut={() => versActivite({navigation})} >
+      <Pressable onPress={() => versActivite({navigation})} >
       {({ pressed }) => (
         <View style={[styles.item, {color: pressed ? 'white' : 'black',},]}>
           <Text>{item.split(/\t/)[2]}</Text>
@@ -54,7 +54,10 @@ const referentScreen = ({navigation}) => {
   // On retourne la flatliste
   return (
     <SafeAreaView style={styles.container}>
-      {isLoading ? <ActivityIndicator/> : (
+      {isLoading ? (
+        <View style={styles.loading}>
+         <ActivityIndicator size="large" color="#00ff00" />
+	      </View>) : (
         <FlatList
           data={ligne}
           renderItem={renderItem}
@@ -82,6 +85,16 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
   },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+	  backgroundColor: '#F5FCFF88',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 }); 
 
 
