@@ -12,7 +12,7 @@ import engagementScreen from './src/screens/Engagements';
 import referentScreen from './src/screens/SynthRef';
 import activiteScreen from './src/screens/Activite';
 
-import userContext from './src/contexts/userContext';
+import {userContext} from './src/contexts/userContext';
 
 const engagementStack = createStackNavigator();
 const synthRefStack = createStackNavigator();

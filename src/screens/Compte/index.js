@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput, Alert} from 'react-native';
 
-import userContext from '../../contexts/userContext';
+import {userContext} from '../../contexts/userContext';
 
 // Fonction Principale
 const compteScreen = () => {

@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert} from 'react-native';
 import {Linking} from 'react-native';
 
-import userContext from '../../contexts/userContext';
+import {userContext} from '../../contexts/userContext';
 
 // Fonction Principale
 function contactScreen() {
