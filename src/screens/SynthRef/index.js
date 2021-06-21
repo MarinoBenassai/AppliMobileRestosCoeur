@@ -16,7 +16,7 @@ function referentScreen({navigation}) {
   // Fonction de sélection de l'activité
   function versActivite({navigation}) {
   	navigation.navigate('Activite', {
-  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14', NomActivite: 'Distribution', NomSite: 'Raisin'
+  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14', NomActivite: 'Distribution', NomSite: 'Raisin', idRole: '2'
   	});
   }
 

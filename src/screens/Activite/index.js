@@ -15,7 +15,7 @@ function activiteScreen({route}) {
   const userID = React.useContext(userContext).userID
 
   // On récupère les informations données en paramètres
-  const { IDActivite, IDSite, IDJour, NomActivite, NomSite } = route.params;
+  const { IDActivite, IDSite, IDJour, NomActivite, NomSite, idRole } = route.params;
 
 
   // On va chercher les données
@@ -48,13 +48,17 @@ function activiteScreen({route}) {
       <View style={{ flexDirection: "column", flexDirection: "column",}}>
 
         {/* Statut */}
-        <Text style={{ color: (item.split(/\t/)[6] == "Absent") ? 'black' : 
-          ((item.split(/\t/)[6] == "Présent") ? "green" : "red") }}>
-            {item.split(/\t/)[6]}
-        </Text>
+        <Pressable onPress={() => changerStatut(item.split(/\t/)[6], 0, IDJour, 0, 0, 0)}
+                   disabled={(idRole=="2") ? false : true}>
+          <Text style={{ color: (item.split(/\t/)[6] == "Absent") ? 'black' : 
+            ((item.split(/\t/)[6] == "Présent") ? "green" : "red") }}>
+              {item.split(/\t/)[6]}
+          </Text>
+        </Pressable>
 
         {/* Commentaire */}
-        <Pressable onPressOut={() => chargerCommentaire(item.split(/\t/)[7])}>
+        <Pressable onPress={() => chargerCommentaire(item.split(/\t/)[7])}
+                    disabled={(idRole=="2") ? false : true}>
           <Text>Commentaire</Text>
         </Pressable>
       </View>
@@ -84,9 +88,9 @@ function activiteScreen({route}) {
               </View>
               <View style={[styles.item, {justifyContent:"flex-start",}]}>
                 <Text style={[styles.info, {fontWeight: "bold",}]}>Jour : </Text>
-                <Text style={styles.info}>{IDJour.split(/\t/)[0].split(" ")[0].split("-")[2]}/
-                                          {IDJour.split(/\t/)[0].split(" ")[0].split("-")[1]}/
-                                          {IDJour.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
+                <Text style={styles.info}>{IDJour.split(" ")[0].split("-")[2]}/
+                                          {IDJour.split(" ")[0].split("-")[1]}/
+                                          {IDJour.split(" ")[0].split("-")[0]}</Text>
               </View>
             </View>
             <View>
@@ -105,10 +109,40 @@ function activiteScreen({route}) {
 
 
 // Fonction de changement de statut
+const changerStatut = (statut, benevole, jour, activite, site, role) => {
+
+  //TODO réinversé absent present (dans condition)
+  if(statut == "Présent"){
+    console.log("Vous ête actuellement 'Absent'");
+    // "http://51.38.186.216/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site
+  }
+  else if(statut == "Absent"){
+    console.log("Vous ête actuellement 'Présent'");
+    //var commentaire = '';
+    
+    //On rend le modal visible
+    setModalVisible(true);
+
+    // TODO : trop rapide, donc pas traiter ici ?
+    console.log("logggggggg")
+    console.log(comment);
+  
+    // plus ici du coup ? (cf ci dessus)
+    // "http://51.38.186.216/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_COMMENTAIRE=" + comment
+  }
+    else{
+      console.log("Vous êtes actuellement 'Non défini'");
+      // "http://51.38.186.216/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role
+    }
+  
+}
+
+
+// Fonction de changement de statut
 const chargerCommentaire = (commentaire) => {
   Alert.alert(
     "Commenaire d'Absence",
-    "Penser à mettre les droits + bloqué si pas absent\n Com :" + commentaire,
+    "Penser à mettre les droits + bloqué si pas absent\n Commentaire :" + commentaire,
     [
       { text: "OK", onPress: () => console.log("OK Commentaire d'activité") }
     ]

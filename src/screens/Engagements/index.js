@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -11,13 +11,20 @@ function engagementScreen({navigation}) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
   
+  // Pour le pop up de commentaire
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // Pour le commentaire
+  const [comment, setComment] = useState('');
+
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
 
   // Focntion de chargement de l'activité
-  function versActivite({navigation}) {
+  function versActivite({navigation}, item) {
+    console.log(item.split(/\t/)[3]);
   	navigation.navigate('Activite', {
-  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14', NomActivite: 'Distribution', NomSite: 'Raisin'
+  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14', NomActivite: 'Distribution', NomSite: 'Raisin', idRole: (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2"
   	});
   }
 
@@ -41,7 +48,7 @@ function engagementScreen({navigation}) {
     <View style={[styles.item, styles[item.split(/\t/)[3]]]}>
 
       {/* Conteneur 1ere colonne */}
-      <Pressable onPress={() => versActivite({navigation})} >
+      <Pressable onPress={() => versActivite({navigation}, item)} >
       {({ pressed }) => (
         <View style={{flexDirection: "column",}}>
           <Text style={{color: pressed ? 'white' : 'black',}}>{item.split(/\t/)[2]}</Text>
@@ -71,6 +78,7 @@ function engagementScreen({navigation}) {
   // Fonction de changement de statut
   const changerStatut = (statut, benevole, jour, activite, site, role) => {
 
+    //TODO réinversé absent present (dans condition)
     if(statut == "Présent"){
       console.log("Vous ête actuellement 'Absent'");
       // "http://51.38.186.216/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site
@@ -79,11 +87,15 @@ function engagementScreen({navigation}) {
       console.log("Vous ête actuellement 'Présent'");
       //var commentaire = '';
       
-      //remplacer si dessous par modal une fois qu'ils seront métrisés ...
-      setModalVisible(true)
+      //On rend le modal visible
+      setModalVisible(true);
+
+      // TODO : trop rapide, donc pas traiter ici ?
+      console.log("logggggggg")
+      console.log(comment);
     
-      // mettre l'arg commentaire en dessous
-      // "http://51.38.186.216/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_COMMENTAIRE=" + commentaire
+      // plus ici du coup ? (cf ci dessus)
+      // "http://51.38.186.216/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_COMMENTAIRE=" + comment
     }
       else{
         console.log("Vous êtes actuellement 'Non défini'");
@@ -92,8 +104,6 @@ function engagementScreen({navigation}) {
     
   }
 
-
-  const [modalVisible, setModalVisible] = useState(false);
   // On retourne la flatliste
   return (
     <>
@@ -102,18 +112,26 @@ function engagementScreen({navigation}) {
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
+            Alert.alert("Changement annulé.");
             setModalVisible(!modalVisible);
           }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Hello World!</Text>
+              <Text style={styles.modalText}>Commentaire d'Absence :</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setComment}
+                placeholder="Raison de votre absence"
+                autoCompleteType="off"
+                maxLength={40}
+              />
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
+                // TODO : envoyer le commentaire
+                onPress={() => {setModalVisible(!modalVisible); console.log(comment)}}
               >
-                <Text style={styles.textStyle}>Hide Modal</Text>
+                <Text style={styles.textStyle}>Valider</Text>
               </Pressable>
             </View>
           </View>

@@ -200,13 +200,57 @@ const changeContact = (phone, mail) => {
 
 // Fonction de changement de mot de passe
 const changeMdP = (oldP, newP, verifP) => {
-  Alert.alert(
-    "New MdP",
-    "\n" + oldP + newP + verifP + "\n(Menu Tmp)",
-    [
-      { text: "OK", onPress: () => console.log("OK MdP Pressed") }
-    ]
-  );
+  // ancien mot de passe faux //TODO
+  if(false){
+    Alert.alert(
+      "Mot de passe faux",
+      "",
+      [
+        { text: "OK", onPress: () => console.log("Error MdP Pressed") }
+      ]
+    );
+  }
+  // Champs vide
+  else if(oldP == "" || newP == "" || verifP == ""){
+    Alert.alert(
+      "Champs vide",
+      "\nAu moins un des champs est vide",
+      [
+        { text: "OK", onPress: () => console.log("Vide MdP Pressed") }
+      ]
+    );
+  }
+  // vérif failled
+  else if(newP != verifP){
+    Alert.alert(
+      "Erreur Nouveau Mot de Passe",
+      "\nLes champs correspondant au nouveau mot de passe ne coreespondent pas",
+      [
+        { text: "OK", onPress: () => console.log("verif failled MdP Pressed") }
+      ]
+    );
+  }
+  // Condition (court)
+  else if(newP.length < 8){
+    Alert.alert(
+      "Mot de passe trop court",
+      "\nVotre mot de passe doit contenir au moins 8 caractères",
+      [
+        { text: "OK", onPress: () => console.log("test MdP Pressed") }
+      ]
+    );
+  }
+  // tout est bon
+  else{
+    Alert.alert(
+      "New MdP",
+      "\n" + oldP + newP + verifP + "\n(Menu Tmp)",
+      [
+        { text: "OK", onPress: () => console.log("OK MdP Pressed") }
+      ]
+    );
+  }
+
 }
 
 
