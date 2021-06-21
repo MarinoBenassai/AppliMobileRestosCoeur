@@ -14,9 +14,9 @@ function referentScreen({navigation}) {
   const userID = React.useContext(userContext).userID
 
   // Fonction de sélection de l'activité
-  function versActivite({navigation}) {
+  function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
-  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14', NomActivite: 'Distribution', NomSite: 'Raisin', idRole: '2'
+  	  IDActivite: item.split(/\t/)[4], IDSite: item.split(/\t/)[5], IDJour: item.split(/\t/)[0], NomActivite: item.split(/\t/)[1], NomSite: item.split(/\t/)[2], idRole: '2'
   	});
   }
 
@@ -37,7 +37,7 @@ function referentScreen({navigation}) {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     <View>
-      <Pressable onPress={() => versActivite({navigation})} >
+      <Pressable onPress={() => versActivite({navigation}, item)} >
       {({ pressed }) => (
         <View style={[styles.item, {color: pressed ? 'white' : 'black',},]}>
           <Text>{item.split(/\t/)[2]}</Text>

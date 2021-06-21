@@ -22,9 +22,8 @@ function engagementScreen({navigation}) {
 
   // Focntion de chargement de l'activité
   function versActivite({navigation}, item) {
-    console.log(item.split(/\t/)[3]);
   	navigation.navigate('Activite', {
-  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14', NomActivite: 'Distribution', NomSite: 'Raisin', idRole: (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2"
+  	  IDActivite: item.split(/\t/)[9], IDSite: item.split(/\t/)[10], IDJour: item.split(/\t/)[0], NomActivite: item.split(/\t/)[1], NomSite: item.split(/\t/)[2], idRole: (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2"
   	});
   }
 
@@ -46,7 +45,7 @@ function engagementScreen({navigation}) {
   const renderItem = ({ item }) => (
     // Conteneur Principal de chaque item
     <View style={[styles.item, styles[item.split(/\t/)[3]]]}>
-
+      
       {/* Conteneur 1ere colonne */}
       <Pressable onPress={() => versActivite({navigation}, item)} >
       {({ pressed }) => (
