@@ -11,6 +11,7 @@ import contactScreen from './src/screens/Contacts';
 import engagementScreen from './src/screens/Engagements';
 import referentScreen from './src/screens/SynthRef';
 import activiteScreen from './src/screens/Activite';
+import oublieScreen from './src/screens/MdpOublie';
 
 import {userContext} from './src/contexts/userContext';
 
@@ -18,13 +19,14 @@ const engagementStack = createStackNavigator();
 const synthRefStack = createStackNavigator();
 const compteStack = createStackNavigator();
 const contactsStack = createStackNavigator();
+const identificationStack = createStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [userID,setUserID] = React.useState("");
   
-  const changeID = (ID) => {
+  function changeID(ID) {
     setUserID(ID);
   }
   
@@ -35,16 +37,13 @@ export default function App() {
   return (
     <userContext.Provider value = {{
       userID: userID,
-      logoutUser: logout
+      logoutUser: logout,
+	  changeID: changeID,
     }}>
     <NavigationContainer>
       <Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
 	  {userID === "" ? (
-	    <Drawer.Screen name="Identification">
-		  {(props) => (
-            <IdScreen onSignIn={changeID} />
-          )}
-		</Drawer.Screen>
+	      <Drawer.Screen name="Identification" component = {identification}/>		
 	  ) : (
 		<>
 		  <Drawer.Screen name="Engagements" component={engagement} options={{ title: "Mes engagements" }} />
@@ -76,6 +75,14 @@ const boutonLogOut = () => {
 } 
 
 
+function identification() {
+  return (
+    <identificationStack.Navigator>
+	  <identificationStack.Screen name="Identification" component = {IdScreen} options = {{title: "Se connecter"}}/>
+	  <identificationStack.Screen name="Oublie" component={oublieScreen} options={{ title: "Mot de passe oublié" }} />
+    </identificationStack.Navigator>
+  );
+}
 
 function engagement({navigation}) {
   const nav = navigation

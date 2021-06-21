@@ -3,47 +3,17 @@ import { StyleSheet, Button, Text, View, Image, TextInput, Pressable, ActivityIn
 import * as Crypto from 'expo-crypto';
 
 import constantes from '../../constantes';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-    input: {
-    height: 40,
-	width : 200,
-    margin: 12,
-	borderBottomColor: '#000000',
-	borderBottomWidth: 1,
-  },
-    logo: {
-    width: 200,
-    height: 200,
-  },
-    texte : {
-    margin : 20
-  },
-    loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-	backgroundColor: '#F5FCFF88',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-});
+import {userContext} from '../../contexts/userContext';
 
 
-export default function IdScreen({ onSignIn }) {
+export default function IdScreen({navigation}) {
   const [textEmail, onChangeTextEmail] = React.useState('');
   const [textPassword, onChangeTextPassword] = React.useState('');
   const [data, setData] = React.useState('');
-  const [hash, setHash] = React.useState('')
+  const [hash, setHash] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+  
+  const changeID = React.useContext(userContext).changeID;
   
   function checkPassword() {
 	if (textEmail != '' && textPassword != '') {
@@ -70,7 +40,7 @@ export default function IdScreen({ onSignIn }) {
 	  const hPassword = getPasswordFromData(data);
 	  if (hPassword != null) {
 		  if (hPassword === hash) {
-			  onSignIn(getIDFromData(data));
+			  changeID(getIDFromData(data));
 		  }
 		  else {
 			alert("Mot de Passe incorrect !");
@@ -139,12 +109,12 @@ export default function IdScreen({ onSignIn }) {
 		color="#841584"
 		accessibilityLabel="Bouton de connexion"
 	  />
-	  <Pressable title = "mdp" onPress = {() => alert("Test")} style={styles.texte}>
+	  <Pressable title = "mdp" onPress = {() => navigation.navigate("Oublie")} style={styles.texte}>
 		<Text>Mot de passe oublié ?</Text>
 	  </Pressable>
 	  	
     <Button
-	  onPress = {() => onSignIn("1005")}
+	  onPress = {() => changeID("1005")}
 	  title="PASSER"
 	  color="#041584"
     />
@@ -158,7 +128,38 @@ export default function IdScreen({ onSignIn }) {
   );
 }
 
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+    input: {
+    height: 40,
+	width : 200,
+    margin: 12,
+	borderBottomColor: '#000000',
+	borderBottomWidth: 1,
+  },
+    logo: {
+    width: 200,
+    height: 200,
+  },
+    texte : {
+    margin : 20
+  },
+    loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+	backgroundColor: '#F5FCFF88',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+});
 	
 	
 	
