@@ -114,7 +114,7 @@ export default function IdScreen({navigation}) {
 	  </Pressable>
 	  	
     <Button
-	  onPress = {() => changeID("1005")}
+	  onPress = {() => changeID(constantes.IDDebug)}
 	  title="PASSER"
 	  color="#041584"
     />
