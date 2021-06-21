@@ -14,7 +14,7 @@ function activiteScreen({route}) {
   const userID = React.useContext(userContext).userID
 
   // On récupère les informations données en paramètres
-  const { IDActivite, IDSite, IDJour } = route.params;
+  const { IDActivite, IDSite, IDJour, NomActivite, NomSite } = route.params;
 
 
   // On va chercher les données
@@ -75,11 +75,11 @@ function activiteScreen({route}) {
             <View style={{marginVertical: 16,}}>
               <View style={[styles.item, {justifyContent:"flex-start",}]}>
                 <Text style={[styles.info, {fontWeight: "bold",}]}>Activité : </Text>
-                <Text style={styles.info}>{IDActivite} + {ligne[0].split("\t")[1]}</Text>
+                <Text style={styles.info}>{NomActivite}</Text>
               </View>
               <View style={[styles.item, {justifyContent:"flex-start",}]}>
                 <Text style={[styles.info, {fontWeight: "bold",}]}>Site : </Text>
-                <Text style={styles.info}>{IDSite} + {ligne[0].split("\t")[2]}</Text>
+                <Text style={styles.info}>{NomSite}</Text>
               </View>
               <View style={[styles.item, {justifyContent:"flex-start",}]}>
                 <Text style={[styles.info, {fontWeight: "bold",}]}>Jour : </Text>

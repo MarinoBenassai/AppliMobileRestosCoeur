@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
 
@@ -16,7 +16,7 @@ function engagementScreen({navigation}) {
   // Focntion de chargement de l'activité
   function versActivite({navigation}) {
   	navigation.navigate('Activite', {
-  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14'
+  	  IDActivite: '3', IDSite: '2', IDJour: '2021-06-14', NomActivite: 'Distribution', NomSite: 'Raisin'
   	});
   }
 
@@ -56,7 +56,7 @@ function engagementScreen({navigation}) {
 
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <View style={{ flexDirection: "column"}}>
-        <Pressable onPressOut={() => changerStatut(item.split(/\t/)[4])}>
+        <Pressable onPressOut={() => changerStatut(item.split(/\t/)[4], userID, item.split(/\t/)[0], 0, 0, 0)}>
           <Text style={{ color: (item.split(/\t/)[4] == "Absent") ? 'black' : 
             ((item.split(/\t/)[4] == "Présent") ? "green" : "red") }}>{item.split(/\t/)[4]}</Text>
         </Pressable>
@@ -66,9 +66,58 @@ function engagementScreen({navigation}) {
     </View>
   );
 
+
+  // Fonction de changement de statut
+  const changerStatut = (statut, benevole, jour, activite, site, role) => {
+
+    if(statut == "Présent"){
+      console.log("Vous ête actuellement 'Absent'");
+      // "http://51.38.186.216/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site
+    }
+    else if(statut == "Absent"){
+      console.log("Vous ête actuellement 'Présent'");
+      //var commentaire = '';
+      
+      //remplacer si dessous par modal une fois qu'ils seront métrisés ...
+      setModalVisible(true)
+    
+      // mettre l'arg commentaire en dessous
+      // "http://51.38.186.216/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_COMMENTAIRE=" + commentaire
+    }
+      else{
+        console.log("Vous êtes actuellement 'Non défini'");
+        // "http://51.38.186.216/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role
+      }
+    
+  }
+
+
+  const [modalVisible, setModalVisible] = useState(false);
   // On retourne la flatliste
   return (
     <>
+    <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Hello World!</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
     <SafeAreaView style={styles.container}>
     {isLoading ? (
       <View style={styles.loading}>
@@ -86,9 +135,11 @@ function engagementScreen({navigation}) {
 }
 
 
-// Fonction de changement de statut
-const changerStatut = (statut) => {
-  console.log("changerStatut : " + statut);
+
+
+// Fonction de changement de commentaire
+const afficherCommentaire = () => {
+    console.log("afficherCommentaire : " + commentaire);
 }
 
 
@@ -125,6 +176,47 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });
 
 
