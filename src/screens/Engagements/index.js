@@ -57,7 +57,8 @@ function engagementScreen({navigation}) {
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <View style={{ flexDirection: "column"}}>
         <Pressable onPressOut={() => changerStatut(item.split(/\t/)[4])}>
-          <Text style={{ color: (item.split(/\t/)[4] == "Absent") ? 'black' : ((item.split(/\t/)[4] == "Present") ? "green" : "red") }}>{item.split(/\t/)[4]}</Text>
+          <Text style={{ color: (item.split(/\t/)[4] == "Absent") ? 'black' : 
+            ((item.split(/\t/)[4] == "Présent") ? "green" : "red") }}>{item.split(/\t/)[4]}</Text>
         </Pressable>
         
         <Text>{item.split(/\t/)[5]}</Text>
@@ -89,6 +90,7 @@ function engagementScreen({navigation}) {
 const changerStatut = (statut) => {
   console.log("changerStatut : " + statut);
 }
+
 
 
 
