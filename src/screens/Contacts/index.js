@@ -4,6 +4,7 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert} from 'react-nativ
 import {Linking} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
+import constantes from '../../constantes';
 
 // Fonction Principale
 function contactScreen() {
@@ -16,7 +17,7 @@ function contactScreen() {
 
   // on va chercher les informations sur la BDD
   useEffect(() => {
-    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_CONTACT/P_IDBENEVOLE=' + userID)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_CONTACT/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées")})
       .catch((error) => console.error(error))

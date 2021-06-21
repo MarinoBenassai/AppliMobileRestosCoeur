@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
+import constantes from '../../constantes';
 
 // Fonction Principale
 function activiteScreen({route}) {
@@ -19,7 +20,7 @@ function activiteScreen({route}) {
 
   // On va chercher les données
   useEffect(() => {
-    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées")})
       .catch((error) => console.error(error))

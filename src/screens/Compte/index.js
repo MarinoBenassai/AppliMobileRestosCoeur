@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput, Alert} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
+import constantes from '../../constantes';
 
 // Fonction Principale
 const compteScreen = () => {
@@ -24,7 +25,7 @@ const compteScreen = () => {
 
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
-    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
       .then((texte) =>  {setDataEngagementDefaut(texte); console.log("Infos Engagement Défaut : chargées")})
       .catch((error) => {
@@ -34,7 +35,7 @@ const compteScreen = () => {
 
   // On récupère les informations personelles
   useEffect(() => {
-    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
       .then((texte) =>  {setDataPerso(texte); console.log("Infos Perosnelles : chargées")})
       .catch((error) => console.error(error))

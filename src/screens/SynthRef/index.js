@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
+import constantes from '../../constantes';
 
 // Fonction Principale
 function referentScreen({navigation}) {
@@ -21,7 +22,7 @@ function referentScreen({navigation}) {
 
   // On récupère les données
   useEffect(() => {
-    fetch('http://51.38.186.216/Axoptim.php/REQ/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos Synthèse Réferent : chargées")})
       .catch((error) => console.error(error))

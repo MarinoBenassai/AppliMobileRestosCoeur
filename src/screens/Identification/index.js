@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
 import * as Crypto from 'expo-crypto';
 
+import constantes from '../../constantes';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -46,7 +48,7 @@ export default function IdScreen({ onSignIn }) {
   function checkPassword() {
 	if (textEmail != '' && textPassword != '') {
 		setLoading(true);
-		fetch('http://51.38.186.216/Axoptim.php/REQ/AP_ACCES_BEN/P_EMAIL=' + textEmail) //A changer
+		fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_ACCES_BEN/P_EMAIL=' + textEmail) //A changer
 		  .then((response) => response.text())
 		  .then((texte) =>  {setData(texte);setLoading(false);})
 		  .catch((error) => {
