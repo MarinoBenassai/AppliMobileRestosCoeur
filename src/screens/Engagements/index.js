@@ -10,12 +10,15 @@ function engagementScreen({navigation}) {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
+
+  const [upToDate, setUpToDate] = useState(false);
   
   // Pour le pop up de commentaire
   const [modalVisible, setModalVisible] = useState(false);
 
   // Pour le commentaire
   const [comment, setComment] = useState('');
+  const [infoComment, setInfoComment] = useState(['', '', '']);
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -27,14 +30,19 @@ function engagementScreen({navigation}) {
   	});
   }
 
-  // On va chercher les données
-  useEffect(() => {
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID)
-      .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées")})
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
-  }, []);
+  //Fonction pour chercher les données
+  const chercherDonnees = () => {
+    useEffect(() => {
+      fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID)
+        .then((response) => response.text())
+        .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); console.log(texte); setUpToDate(true);})
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+    });
+  }
+
+  // On récupère les données initiales
+  chercherDonnees();
 
   // On traite les données
   const ligne = data.split(/\n/);
@@ -63,7 +71,7 @@ function engagementScreen({navigation}) {
 
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <View style={{ flexDirection: "column"}}>
-        <Pressable onPressOut={() => changerStatut(item.split(/\t/)[4], userID, item.split(/\t/)[0], 0, 0, 0)}>
+        <Pressable onPressOut={() => changerStatut(item.split(/\t/)[4], userID, item.split(/\t/)[0], item.split(/\t/)[9], item.split(/\t/)[10], (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}>
           <Text style={{ color: (item.split(/\t/)[4] == "Absent") ? 'black' : 
             ((item.split(/\t/)[4] == "Présent") ? "green" : "red") }}>{item.split(/\t/)[4]}</Text>
         </Pressable>
@@ -77,64 +85,77 @@ function engagementScreen({navigation}) {
   // Fonction de changement de statut
   const changerStatut = (statut, benevole, jour, activite, site, role) => {
 
-    //TODO réinversé absent present (dans condition)
-    if(statut == "Présent"){
+    if(statut == "Absent"){
       console.log("Vous ête actuellement 'Absent'");
-      // "http://51.38.186.216/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site
+      console.log("Vous êtes actuellement 'Non défini'");
+          fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
+            .then((response) => response.text())
+            .then((texte) =>  {console.log("chnagement statut !"); console.log(texte)})
+            .catch((error) => console.error(error))
+      // "http://" + constantes.BDD + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site
     }
-    else if(statut == "Absent"){
+    else if(statut == "Présent"){
       console.log("Vous ête actuellement 'Présent'");
-      //var commentaire = '';
-      
+
+      setInfoComment([ jour, activite, site ]);
       //On rend le modal visible
       setModalVisible(true);
 
-      // TODO : trop rapide, donc pas traiter ici ?
-      console.log("logggggggg")
-      console.log(comment);
     
-      // plus ici du coup ? (cf ci dessus)
-      // "http://51.38.186.216/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_COMMENTAIRE=" + comment
+      // plus ici du coup ? (directelent dans le modal pous être sur de la synchro)
+      // "http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_COMMENTAIRE=" + comment
     }
       else{
-        console.log("Vous êtes actuellement 'Non défini'");
-        // "http://51.38.186.216/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role
+        //useEffect(() => {
+          console.log("Vous êtes actuellement 'Non défini'");
+          fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role)
+            .then((response) => response.text())
+            .then((texte) =>  {console.log("chnagement statut !"); console.log(texte)})
+            .catch((error) => console.error(error))
+        //}, []);
       }
-    
+      
+      setUpToDate(false);
   }
 
   // On retourne la flatliste
   return (
     <>
     <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Changement annulé.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Commentaire d'Absence :</Text>
-              <TextInput
-                style={styles.input}
-                onChangeText={setComment}
-                placeholder="Raison de votre absence"
-                autoCompleteType="off"
-                maxLength={40}
-              />
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                // TODO : envoyer le commentaire
-                onPress={() => {setModalVisible(!modalVisible); console.log(comment)}}
-              >
-                <Text style={styles.textStyle}>Valider</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        Alert.alert("Changement annulé.");
+        setModalVisible(!modalVisible);
+      }}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Commentaire d'Absence :</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setComment}
+            placeholder="Raison de votre absence"
+            autoCompleteType="off"
+            maxLength={40}
+          />
+          <Pressable
+            style={[styles.button, styles.buttonClose]}
+            // TODO : envoyer le commentaire
+            onPress={() => {setModalVisible(!modalVisible); console.log(comment);
+              fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
+              .then((response) => response.text())
+              .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+              .catch((error) => console.error(error));
+              setUpToDate(false);
+            }}
+          >
+            <Text style={styles.textStyle}>Valider</Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
 
     <SafeAreaView style={styles.container}>
     {isLoading ? (
