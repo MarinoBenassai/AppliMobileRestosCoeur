@@ -12,6 +12,7 @@ import engagementScreen from './src/screens/Engagements';
 import referentScreen from './src/screens/SynthRef';
 import activiteScreen from './src/screens/Activite';
 import oublieScreen from './src/screens/MdpOublie';
+import listeUtilisateurScreen from './src/screens/ListeUtilisateur';
 
 import {userContext} from './src/contexts/userContext';
 
@@ -90,6 +91,7 @@ function engagement({navigation}) {
     <engagementStack.Navigator screenOptions={{headerRight: () => (boutonLogOut()),}}>
 	  <engagementStack.Screen name="Engagements" component={engagementScreen} options={{title: "Mes engagements", headerLeft: () => (boutonMenu({nav})),}}/>
 	  <engagementStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
+    <engagementStack.Screen name="ListeUtilisateur" component={listeUtilisateurScreen} options={{title: "Liste des utilisateurs"}}/>
     </engagementStack.Navigator>
   );
 }

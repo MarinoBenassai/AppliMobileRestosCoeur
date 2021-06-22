@@ -6,7 +6,7 @@ import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 
 // Fonction Principale
-function activiteScreen({route}) {
+function activiteScreen({route, navigation}) {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
@@ -26,6 +26,13 @@ function activiteScreen({route}) {
 
   // On récupère les informations données en paramètres
   const { IDActivite, IDSite, IDJour, NomActivite, NomSite, idRole } = route.params;
+
+  // Fonction de sélection de l'activité
+  function versListe({navigation}) {
+  	navigation.navigate('ListeUtilisateur', {
+  	  IDActivite: 34
+  	});
+  }
 
 
   // On va chercher les données
@@ -181,8 +188,14 @@ function activiteScreen({route}) {
                                           {IDJour.split(" ")[0].split("-")[0]}</Text>
               </View>
             </View>
-            <View>
+            <View style={{flexDirection: "row"}}>
               <Text style={[styles.item, styles.info, {fontWeight: "bold"}]}>Engagé : </Text>
+              <Pressable onPress={() => versListe({navigation})} >
+              {({ pressed }) => (
+                <View style={[styles.item, {color: pressed ? 'white' : 'black',},]}>
+                  <Text>Liste</Text>
+                </View>)}
+              </Pressable>
             </View>
           </>
         }
