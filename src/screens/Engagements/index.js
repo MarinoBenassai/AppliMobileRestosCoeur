@@ -11,6 +11,7 @@ function engagementScreen({navigation}) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
 
+  // Reload
   const [upToDate, setUpToDate] = useState(false);
   
   // Pour le pop up de commentaire
@@ -26,23 +27,19 @@ function engagementScreen({navigation}) {
   // Focntion de chargement de l'activité
   function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
-  	  IDActivite: item.split(/\t/)[9], IDSite: item.split(/\t/)[10], IDJour: item.split(/\t/)[0], NomActivite: item.split(/\t/)[1], NomSite: item.split(/\t/)[2], idRole: (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2"
+  	  IDActivite: item.split(/\t/)[9], IDSite: item.split(/\t/)[10], IDJour: item.split(/\t/)[0].split(" ")[0], NomActivite: item.split(/\t/)[1], NomSite: item.split(/\t/)[2], idRole: (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2"
   	});
   }
 
   //Fonction pour chercher les données
-  const chercherDonnees = () => {
-    useEffect(() => {
-      fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID)
-        .then((response) => response.text())
-        .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); console.log(texte); setUpToDate(true);})
-        .catch((error) => console.error(error))
-        .finally(() => setLoading(false));
-    });
-  }
+  useEffect(() => {
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID)
+      .then((response) => response.text())
+      .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); setUpToDate(true);})
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, [upToDate]);
 
-  // On récupère les données initiales
-  chercherDonnees();
 
   // On traite les données
   const ligne = data.split(/\n/);
@@ -76,7 +73,7 @@ function engagementScreen({navigation}) {
             ((item.split(/\t/)[4] == "Présent") ? "green" : "red") }}>{item.split(/\t/)[4]}</Text>
         </Pressable>
         
-        <Text>{item.split(/\t/)[5]}</Text>
+        <Text style={{width: 100}}>{item.split(/\t/)[5]}</Text>
       </View>
     </View>
   );
@@ -85,36 +82,37 @@ function engagementScreen({navigation}) {
   // Fonction de changement de statut
   const changerStatut = (statut, benevole, jour, activite, site, role) => {
 
+    // Si absent
     if(statut == "Absent"){
       console.log("Vous ête actuellement 'Absent'");
-      console.log("Vous êtes actuellement 'Non défini'");
-          fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
-            .then((response) => response.text())
-            .then((texte) =>  {console.log("chnagement statut !"); console.log(texte)})
-            .catch((error) => console.error(error))
-      // "http://" + constantes.BDD + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site
+      fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
+        .then((response) => response.text())
+        .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+        .catch((error) => console.error(error));
     }
+
+    // Si présent
     else if(statut == "Présent"){
       console.log("Vous ête actuellement 'Présent'");
 
       setInfoComment([ jour, activite, site ]);
       //On rend le modal visible
       setModalVisible(true);
+      
+      // Le traitement se fait sur le modal afin d'éviter les désynchronisations
 
-    
-      // plus ici du coup ? (directelent dans le modal pous être sur de la synchro)
-      // "http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_COMMENTAIRE=" + comment
     }
+
+      // Si non-défini
       else{
-        //useEffect(() => {
-          console.log("Vous êtes actuellement 'Non défini'");
-          fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role)
-            .then((response) => response.text())
-            .then((texte) =>  {console.log("chnagement statut !"); console.log(texte)})
-            .catch((error) => console.error(error))
-        //}, []);
+        console.log("Vous êtes actuellement 'Non défini'");
+        fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role)
+          .then((response) => response.text())
+          .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+          .catch((error) => console.error(error))
       }
       
+      // On raffraichie les composants quoi qu'il arrive
       setUpToDate(false);
   }
 
@@ -138,16 +136,19 @@ function engagementScreen({navigation}) {
             onChangeText={setComment}
             placeholder="Raison de votre absence"
             autoCompleteType="off"
-            maxLength={40}
+            maxLength={99}
           />
           <Pressable
-            style={[styles.button, styles.buttonClose]}
+            style={styles.button}
             // TODO : envoyer le commentaire
-            onPress={() => {setModalVisible(!modalVisible); console.log(comment);
+            onPress={() => {setModalVisible(!modalVisible);
               fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
               .then((response) => response.text())
               .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
               .catch((error) => console.error(error));
+
+              // On raffraichi et reset le commentaire pour la prochaine fois
+              setComment("");
               setUpToDate(false);
             }}
           >
@@ -234,17 +235,12 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
+    elevation: 2,
     backgroundColor: "#2196F3",
   },
   textStyle: {

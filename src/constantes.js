@@ -1,4 +1,4 @@
 export default {
-  BDD: '140.93.12.147',
+  BDD: '140.93.11.10',
   IDDebug: '1',
   };

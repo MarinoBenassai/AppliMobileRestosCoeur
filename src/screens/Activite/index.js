@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -10,6 +10,16 @@ function activiteScreen({route}) {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
+
+  // Reload
+  const [upToDate, setUpToDate] = useState(false);
+  
+  // Pour le pop up de commentaire
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // Pour le commentaire
+  const [comment, setComment] = useState('');
+  const [infoComment, setInfoComment] = useState(['', '', '', '']);
   
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -22,10 +32,10 @@ function activiteScreen({route}) {
   useEffect(() => {
     fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées")})
+      .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées "); setUpToDate(true);})
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
-  }, []);
+  }, [upToDate]);
 
   // On traite les données
   const ligne = data.split(/\n/);
@@ -48,7 +58,7 @@ function activiteScreen({route}) {
       <View style={{ flexDirection: "column", flexDirection: "column",}}>
 
         {/* Statut */}
-        <Pressable onPress={() => changerStatut(item.split(/\t/)[6], 0, IDJour, 0, 0, 0)}
+        <Pressable onPress={() => changerStatut(item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
                    disabled={(idRole=="2") ? false : true}>
           <Text style={{ color: (item.split(/\t/)[6] == "Absent") ? 'black' : 
             ((item.split(/\t/)[6] == "Présent") ? "green" : "red") }}>
@@ -65,9 +75,87 @@ function activiteScreen({route}) {
     </View>
   );
 
+
+  // Fonction de changement de statut
+  const changerStatut = (statut, benevole, jour, activite, site, role) => {
+
+    // Si absent
+    if(statut == "Absent"){
+      console.log("Vous ête actuellement 'Absent'");
+      fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
+        .then((response) => response.text())
+        .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+        .catch((error) => console.error(error));
+    }
+
+    // Si présent
+    else if(statut == "Présent"){
+      console.log("Vous ête actuellement 'Présent'");
+
+      setInfoComment([ jour, activite, site, benevole ]);
+      //On rend le modal visible
+      setModalVisible(true);
+      
+      // Le traitement se fait sur le modal afin d'éviter les désynchronisations
+
+    }
+
+      // Si non-défini
+      else{
+        console.log("Vous êtes actuellement 'Non défini'");
+        fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role)
+          .then((response) => response.text())
+          .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+          .catch((error) => console.error(error))
+      }
+      
+      // On raffraichie les composants quoi qu'il arrive
+      setUpToDate(false);
+  }
+
+
   // On retourne la flatliste
   return (
     <>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        Alert.alert("Changement annulé.");
+        setModalVisible(!modalVisible);
+      }}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Commentaire d'Absence :</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setComment}
+            placeholder="Raison de votre absence"
+            autoCompleteType="off"
+            maxLength={99}
+          />
+          <Pressable
+            style={styles.button}
+            // TODO : envoyer le commentaire
+            onPress={() => {setModalVisible(!modalVisible);
+              fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
+              .then((response) => response.text())
+              .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+              .catch((error) => console.error(error));
+
+              // On raffraichi et reset le commentaire pour la prochaine fois
+              setComment("");
+              setUpToDate(false);
+            }}
+          >
+            <Text style={styles.textStyle}>Valider</Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+
     <SafeAreaView style={styles.container}>
     {isLoading ? (
       <View style={styles.loading}>
@@ -108,41 +196,12 @@ function activiteScreen({route}) {
 }
 
 
-// Fonction de changement de statut
-const changerStatut = (statut, benevole, jour, activite, site, role) => {
-
-  //TODO réinversé absent present (dans condition)
-  if(statut == "Présent"){
-    console.log("Vous ête actuellement 'Absent'");
-    // "http://51.38.186.216/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site
-  }
-  else if(statut == "Absent"){
-    console.log("Vous ête actuellement 'Présent'");
-    //var commentaire = '';
-    
-    //On rend le modal visible
-    setModalVisible(true);
-
-    // TODO : trop rapide, donc pas traiter ici ?
-    console.log("logggggggg")
-    console.log(comment);
-  
-    // plus ici du coup ? (cf ci dessus)
-    // "http://51.38.186.216/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_COMMENTAIRE=" + comment
-  }
-    else{
-      console.log("Vous êtes actuellement 'Non défini'");
-      // "http://51.38.186.216/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role
-    }
-  
-}
-
 
 // Fonction de changement de statut
 const chargerCommentaire = (commentaire) => {
   Alert.alert(
     "Commenaire d'Absence",
-    "Penser à mettre les droits + bloqué si pas absent\n Commentaire :" + commentaire,
+    commentaire,
     [
       { text: "OK", onPress: () => console.log("OK Commentaire d'activité") }
     ]
@@ -186,6 +245,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });
 
 // On exporte la fonction principale
