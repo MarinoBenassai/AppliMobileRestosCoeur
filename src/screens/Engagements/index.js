@@ -222,8 +222,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 22
   },
+  // vue gloabl du modal
   modalView: {
-    margin: 20,
+    justifyContent: "space-evenly",
+    height: "40%",
+    width: "80%",
+    maxWidth: 200,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
@@ -237,6 +241,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  // button "fermé" du modal
   button: {
     borderRadius: 20,
     padding: 10,
@@ -248,9 +253,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"
   },
+  // Titre du modal
   modalText: {
-    marginBottom: 15,
+    marginBottom: 5,
     textAlign: "center"
+  },
+  // inputTexte du modal
+  input: {
+    padding: 10
   }
 });
 

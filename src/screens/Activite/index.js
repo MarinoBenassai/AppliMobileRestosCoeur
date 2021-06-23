@@ -20,6 +20,9 @@ function activiteScreen({route, navigation}) {
   // Pour le commentaire
   const [comment, setComment] = useState('');
   const [infoComment, setInfoComment] = useState(['', '', '', '']);
+
+  // Commentaire d'activité
+  const [commentActivite, setCommentActivite] = useState('');
   
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -36,6 +39,7 @@ function activiteScreen({route, navigation}) {
 
   // On va chercher les données
   useEffect(() => {
+    // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
@@ -44,11 +48,19 @@ function activiteScreen({route, navigation}) {
       .finally(() => setLoading(false));
     });
 
+    // Update la liste
     fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées "); setUpToDate(true);})
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
+
+    // Update commenatire d'activité
+    /*fetch('')
+      .then((response) => response.text())
+      .then((texte) =>  {setCommentActivite(texte); console.log("Infos Comment d'activité : chargées "); setUpToDate(true);})
+      .catch((error) => console.error(error)); */ //TODO trater info après
+
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
@@ -184,6 +196,7 @@ function activiteScreen({route, navigation}) {
         ListHeaderComponent={
           <>
             <View style={{marginVertical: 16,}}>
+              {/* Info générales */}
               <View style={[styles.item, {justifyContent:"flex-start",}]}>
                 <Text style={[styles.info, {fontWeight: "bold",}]}>Activité : </Text>
                 <Text style={styles.info}>{NomActivite}</Text>
@@ -199,6 +212,13 @@ function activiteScreen({route, navigation}) {
                                           {IDJour.split(" ")[0].split("-")[0]}</Text>
               </View>
             </View>
+
+            {/* info commentaire d'activité */}
+            <View>
+              <CommentActivite role={idRole}/>
+            </View>
+
+            {/* "header" de la flatlist */}
             <View style={{flexDirection: "row"}}>
               <Text style={[styles.item, styles.info, {fontWeight: "bold"}]}>Engagé : </Text>
               <Pressable onPress={() => versListe({navigation})} >
@@ -219,6 +239,42 @@ function activiteScreen({route, navigation}) {
   );
 }
 
+
+// Div commentActivité
+function CommentActivite(props) {
+  const role = props.role;
+  console.log(role);
+  if (role=="2"){
+    return  <View>
+              <View style={[styles.item, {justifyContent:"flex-start",}]}>
+                <Text style={[styles.info, {fontWeight: "bold",}]}>Commentaire : </Text>
+                <Pressable onPress={() => changerCommentaireActivite()}>
+                  <Text style={styles.info}>placeholder...</Text>
+                </Pressable>
+              </View>
+              <View style={[styles.item, {justifyContent:"flex-start",}]}>
+                <Text style={[styles.info, {fontWeight: "bold",}]}>Nombre de bénéficiaires : </Text>
+                <Pressable onPress={() => changerBeneficiaire()}>
+                  <Text style={styles.info}>placeholder...</Text>
+                </Pressable>
+              </View>
+            </View>;
+      
+  }
+  else{
+    return <></>;
+  }
+}
+
+// Fonction de changement du commentaire d'activité
+const changerCommentaireActivite = () => {
+
+}
+
+// Fonction e changement du nombre de bénéficiaire
+const changerBeneficiaire = () => {
+  
+}
 
 
 // Fonction de changement de statut
