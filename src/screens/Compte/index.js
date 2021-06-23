@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput, Alert} from 'react-native';
+import * as Crypto from 'expo-crypto';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -183,76 +184,136 @@ const compteScreen = () => {
     </SafeAreaView>
   );
 
+
+	// Fonction de changement de mot de passe
+	function changeMdP (oldP, newP, verifP){
+
+	  // Champs vide
+	  if(oldP == "" || newP == "" || verifP == ""){
+		Alert.alert(
+		  "Champs vide",
+		  "\nAu moins un des champs est vide",
+		  [
+			{ text: "OK", onPress: () => console.log("Vide MdP Pressed") }
+		  ]
+		);
+	  }
+	  // vérif failled
+	  else if(newP != verifP){
+		Alert.alert(
+		  "Erreur Nouveau Mot de Passe",
+		  "\nLes champs correspondant au nouveau mot de passe ne sont pas identiques",
+		  [
+			{ text: "OK", onPress: () => console.log("verif failled MdP Pressed") }
+		  ]
+		);
+	  }
+	  // Condition (court)
+	  else if(newP.length < 8){
+		Alert.alert(
+		  "Mot de passe trop court",
+		  "\nVotre mot de passe doit contenir au moins 8 caractères",
+		  [
+			{ text: "OK", onPress: () => console.log("test MdP Pressed") }
+		  ]
+		);
+	  }
+	  // tout est bon
+	  else {
+		setLoading(true);
+		fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
+		.then((response) => response.text())
+		.then((texte) => {const emailAdd = getEmailFromData(texte); return fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_ACCES_BEN/P_EMAIL=' + emailAdd)})
+		.then((response) => response.text())
+		.then((texte) =>  {const hash = getPasswordFromData(texte); return compareToHash(oldP,hash);})
+		.then((correct) => {
+			// ancien mot de passe faux
+			if(!correct){
+				Alert.alert(
+				"L'ancien mot de passe est incorrect.",
+				"",
+				[
+				  { text: "OK", onPress: () => console.log("Error MdP Pressed") }
+				]
+			  );
+			}
+
+			else{
+				Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256,newP)
+				.then((hash) => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_MOTDEPASSE/P_IDBENEVOLE=' + userID + '/P_MOTDEPASSE=' + hash))
+				.then((rep) => rep.text())
+				.then(texte => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
+				.catch((error) => console.error(error));
+			  Alert.alert(
+				"Votre mot de passe a bien été modifié.",
+				[
+				  { text: "OK", onPress: () => console.log("OK MdP Pressed") }
+				]
+			  );
+			}
+		})
+		.catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+
+	  }
+
+	}
+
+
+	// Fonction de changement d'information de contact
+	function changeContact (phone, mail) {
+	  fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone)
+	  .then((rep) => rep.text())
+	  .then(texte => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
+	  .catch((error) => console.error(error));
+	  Alert.alert(
+		"Vos informations ont bien été mises à jour.",
+		[
+		  { text: "OK", onPress: () => console.log("OK ContactPerso Pressed") }
+		]
+
+	  );
+	}
+
 }
 
 
-// Fonction de changement d'information de contact
-const changeContact = (phone, mail) => {
-  Alert.alert(
-    "New Contact information",
-    "\nmail : " + mail + "\n\n" + "tel : " + phone + "\n(Menu Tmp)",
-    [
-      { text: "OK", onPress: () => console.log("OK ContactPerso Pressed") }
-    ]
 
-  );
+
+async function compareToHash (mdp, hash) {
+	try {
+		let mdpHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256,mdp);
+		return mdpHash === hash;
+	} catch(error) {
+      console.error(error);
+    }
 }
 
-// Fonction de changement de mot de passe
-const changeMdP = (oldP, newP, verifP) => {
-  // ancien mot de passe faux //TODO
-  if(false){
-    Alert.alert(
-      "Mot de passe faux",
-      "",
-      [
-        { text: "OK", onPress: () => console.log("Error MdP Pressed") }
-      ]
-    );
+  function getEmailFromData(data) {
+	const lignes = data.split(/\n/);
+	var i;
+	var Email = null;
+	for (i = 1; i<lignes.length; i++){
+		if (lignes[i] != ""){
+			const valeurs = lignes[i].split(/\t/);
+			Email = valeurs[2];
+		}
+	}
+	return Email;
   }
-  // Champs vide
-  else if(oldP == "" || newP == "" || verifP == ""){
-    Alert.alert(
-      "Champs vide",
-      "\nAu moins un des champs est vide",
-      [
-        { text: "OK", onPress: () => console.log("Vide MdP Pressed") }
-      ]
-    );
+  
+    function getPasswordFromData(data) {
+	const lignes = data.split(/\n/);
+	var i;
+	var hPassword = null;
+	for (i = 1; i<lignes.length; i++){
+		if (lignes[i] != ""){
+			const valeurs = lignes[i].split(/\t/);
+			hPassword = valeurs[2];
+		}
+	}
+	return hPassword;
   }
-  // vérif failled
-  else if(newP != verifP){
-    Alert.alert(
-      "Erreur Nouveau Mot de Passe",
-      "\nLes champs correspondant au nouveau mot de passe ne coreespondent pas",
-      [
-        { text: "OK", onPress: () => console.log("verif failled MdP Pressed") }
-      ]
-    );
-  }
-  // Condition (court)
-  else if(newP.length < 8){
-    Alert.alert(
-      "Mot de passe trop court",
-      "\nVotre mot de passe doit contenir au moins 8 caractères",
-      [
-        { text: "OK", onPress: () => console.log("test MdP Pressed") }
-      ]
-    );
-  }
-  // tout est bon
-  else{
-    Alert.alert(
-      "New MdP",
-      "\n" + oldP + newP + verifP + "\n(Menu Tmp)",
-      [
-        { text: "OK", onPress: () => console.log("OK MdP Pressed") }
-      ]
-    );
-  }
-
-}
-
 
 // Styles
 const styles = StyleSheet.create({
