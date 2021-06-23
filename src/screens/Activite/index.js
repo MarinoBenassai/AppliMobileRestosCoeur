@@ -221,7 +221,8 @@ function activiteScreen({route, navigation}) {
             {/* "header" de la flatlist */}
             <View style={{flexDirection: "row"}}>
               <Text style={[styles.item, styles.info, {fontWeight: "bold"}]}>Engagé : </Text>
-              <Pressable onPress={() => versListe({navigation})} >
+              <Pressable onPress={() => versListe({navigation})} 
+                         disabled={(idRole=="2") ? false : true}>
               {({ pressed }) => (
                 <View style={[styles.item, {color: pressed ? 'white' : 'black',},]}>
                   <Text>Liste</Text>
