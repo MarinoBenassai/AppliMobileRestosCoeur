@@ -118,59 +118,61 @@ function engagementScreen({navigation}) {
 
   // On retourne la flatliste
   return (
-    <>
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        Alert.alert("Changement annulé.");
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Commentaire d'Absence :</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setComment}
-            placeholder="Raison de votre absence"
-            autoCompleteType="off"
-            maxLength={99}
-          />
-          <Pressable
-            style={styles.button}
-            // TODO : envoyer le commentaire
-            onPress={() => {setModalVisible(!modalVisible);
-              fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
-              .then((response) => response.text())
-              .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-              .catch((error) => console.error(error));
-
-              // On raffraichi et reset le commentaire pour la prochaine fois
-              setComment("");
-              setUpToDate(false);
-            }}
-          >
-            <Text style={styles.textStyle}>Valider</Text>
-          </Pressable>
-        </View>
-      </View>
-    </Modal>
 
     <SafeAreaView style={styles.container}>
     {isLoading ? (
       <View style={styles.loading}>
         <ActivityIndicator size="large" color="#00ff00" />
       </View>) : (
-      <FlatList
-        data={ligne}
-        renderItem={renderItem}
-        keyExtractor={item => item}
-      />
+      <View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Changement annulé.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Commentaire d'Absence :</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setComment}
+                placeholder="Raison de votre absence"
+                autoCompleteType="off"
+                maxLength={99}
+              />
+              <Pressable
+                style={styles.button}
+                // TODO : envoyer le commentaire
+                onPress={() => {setModalVisible(!modalVisible);
+                  fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
+                  .then((response) => response.text())
+                  .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+                  .catch((error) => console.error(error));
+
+                  // On raffraichi et reset le commentaire pour la prochaine fois
+                  setComment("");
+                  setUpToDate(false);
+                }}
+              >
+                <Text style={styles.textStyle}>Valider</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
+        <FlatList
+          data={ligne}
+          renderItem={renderItem}
+          keyExtractor={item => item}
+        />
+      </View>
       )}
     </SafeAreaView>
-	</>
+
   );
 }
 
@@ -226,8 +228,9 @@ const styles = StyleSheet.create({
   modalView: {
     justifyContent: "space-evenly",
     height: "40%",
+    minHeight: 300,
     width: "80%",
-    maxWidth: 200,
+    maxWidth: 600,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
