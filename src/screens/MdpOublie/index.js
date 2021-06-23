@@ -74,6 +74,10 @@ function oublieScreen({navigation}){
 		style={styles.input}
 		placeholder="votre@email.fr"
 		onChangeText={onChangeTextEmail}
+		keyboardType = "email-address"
+		textContentType = "emailAddress"
+		autoCompleteType = "email"
+		autoCorrect = {false}
 	  />
 	  <Button
 		onPress = {() => resetPassword()}

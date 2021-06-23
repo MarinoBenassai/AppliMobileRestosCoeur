@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/Octicons';
 
 import IdScreen from './src/screens/Identification';
 import compteScreen from './src/screens/Compte';
@@ -59,21 +60,19 @@ export default function App() {
   );
 }
 
-const boutonMenu = ({nav}) => {
-	return (<Button
-              onPress={nav.openDrawer}
-              title="Menu"
-              color="#080"
-            />)
-}
+const boutonMenu = ({nav}) => <Icon 
+    name='three-bars' 
+    size={30}
+    color='#000' 
+    onPress={nav.openDrawer}
+/>;
 
-const boutonLogOut = () => {
-	return (<Button
+const boutonLogOut = () => <Icon 
               onPress={React.useContext(userContext).logoutUser}
-              title="Se déconnecter"
-              color="#CC1701"
-            />)
-} 
+			  name='sign-out' 
+			  size={30}
+			  color='#000'
+            />;
 
 
 function identification() {
@@ -85,11 +84,14 @@ function identification() {
   );
 }
 
+const screenOptionsBase = {headerRight: () => (boutonLogOut()), headerStyle: {backgroundColor: '#45968c',}, headerRightContainerStyle: {paddingRight: 20},};
+function screenOptionsFirstPage (nav, title) {return {title: title, headerLeft: () => (boutonMenu({nav})), headerLeftContainerStyle: {paddingLeft: 20},}}
+
 function engagement({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerRight: () => (boutonLogOut()),}}>
-	  <engagementStack.Screen name="Engagements" component={engagementScreen} options={{title: "Mes engagements", headerLeft: () => (boutonMenu({nav})),}}/>
+    <engagementStack.Navigator screenOptions = {screenOptionsBase}>
+	  <engagementStack.Screen name="Engagements" component={engagementScreen} options={screenOptionsFirstPage(nav, "Mes engagements")}/>
 	  <engagementStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
     <engagementStack.Screen name="ListeUtilisateur" component={listeUtilisateurScreen} options={{title: "Liste des utilisateurs"}}/>
     </engagementStack.Navigator>
@@ -99,8 +101,8 @@ function engagement({navigation}) {
 function referent({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerRight: () => (boutonLogOut()),}}>
-	  <synthRefStack.Screen name="SynthRef" component={referentScreen} options={{headerLeft: () => (boutonMenu({nav})), title: "Ma synthèse référent" }} />
+    <engagementStack.Navigator screenOptions= {screenOptionsBase}>
+	  <synthRefStack.Screen name="SynthRef" component={referentScreen} options={screenOptionsFirstPage(nav, "Ma synthèse référent") } />
 	  <engagementStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
     </engagementStack.Navigator>
   );
@@ -109,8 +111,8 @@ function referent({navigation}) {
 function compte({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})), headerRight: () => (boutonLogOut()),}}>
-	  <compteStack.Screen name="Compte" component={compteScreen} options={{ title: "Mon compte" }} />
+    <engagementStack.Navigator screenOptions={screenOptionsBase}>
+	  <compteStack.Screen name="Compte" component={compteScreen} options={screenOptionsFirstPage(nav,"Mon compte")} />
     </engagementStack.Navigator>
   );
 }
@@ -118,8 +120,8 @@ function compte({navigation}) {
 function contact({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={{headerLeft: () => (boutonMenu({nav})), headerRight: () => (boutonLogOut()),}}>
-	  <contactsStack.Screen name="Contacts" component={contactScreen} options={{ title: "Mes contacts" }} />
+    <engagementStack.Navigator screenOptions={screenOptionsBase}>
+	  <contactsStack.Screen name="Contacts" component={contactScreen} options={screenOptionsFirstPage(nav, "Mes contacts")}/>
     </engagementStack.Navigator>
   );
 }

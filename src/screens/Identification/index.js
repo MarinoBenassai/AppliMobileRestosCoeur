@@ -95,13 +95,20 @@ export default function IdScreen({navigation}) {
 		style={styles.input}
 		placeholder="votre@email.fr"
 		onChangeText={onChangeTextEmail}
+		keyboardType = "email-address"
+		textContentType = "emailAddress"
+		autoCompleteType = "email"
+		autoCorrect = {false}
 	  />
 	  <Text>Mot de passe</Text>
 	  <TextInput
 		style={styles.input}
+		placeholder="********"
 		secureTextEntry = {true}
         onChangeText={onChangeTextPassword}
 		value={textPassword}
+		textContentType = "password"
+
 	  />
 	  <Button
 		onPress = {() => checkPassword()} //{() => navigation.navigate('Engagements')}
