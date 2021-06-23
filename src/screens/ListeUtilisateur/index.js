@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Linking, TextInput} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 
 // Fonction Principale
-function listeUtilisateurScreen({route}) {
+function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // on définit les états : data et loading
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
+
+  // Bénévole à chercher
+  const [ajout, setAjout] = useState('');
+  const [visibleData, setVisibleData] = useState('');
 
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
 
   // On récupère les informations données en paramètres
-  const { IDActivite } = route.params;
+  const { IDActivite, IDSite, IDJour } = route.params;
 
   // on va chercher les informations sur la BDD
   useEffect(() => {
@@ -31,20 +35,50 @@ function listeUtilisateurScreen({route}) {
   ligne.shift(); //enlève le premier élement (et le retourne)
   ligne.pop();   //enlève le dernier élement (et le retourne)
 
+  // on met à jour la liste visible
+  useEffect(() => {
+    
+    setVisibleData( ligne.filter( (nom) => ( nom.toLowerCase().startsWith(ajout.toLowerCase()) ) ) )
+
+    //setVisibleData( ligne.map((nom) => (nom.toLowerCase().includes(ajout.toLowerCase()) ? nom : none)) );
+  }, [ajout]);
+
+
+  //Fonction d'ajout de bénévole
+  const ajouterBenevole = (benevole) => {
+    console.log("Vous avez ajouter l'id : " + benevole + " " + IDJour + " " + IDActivite + " " + IDSite);
+      fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + IDJour + "/P_IDACTIVITE=" + IDActivite + "/P_IDSITE=" + IDSite + "/P_IDROLE=1")
+        .then((response) => response.text())
+        .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+        .then( () => goBack() )
+        .catch((error) => console.error(error));
+  }
+  
+
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal
     <View style={styles.item}>
       {/* Conteneur 1ere colonne : info personne */}
       <View style={styles.colomn}>
-        <Text>{item.split(/\t/)[0]}</Text>
-        <Text>{item.split(/\t/)[1]}</Text>
+        <Pressable onPress={() => ajouterBenevole(item.split(/\t/)[4])}>
+        {({ pressed }) => (
+          <View style={{color: pressed ? 'white' : 'black',}}>
+            <Text>{item.split(/\t/)[0]}</Text>
+            <Text>{item.split(/\t/)[1]}</Text>
+          </View>
+        )}
+        </Pressable>
       </View>
 
       {/* Conteneur 2eme colonne : info lieu */}
-      <View style={styles.colomn}>
-        <Text>mail</Text>
-        <Text>tel</Text>
+      <View style={styles.colomn}> 
+        <Pressable title="AlertContact" onPress={() => createContactAlert(item.split(/\t/)[2], item.split(/\t/)[3])} >
+          <Text>contacter</Text>
+        </Pressable>
+        <Pressable title="EnvoieSMSContact" onPress={() => Linking.openURL(`sms:${item.split(/\t/)[3]}`)} >
+          <Text>message</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -58,9 +92,20 @@ function listeUtilisateurScreen({route}) {
          <ActivityIndicator size="large" color="green" />
 	      </View>) : (
         <FlatList
-          data={ligne}
+          data={visibleData}
           renderItem={renderItem}
           keyExtractor={item => item}
+          ListHeaderComponent={
+            <>
+              <View>
+                <TextInput
+                  style={[, styles.input, styles.item, {backgroundColor: "#ebe0c3"}]}
+                  onChangeText={text => setAjout(text)}
+                  placeholder="Nom du bénévole à ajouter :"
+                />
+              </View>
+            </>
+          }
         />
       )}
     </SafeAreaView>
@@ -71,7 +116,7 @@ function listeUtilisateurScreen({route}) {
 
 
 // Fonction d'affichage pop-up des informations de contact
-const createContactAlert = (mail, phone) =>{
+const createContactAlert = (mail, phone) => {
     Alert.alert(
       "Contact information",
       "\nmail : " + mail + "\n\n" + "tel : " + phone,
@@ -80,6 +125,7 @@ const createContactAlert = (mail, phone) =>{
       ]
     );
 }
+
 
 
 
@@ -133,6 +179,10 @@ const styles = StyleSheet.create({
 	  backgroundColor: '#F5FCFF88',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  input: {
+    marginVertical: 4,
+    marginHorizontal: -10,
   },
 }); 
 

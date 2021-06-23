@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput, useFocusEffect } from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -30,19 +30,30 @@ function activiteScreen({route, navigation}) {
   // Fonction de sélection de l'activité
   function versListe({navigation}) {
   	navigation.navigate('ListeUtilisateur', {
-  	  IDActivite: 34
+  	  IDActivite: IDActivite, IDSite: IDSite, IDJour: IDJour
   	});
   }
 
-
   // On va chercher les données
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
+      .then((response) => response.text())
+      .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées "); setUpToDate(true);})
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+    });
+
     fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées "); setUpToDate(true);})
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
-  }, [upToDate]);
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+    
+  }, [upToDate, navigation]);
 
   // On traite les données
   const ligne = data.split(/\n/);
