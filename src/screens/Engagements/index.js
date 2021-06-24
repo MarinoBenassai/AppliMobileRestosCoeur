@@ -179,14 +179,6 @@ function engagementScreen({navigation}) {
 
 
 
-// Fonction de changement de commentaire
-const afficherCommentaire = () => {
-    console.log("afficherCommentaire : " + commentaire);
-}
-
-
-
-
 // Styles
 const styles = StyleSheet.create({
   container: {

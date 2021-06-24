@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput, useFocusEffect } from 'react-native';
+import Icon from 'react-native-vector-icons/Octicons';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -85,7 +86,7 @@ function activiteScreen({route, navigation}) {
       
 
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
-      <View style={{ flexDirection: "column", flexDirection: "column",}}>
+      <View style={{ justifyContent:"space-evenly", flexDirection: "column"}}>
 
         {/* Statut */}
         <Pressable onPress={() => changerStatut(item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
@@ -101,6 +102,17 @@ function activiteScreen({route, navigation}) {
                     disabled={(idRole=="2") ? false : true}>
           <Text>Commentaire</Text>
         </Pressable>
+      </View>
+
+      {/* Conteneur 3eme colonne */}
+      <View style={{ justifyContent:"space-evenly", flexDirection: "column",}}>
+        <Icon 
+          name='mail' 
+          size={30}
+          color='#000'
+          onPress={() => createContactAlert()}
+        />
+        
       </View>
     </View>
   );
@@ -144,7 +156,7 @@ function activiteScreen({route, navigation}) {
   }
 
 
-  // On retourne la flatliste
+  // On retourne la flatlist
   return (
     <>
     <Modal
@@ -219,15 +231,18 @@ function activiteScreen({route, navigation}) {
             </View>
 
             {/* "header" de la flatlist */}
-            <View style={{flexDirection: "row"}}>
+            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
               <Text style={[styles.item, styles.info, {fontWeight: "bold"}]}>Engagé : </Text>
-              <Pressable onPress={() => versListe({navigation})} 
-                         disabled={(idRole=="2") ? false : true}>
-              {({ pressed }) => (
-                <View style={[styles.item, {color: pressed ? 'white' : 'black',},]}>
-                  <Text>Liste</Text>
-                </View>)}
-              </Pressable>
+              {(idRole == "2") &&	
+                <Icon 
+                  name='plus' 
+                  size={30}
+                  color='#000'
+                  onPress={() => versListe({navigation})}
+                  disabled={(idRole=="2") ? false : true}
+                  style={styles.item}
+                />
+              }
             </View>
           </>
         }
@@ -266,6 +281,20 @@ function CommentActivite(props) {
     return <></>;
   }
 }
+
+
+// Fonction d'affichage pop-up des informations de contact
+const createContactAlert = (mail, phone) =>{
+  Alert.alert(
+    "Contact information",
+    "\nmail : " + mail + "\n\n" + "tel : " + phone,
+    [
+      { text: "OK", onPress: () => console.log("OK  Contact Pressed") }
+    ]
+  );
+}
+
+
 
 // Fonction de changement du commentaire d'activité
 const changerCommentaireActivite = () => {

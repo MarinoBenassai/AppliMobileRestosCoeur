@@ -16,7 +16,7 @@ function referentScreen({navigation}) {
   // Fonction de sélection de l'activité
   function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
-  	  IDActivite: item.split(/\t/)[4], IDSite: item.split(/\t/)[5], IDJour: item.split(/\t/)[0], NomActivite: item.split(/\t/)[1], NomSite: item.split(/\t/)[2], idRole: '2'
+  	  IDActivite: item.split(/\t/)[4], IDSite: item.split(/\t/)[5], IDJour: item.split(/\t/)[0].split(" ")[0], NomActivite: item.split(/\t/)[1], NomSite: item.split(/\t/)[2], idRole: '2'
   	});
   }
 

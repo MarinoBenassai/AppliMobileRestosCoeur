@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert} from 'react-native';
 import {Linking} from 'react-native';
+import Icon from 'react-native-vector-icons/Octicons';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -49,12 +50,13 @@ function contactScreen() {
 
       {/* Conteneur 3eme colonne : contacter */}
       <View style={styles.colomn}> 
-        <Pressable title="AlertContact" onPress={() => createContactAlert(item.split(/\t/)[7], item.split(/\t/)[6])} >
-          <Text>contacter</Text>
-        </Pressable>
-        <Pressable title="EnvoieSMSContact" onPress={() => Linking.openURL(`sms:${item.split(/\t/)[6]}`)} >
-          <Text>message</Text>
-        </Pressable>
+        <Icon 
+          name='mail' 
+          size={30}
+          color='#000'
+          onPress={() => createContactAlert(item.split(/\t/)[7], item.split(/\t/)[6])}
+        />
+        
       </View>
     </View>
   );
@@ -86,7 +88,9 @@ const createContactAlert = (mail, phone) =>{
       "Contact information",
       "\nmail : " + mail + "\n\n" + "tel : " + phone,
       [
-        { text: "OK", onPress: () => console.log("OK  Contact Pressed") }
+        { text: "OK", onPress: () => console.log("OK  Contact Pressed") },
+        { text: "sms", onPress: () => Linking.openURL(`sms:${phone}`) },
+        { text: "mail", onPress: () => Linking.openURL(`mailto:${mail}`) }
       ]
     );
 }
