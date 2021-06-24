@@ -57,19 +57,42 @@ function referentScreen({navigation}) {
     <SafeAreaView style={styles.container}>
       {isLoading ? (
         <View style={styles.loading}>
-         <ActivityIndicator size="large" color="#00ff00" />
-	      </View>) : (
-        <FlatList
-          data={ligne}
-          renderItem={renderItem}
-          keyExtractor={item => item}
-        />
+          <ActivityIndicator size="large" color="#00ff00" />
+        </View>) : (
+        <View>
+          <Synthese ligne={ligne} loading={isLoading} renderItem={renderItem}/>
+        </View>
       )}
     </SafeAreaView>
   );
 
 }
 
+
+// Div Synthese
+function Synthese(props) {
+  const ligne = props.ligne;
+  const isLoading = props.loading;
+  const renderItem = props.renderItem;
+  if (ligne.length != 0){
+    return  <View>
+              <FlatList
+                data={ligne}
+                renderItem={renderItem}
+                keyExtractor={item => item}
+              />
+            </View>;
+      
+  }
+  else{
+    return <View>
+              <Text style={styles.item}>
+                Il semblerait que vous ne soyez référent d'aucune activité pour le moment.
+              </Text>
+            </View>;
+
+  }
+}
 
 
 // Style
