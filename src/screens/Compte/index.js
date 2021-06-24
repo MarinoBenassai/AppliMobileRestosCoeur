@@ -20,6 +20,7 @@ const compteScreen = () => {
   const [oldP, setOldP] = useState('');
   const [newP, setNewP] = useState('');
   const [verifP, setVerifP] = useState('');
+  const [persoUpToDate, setPersoUpToDate] = useState(false);
   
   // O récupère l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -36,12 +37,16 @@ const compteScreen = () => {
 
   // On récupère les informations personelles
   useEffect(() => {
+	if (persoUpToDate === false) {
+	setPersoUpToDate(true);
+	console.log("fait");
     fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
       .then((response) => response.text())
       .then((texte) =>  {setDataPerso(texte); console.log("Infos Perosnelles : chargées")})
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));;
-  }, []);
+	}
+  }, [persoUpToDate]);
 
   // On traite ces informations
   const ligneEngagementDefaut = dataEngagementDefaut.split(/\n/);
@@ -105,6 +110,7 @@ const compteScreen = () => {
                           textContentType='telephoneNumber'
                           keyboardType='phone-pad'
                           onChangeText={text => setPhone(text)}
+						  value = {phone}
                         />
                       </View>
                       <View style={{ flexDirection: "row"}}>
@@ -116,6 +122,7 @@ const compteScreen = () => {
                           textContentType='emailAddress'
                           keyboardType='email-address'
                           onChangeText={text => setMail(text)}
+						  value = {mail}
                         />
                       </View>
                       <Button
@@ -139,6 +146,7 @@ const compteScreen = () => {
                           secureTextEntry={true}
                           textContentType='password'
                           onChangeText={text => setOldP(text)}
+						  value = {oldP}
                         />
                       </View>
                       <View style={{ flexDirection: "row"}}>
@@ -150,6 +158,7 @@ const compteScreen = () => {
                           secureTextEntry={true}
                           textContentType='newPassword'
                           onChangeText={text => setNewP(text)}
+						  value = {newP}
                         />
                       </View>
                       <View style={{ flexDirection: "row"}}>
@@ -161,10 +170,11 @@ const compteScreen = () => {
                           secureTextEntry={true}
                           textContentType='newPassword'
                           onChangeText={text => setVerifP(text)}
+						  value = {verifP}
                         />
                       </View>
                       <Button
-                        onPress={() => changeMdP(oldP, newP, verifP)}
+                        onPress={() => {changeMdP(oldP, newP, verifP);}}
                         title="Valider Mot de Passe"
                         color="#841584"
                         accessibilityLabel="Valider votre nouveau mot de passe"
@@ -187,10 +197,9 @@ const compteScreen = () => {
 
 	// Fonction de changement de mot de passe
 	function changeMdP (oldP, newP, verifP){
-
 	  // Champs vide
 	  if(oldP == "" || newP == "" || verifP == ""){
-		Alert.alert(
+		alert(
 		  "Champs vide",
 		  "\nAu moins un des champs est vide",
 		  [
@@ -200,7 +209,7 @@ const compteScreen = () => {
 	  }
 	  // vérif failled
 	  else if(newP != verifP){
-		Alert.alert(
+		alert(
 		  "Erreur Nouveau Mot de Passe",
 		  "\nLes champs correspondant au nouveau mot de passe ne sont pas identiques",
 		  [
@@ -210,7 +219,7 @@ const compteScreen = () => {
 	  }
 	  // Condition (court)
 	  else if(newP.length < 8){
-		Alert.alert(
+		alert(
 		  "Mot de passe trop court",
 		  "\nVotre mot de passe doit contenir au moins 8 caractères",
 		  [
@@ -229,7 +238,7 @@ const compteScreen = () => {
 		.then((correct) => {
 			// ancien mot de passe faux
 			if(!correct){
-				Alert.alert(
+				alert(
 				"L'ancien mot de passe est incorrect.",
 				"",
 				[
@@ -239,12 +248,13 @@ const compteScreen = () => {
 			}
 
 			else{
+				setLoading(true);
 				Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256,newP)
 				.then((hash) => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_MOTDEPASSE/P_IDBENEVOLE=' + userID + '/P_MOTDEPASSE=' + hash))
 				.then((rep) => rep.text())
 				.then(texte => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
 				.catch((error) => console.error(error));
-			  Alert.alert(
+			  alert(
 				"Votre mot de passe a bien été modifié.",
 				[
 				  { text: "OK", onPress: () => console.log("OK MdP Pressed") }
@@ -256,23 +266,32 @@ const compteScreen = () => {
         .finally(() => setLoading(false));
 
 	  }
+	  setOldP("");
+	  setNewP("");
+	  setVerifP("");
 
 	}
 
 
 	// Fonction de changement d'information de contact
 	function changeContact (phone, mail) {
-	  fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone)
-	  .then((rep) => rep.text())
-	  .then(texte => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
-	  .catch((error) => console.error(error));
-	  Alert.alert(
-		"Vos informations ont bien été mises à jour.",
-		[
-		  { text: "OK", onPress: () => console.log("OK ContactPerso Pressed") }
-		]
+	  if (phone != "" || mail != ""){
+	    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
+		.then((resp) => resp.text())
+	    .then((texte) => {console.log(texte);if (phone === "") {phone = getPhoneFromData(texte)} if (mail === "") {mail = getEmailFromData(texte)}})
+	    .then(() => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone))
+	    .then((rep) => rep.text())
+	    .then(texte => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
+		.catch((error) => console.error(error))
+        .finally(() => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)});
+	    alert(
+		  "Vos informations ont bien été mises à jour.",
+		  [
+		    { text: "OK", onPress: () => console.log("OK ContactPerso Pressed") }
+		  ]
 
-	  );
+	    );
+	  }
 	}
 
 }
@@ -300,6 +319,19 @@ async function compareToHash (mdp, hash) {
 		}
 	}
 	return Email;
+  }
+  
+    function getPhoneFromData(data) {
+	const lignes = data.split(/\n/);
+	var i;
+	var phone = null;
+	for (i = 1; i<lignes.length; i++){
+		if (lignes[i] != ""){
+			const valeurs = lignes[i].split(/\t/);
+			phone = valeurs[3];
+		}
+	}
+	return phone;
   }
   
     function getPasswordFromData(data) {
