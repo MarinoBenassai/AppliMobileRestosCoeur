@@ -50,15 +50,15 @@ function contactScreen() {
 
       {/* Conteneur 1ere colonne : info personne */}
       <View style={styles.colomn}>
-        <Text>{item.split(/\t/)[3]}{"\t\t\t"}</Text>
-        <Text>{item.split(/\t/)[4]}{"\t\t\t"}</Text>
+        <Text>{item.split(/\t/)[3]}</Text>
+        <Text>{item.split(/\t/)[4]}</Text>
       </View>
 
       {/* Conteneur 2eme colonne : info lieu */}
       <View style={styles.colomn}>
-        <Text>{item.split(/\t/)[0]}{"\t\t\t"}</Text>
-        <Text>{item.split(/\t/)[2]}{"\t\t\t"}</Text>
-        <Text>{item.split(/\t/)[1]}{"\t\t\t"}</Text>
+        <Text>{item.split(/\t/)[0]}</Text>
+        <Text>{item.split(/\t/)[2]}</Text>
+        <Text>{item.split(/\t/)[1]}</Text>
       </View>
 
       {/* Conteneur 3eme colonne : contacter */}
@@ -87,31 +87,31 @@ function contactScreen() {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-		  <Text style={styles.modalTitle}>Informations de contact</Text>
-		  <View style={styles.modalContentView}>
+		      <Text style={styles.modalTitle}>Informations de contact</Text>
+		      <View style={styles.modalContentView}>
             <Text style={styles.modalText} onPress={() => {setToClipboard(mail);alert('Copié dans le presse-papier');}}>{"Mail : " + mail}</Text> //TODO Comprendre pourquoi ça marche pas sans alerte
-		    <Text style={styles.modalText} onPress={() => {setToClipboard(phone);alert('Copié dans le presse-papier');}}>{"Tel : " + phone}</Text>
-		  </View>
-		  <View style={styles.modalButtonView}>
+		        <Text style={styles.modalText} onPress={() => {setToClipboard(phone);alert('Copié dans le presse-papier');}}>{"Tel : " + phone}</Text>
+		      </View>
+          <View style={styles.modalButtonView}>
             <Pressable
               style={styles.buttonLeft}
               onPress={() => {setModalVisible(!modalVisible);console.log("OK  Contact Pressed");}}
             >
               <Text style={styles.textStyle}>OK</Text>
             </Pressable>
-			            <Pressable
+            <Pressable
               style={styles.buttonMid}
               onPress={() => {setModalVisible(!modalVisible);Linking.openURL(`sms:${phone}`);}}
             >
               <Text style={styles.textStyle}>SMS</Text>
             </Pressable>
-			            <Pressable
+            <Pressable
               style={styles.buttonRight}
               onPress={() => {setModalVisible(!modalVisible);Linking.openURL(`mailto:${mail}`);}}
             >
               <Text style={styles.textStyle}>MAIL</Text>
             </Pressable>
-		  </View>
+		      </View>
         </View>
       </View>
     </Modal>
@@ -147,7 +147,10 @@ const styles = StyleSheet.create({
 
   // chaque item de la flatlist
   item: {
-    justifyContent:"space-around",
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
+    justifyContent:"space-between",
     flexDirection: "row",
     backgroundColor: '#00ffff',
     padding: 20,
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
   colomn: { 
     flexDirection: "column", 
     marginVertical: 8, 
-    justifyContent:"space-around",
+    justifyContent:"space-evenly",
   },
 	loading: {
     position: 'absolute',
@@ -180,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-	paddingBottom: 20,
+	  paddingBottom: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -190,7 +193,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-	alignSelf: "center",
+	  alignSelf: "center",
   },
     modalText: {
     marginBottom: 15,
@@ -198,36 +201,36 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     textAlign: "center",
-	fontSize: 20,
+	  fontSize: 20,
     fontWeight: "bold",
-	marginBottom: 20,
+	  marginBottom: 20,
   },
   modalContentView: {
     alignItems: "flex-start",
 	},
-  modalButtonView: {
+    modalButtonView: {
     alignItems: "flex-start",
-	flexDirection: "row",
+	  flexDirection: "row",
 	},
     buttonLeft: {
-	flex: 3,
+	  flex: 3,
     padding: 10,
     elevation: 2,
-	alignSelf: "flex-start"
+	  alignSelf: "flex-start"
   },
   buttonMid: {
     alignItems: "flex-start",
-	flex: 1,
+	  flex: 1,
     padding: 10,
     elevation: 2,
-	alignSelf: "flex-end"
+	  alignSelf: "flex-end"
   },
   buttonRight: {
     alignItems: "flex-start",
-	flex: 1,
+	  flex: 1,
     padding: 10,
     elevation: 2,
-	alignSelf: "flex-end"
+	  alignSelf: "flex-end"
   },
     centeredView: {
     flex: 1,

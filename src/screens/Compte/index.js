@@ -91,7 +91,7 @@ const compteScreen = () => {
                   {/* View du Profil (info, contact, MdP) */}
                   <View>
                     {/* View des information de profil */}
-                    <View>
+                    <View style={styles.browser}>
                       <Text style={styles.title}>Profil de :</Text>
                       <Text style={styles.data}>Nom : {lignePerso[1].split("\t")[0]}</Text>
                       <Text style={styles.data}>Prenom : {lignePerso[1].split("\t")[1]}</Text>
@@ -99,7 +99,7 @@ const compteScreen = () => {
                     </View>
 
                     {/* View des informations de contact */}
-                    <View>
+                    <View style={styles.browser}>
                       <Text style={styles.title}>Modification des coordonnées :</Text>
                       <View style={{ flexDirection: "row"}}>
                         <Text style={styles.data}>Téléphone : </Text>
@@ -110,7 +110,7 @@ const compteScreen = () => {
                           textContentType='telephoneNumber'
                           keyboardType='phone-pad'
                           onChangeText={text => setPhone(text)}
-						  value = {phone}
+						              value = {phone}
                         />
                       </View>
                       <View style={{ flexDirection: "row"}}>
@@ -122,7 +122,7 @@ const compteScreen = () => {
                           textContentType='emailAddress'
                           keyboardType='email-address'
                           onChangeText={text => setMail(text)}
-						  value = {mail}
+						              value = {mail}
                         />
                       </View>
                       <Button
@@ -135,7 +135,7 @@ const compteScreen = () => {
                     </View>
 
                     {/* View des MdP */}
-                    <View>
+                    <View style={styles.browser}>
                       <Text style={styles.title}>Modification du mot de passe :</Text>
                       <View style={{ flexDirection: "row"}}>
                         <Text style={styles.data}>Ancien mot de passe : </Text>
@@ -146,7 +146,7 @@ const compteScreen = () => {
                           secureTextEntry={true}
                           textContentType='password'
                           onChangeText={text => setOldP(text)}
-						  value = {oldP}
+						              value = {oldP}
                         />
                       </View>
                       <View style={{ flexDirection: "row"}}>
@@ -158,7 +158,7 @@ const compteScreen = () => {
                           secureTextEntry={true}
                           textContentType='newPassword'
                           onChangeText={text => setNewP(text)}
-						  value = {newP}
+						              value = {newP}
                         />
                       </View>
                       <View style={{ flexDirection: "row"}}>
@@ -170,7 +170,7 @@ const compteScreen = () => {
                           secureTextEntry={true}
                           textContentType='newPassword'
                           onChangeText={text => setVerifP(text)}
-						  value = {verifP}
+						              value = {verifP}
                         />
                       </View>
                       <Button
@@ -353,8 +353,16 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
   },
+  browser: {
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
+  },
   item: {
-    justifyContent:"space-around",
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
+    justifyContent:"space-between",
     flexDirection: "row",
     backgroundColor: '#f9c2ff',
     padding: 20,

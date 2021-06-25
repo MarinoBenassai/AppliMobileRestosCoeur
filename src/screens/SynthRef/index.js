@@ -102,7 +102,10 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0,
   },
   item: {
-    justifyContent:"space-around",
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
+    justifyContent:"space-between",
     flexDirection: "row",
     backgroundColor: '#f9c2ff',
     padding: 20,

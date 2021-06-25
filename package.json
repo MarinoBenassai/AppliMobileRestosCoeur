@@ -24,7 +24,8 @@
     "react-native-reanimated": "~2.1.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.0.0",
-    "react-native-web": "^0.17.1"
+    "react-native-web": "^0.17.1",
+    "expo-clipboard": "~1.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
