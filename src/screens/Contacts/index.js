@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput} from 'react-native';
 import {Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
+import Clipboard from 'expo-clipboard';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -12,7 +13,19 @@ function contactScreen() {
   // on définit les états : data et loading
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [mail, setMail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [toClipboard, setToClipboard] = useState("");
 
+  useEffect(() => {
+	if (toClipboard != "") {
+	  Clipboard.setString(toClipboard);
+	}
+	setToClipboard("");
+  }, [toClipboard]);
+  
+  
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
 
@@ -54,7 +67,7 @@ function contactScreen() {
           name='mail' 
           size={30}
           color='#000'
-          onPress={() => createContactAlert(item.split(/\t/)[7], item.split(/\t/)[6])}
+          onPress={() => {setMail(item.split(/\t/)[7]);setPhone(item.split(/\t/)[6]);setModalVisible(!modalVisible)}}
         />
         
       </View>
@@ -64,6 +77,44 @@ function contactScreen() {
   // on retourne la flatliste
   return (
     <>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        setModalVisible(!modalVisible);
+      }}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+		  <Text style={styles.modalTitle}>Informations de contact</Text>
+		  <View style={styles.modalContentView}>
+            <Text style={styles.modalText} onPress={() => {setToClipboard(mail);alert('Copié dans le presse-papier');}}>{"Mail : " + mail}</Text> //TODO Comprendre pourquoi ça marche pas sans alerte
+		    <Text style={styles.modalText} onPress={() => {setToClipboard(phone);alert('Copié dans le presse-papier');}}>{"Tel : " + phone}</Text>
+		  </View>
+		  <View style={styles.modalButtonView}>
+            <Pressable
+              style={styles.buttonLeft}
+              onPress={() => {setModalVisible(!modalVisible);console.log("OK  Contact Pressed");}}
+            >
+              <Text style={styles.textStyle}>OK</Text>
+            </Pressable>
+			            <Pressable
+              style={styles.buttonMid}
+              onPress={() => {setModalVisible(!modalVisible);Linking.openURL(`sms:${phone}`);}}
+            >
+              <Text style={styles.textStyle}>SMS</Text>
+            </Pressable>
+			            <Pressable
+              style={styles.buttonRight}
+              onPress={() => {setModalVisible(!modalVisible);Linking.openURL(`mailto:${mail}`);}}
+            >
+              <Text style={styles.textStyle}>MAIL</Text>
+            </Pressable>
+		  </View>
+        </View>
+      </View>
+    </Modal>
     <SafeAreaView style={styles.container}>
     {isLoading ? (
         <View style={styles.loading}>
@@ -82,18 +133,6 @@ function contactScreen() {
 }
 
 
-// Fonction d'affichage pop-up des informations de contact
-const createContactAlert = (mail, phone) =>{
-    Alert.alert(
-      "Contact information",
-      "\nmail : " + mail + "\n\n" + "tel : " + phone,
-      [
-        { text: "OK", onPress: () => console.log("OK  Contact Pressed") },
-        { text: "sms", onPress: () => Linking.openURL(`sms:${phone}`) },
-        { text: "mail", onPress: () => Linking.openURL(`mailto:${mail}`) }
-      ]
-    );
-}
 
 
 
@@ -135,6 +174,66 @@ const styles = StyleSheet.create({
 	  backgroundColor: '#F5FCFF88',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+    modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+	paddingBottom: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+	alignSelf: "center",
+  },
+    modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  modalTitle: {
+    textAlign: "center",
+	fontSize: 20,
+    fontWeight: "bold",
+	marginBottom: 20,
+  },
+  modalContentView: {
+    alignItems: "flex-start",
+	},
+  modalButtonView: {
+    alignItems: "flex-start",
+	flexDirection: "row",
+	},
+    buttonLeft: {
+	flex: 3,
+    padding: 10,
+    elevation: 2,
+	alignSelf: "flex-start"
+  },
+  buttonMid: {
+    alignItems: "flex-start",
+	flex: 1,
+    padding: 10,
+    elevation: 2,
+	alignSelf: "flex-end"
+  },
+  buttonRight: {
+    alignItems: "flex-start",
+	flex: 1,
+    padding: 10,
+    elevation: 2,
+	alignSelf: "flex-end"
+  },
+    centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    marginTop: 22,
+
   },
 }); 
 
