@@ -46,7 +46,7 @@ function referentScreen({navigation}) {
           <Text>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
             {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
             {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
-          <Text>{item.split(/\t/)[3]}</Text>
+          <Text>{item.split(/\t/)[3]}/x</Text>
         </View>)}
       </Pressable>
     </View>

@@ -17,13 +17,16 @@ function activiteScreen({route, navigation}) {
   
   // Pour le pop up de commentaire
   const [modalVisible, setModalVisible] = useState(false);
+  const [modal2Visible, setModal2Visible] = useState(false);
 
   // Pour le commentaire
   const [comment, setComment] = useState('');
   const [infoComment, setInfoComment] = useState(['', '', '', '']);
 
   // Commentaire d'activité
+  const [infoActivite, setInfoActivite] = useState('');
   const [commentActivite, setCommentActivite] = useState('');
+  const [beneficiaireActivite, setBeneficiaireActivite] = useState('');
   
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -44,34 +47,50 @@ function activiteScreen({route, navigation}) {
     const unsubscribe = navigation.addListener('focus', () => {
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées "); setUpToDate(true);})
+      .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées ");})
+      .then(
+        fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
+        .then((response) => response.text())
+        .then((texte) =>  {setInfoActivite(texte.split("\n")[1]); console.log("Info commentaire d'activité : chargées");})
+        .then(() => {setCommentActivite(infoActivite.split("\t")[1]); setBeneficiaireActivite(infoActivite.split("\t")[0])})
+        .catch((error) => console.error(error))
+      )
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
     });
 
-    // Update la liste
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
-      .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées "); setUpToDate(true);})
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
-
-    // Update commenatire d'activité
-    /*fetch('')
-      .then((response) => response.text())
-      .then((texte) =>  {setCommentActivite(texte); console.log("Infos Comment d'activité : chargées "); setUpToDate(true);})
-      .catch((error) => console.error(error)); */ //TODO trater info après
-
-
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
     
-  }, [upToDate, navigation]);
+  }, [navigation]);
 
+    
+  useEffect(() => {
+    if(true){ // if !upTodate, mais ne marche pas ... TODO(val defaut 'livre')
+      // Update la liste et les info Activité
+      fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
+        .then((response) => response.text())
+        .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées ");})
+        .then(
+          fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
+          .then((response) => response.text())
+          .then((texte) =>  {setInfoActivite(texte.split("\n")[1]); console.log("Info commentaire d'activité : chargées");})
+          .then(() => {setCommentActivite(infoActivite.split("\t")[1]); setBeneficiaireActivite(infoActivite.split("\t")[0])})
+          .catch((error) => console.error(error))
+        )
+        .catch((error) => console.error(error))
+        .finally(() => {setLoading(false); setUpToDate(true)});
+
+      // Update commenatire d'activité (dans le fetch au dessus)
+    }
+    
+  }, [upToDate]);
+  
   // On traite les données
   const ligne = data.split(/\n/);
   ligne.shift(); //enlève le premier élement (et le retourne)
   ligne.pop();   //enlève le dernier élement (et le retourne)
+
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
@@ -105,12 +124,12 @@ function activiteScreen({route, navigation}) {
       </View>
 
       {/* Conteneur 3eme colonne */}
-      <View style={{ justifyContent:"space-evenly", flexDirection: "column",}}>
+      <View>
         <Icon 
           name='mail' 
           size={30}
           color='#000'
-          onPress={() => createContactAlert()}
+          onPress={() => {createContactAlert(item.split(/\t/)[10], item.split(/\t/)[11])} }
         />
         
       </View>
@@ -155,132 +174,168 @@ function activiteScreen({route, navigation}) {
       setUpToDate(false);
   }
 
+  // Fonction de changement du commentaire d'activité
+  const commentaireActivite = () => {
+    setModal2Visible(true);
+  }
+
+
 
   // On retourne la flatlist
   return (
     <>
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        Alert.alert("Changement annulé.");
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Commentaire d'Absence :</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setComment}
-            placeholder="Raison de votre absence"
-            autoCompleteType="off"
-            maxLength={99}
-          />
-          <Pressable
-            style={styles.button}
-            // TODO : envoyer le commentaire
-            onPress={() => {setModalVisible(!modalVisible);
-              fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
-              .then((response) => response.text())
-              .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-              .catch((error) => console.error(error));
-
-              // On raffraichi et reset le commentaire pour la prochaine fois
-              setComment("");
-              setUpToDate(false);
-            }}
-          >
-            <Text style={styles.textStyle}>Valider</Text>
-          </Pressable>
-        </View>
-      </View>
-    </Modal>
-
     <SafeAreaView style={styles.container}>
     {isLoading ? (
       <View style={styles.loading}>
         <ActivityIndicator size="large" color="#00ff00" />
       </View>) : (
-      <FlatList
-        data={ligne}
-        ListHeaderComponent={
-          <>
-            <View style={{marginVertical: 16,}}>
-              {/* Info générales */}
-              <View style={[styles.item, {justifyContent:"flex-start",}]}>
-                <Text style={[styles.info, {fontWeight: "bold",}]}>Activité : </Text>
-                <Text style={styles.info}>{NomActivite}</Text>
-              </View>
-              <View style={[styles.item, {justifyContent:"flex-start",}]}>
-                <Text style={[styles.info, {fontWeight: "bold",}]}>Site : </Text>
-                <Text style={styles.info}>{NomSite}</Text>
-              </View>
-              <View style={[styles.item, {justifyContent:"flex-start",}]}>
-                <Text style={[styles.info, {fontWeight: "bold",}]}>Jour : </Text>
-                <Text style={styles.info}>{IDJour.split(" ")[0].split("-")[2]}/
-                                          {IDJour.split(" ")[0].split("-")[1]}/
-                                          {IDJour.split(" ")[0].split("-")[0]}</Text>
-              </View>
+      <View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modal2Visible}
+          onRequestClose={() => {setModal2Visible(false)}}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Nombre de Bénéficiaire :</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setBeneficiaireActivite}
+                defaultValue={beneficiaireActivite}
+                keyboardType="numeric"
+                maxLength={10}
+              />
+              <Text style={styles.modalText}>Commentaire d'activité :</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setCommentActivite}
+                defaultValue={commentActivite}
+                maxLength={99}
+              />
+              <Pressable
+                style={styles.button}
+                // TODO : envoyer le commentaire
+                onPress={() => {setModal2Visible(false)
+                                if(infoActivite.length == 0){
+                                  fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
+                                  .then((response) => response.text())
+                                  .then((texte) => console.log(texte))
+                                  .then(() => console.log("Nouvelle entrée : commentaire d'activité"))
+                                  .catch((error) => console.error(error));
+                                }
+                                else{
+                                  fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
+                                  .then((response) => response.text())
+                                  .then((texte) => console.log(texte))
+                                  .then(() => console.log("update entrée : commentaire d'activité "))
+                                  .catch((error) => console.error(error));
+                                }
+                                // On raffraichi et reset le commentaire pour la prochaine fois
+                                setUpToDate(false);
+                }}
+              >
+                <Text style={styles.textStyle}>Valider</Text>
+              </Pressable>
             </View>
+          </View>
+        </Modal>
+        
 
-            {/* info commentaire d'activité */}
-            <View>
-              <CommentActivite role={idRole}/>
-            </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {setModalVisible(false)}}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Commentaire d'Absence :</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setComment}
+                placeholder="Raison de votre absence"
+                autoCompleteType="off"
+                maxLength={99}
+              />
+              <Pressable
+                style={styles.button}
+                // TODO : envoyer le commentaire
+                onPress={() => {setModalVisible(!modalVisible);
+                  fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
+                  .then((response) => response.text())
+                  .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+                  .catch((error) => console.error(error));
 
-            {/* "header" de la flatlist */}
-            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-              <Text style={[styles.item, styles.info, {fontWeight: "bold"}]}>Engagé : </Text>
-              {(idRole == "2") &&	
-                <Icon 
-                  name='plus' 
-                  size={30}
-                  color='#000'
-                  onPress={() => versListe({navigation})}
-                  disabled={(idRole=="2") ? false : true}
-                  style={styles.item}
-                />
-              }
+                  // On raffraichi et reset le commentaire pour la prochaine fois
+                  setComment("");
+                  setUpToDate(false);
+                }}
+              >
+                <Text style={styles.textStyle}>Valider</Text>
+              </Pressable>
             </View>
-          </>
-        }
-        renderItem={renderItem}
-        keyExtractor={item => item}
-      />
+          </View>
+        </Modal>
+
+        <FlatList
+          data={ligne}
+          ListHeaderComponent={
+            <>
+              <View style={{marginVertical: 16,}}>
+                {/* Info générales */}
+                <View style={[styles.item, {justifyContent:"flex-start",}]}>
+                  <Text style={[styles.info, {fontWeight: "bold",}]}>Activité : </Text>
+                  <Text style={styles.info}>{NomActivite}</Text>
+                </View>
+                <View style={[styles.item, {justifyContent:"flex-start",}]}>
+                  <Text style={[styles.info, {fontWeight: "bold",}]}>Site : </Text>
+                  <Text style={styles.info}>{NomSite}</Text>
+                </View>
+                <View style={[styles.item, {justifyContent:"flex-start",}]}>
+                  <Text style={[styles.info, {fontWeight: "bold",}]}>Jour : </Text>
+                  <Text style={styles.info}>{IDJour.split(" ")[0].split("-")[2]}/
+                                            {IDJour.split(" ")[0].split("-")[1]}/
+                                            {IDJour.split(" ")[0].split("-")[0]}</Text>
+                </View>
+              </View>
+
+
+              {/* "header" de la flatlist */}
+              <View style={[styles.item, {flexDirection: "row", justifyContent: "space-between"}]}>
+                <Text style={[styles.info, {fontWeight: "bold"}]}>Engagé : </Text>
+                {(idRole == "2") &&	
+                  <View style={{flexDirection: "row"}}>
+                    <Icon 
+                      name='repo' 
+                      size={30}
+                      color='#000'
+                      onPress={() => commentaireActivite()}
+                      disabled={(idRole=="2") ? false : true}
+                      style={{paddingRight: 40}}
+                    />
+                    <Icon 
+                      name='plus' 
+                      size={30}
+                      color='#000'
+                      onPress={() => versListe({navigation})}
+                      disabled={(idRole=="2") ? false : true}
+                    />
+                  </View>
+                }
+              </View>
+            </>
+          }
+          renderItem={renderItem}
+          keyExtractor={item => item}
+        />
+      </View>
       )}
     </SafeAreaView>
 	</>
   );
 }
 
-
-// Div commentActivité
-function CommentActivite(props) {
-  const role = props.role;
-  console.log(role);
-  if (role=="2"){
-    return  <View>
-              <View style={[styles.item, {justifyContent:"flex-start",}]}>
-                <Text style={[styles.info, {fontWeight: "bold",}]}>Commentaire : </Text>
-                <Pressable onPress={() => changerCommentaireActivite()}>
-                  <Text style={styles.info}>placeholder...</Text>
-                </Pressable>
-              </View>
-              <View style={[styles.item, {justifyContent:"flex-start",}]}>
-                <Text style={[styles.info, {fontWeight: "bold",}]}>Nombre de bénéficiaires : </Text>
-                <Pressable onPress={() => changerBeneficiaire()}>
-                  <Text style={styles.info}>placeholder...</Text>
-                </Pressable>
-              </View>
-            </View>;
-      
-  }
-  else{
-    return <></>;
-  }
-}
 
 
 // Fonction d'affichage pop-up des informations de contact
@@ -294,17 +349,6 @@ const createContactAlert = (mail, phone) =>{
   );
 }
 
-
-
-// Fonction de changement du commentaire d'activité
-const changerCommentaireActivite = () => {
-
-}
-
-// Fonction e changement du nombre de bénéficiaire
-const changerBeneficiaire = () => {
-  
-}
 
 
 // Fonction de changement de statut
@@ -328,8 +372,11 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0,
   },
   item: {
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
     flexDirection: "row",
-    justifyContent:"space-evenly",
+    justifyContent:"space-between",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -361,8 +408,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 22
   },
+  // vue gloabl du modal
   modalView: {
-    margin: 20,
+    justifyContent: "space-evenly",
+    height: "40%",
+    minHeight: 300,
+    width: "80%",
+    maxWidth: 600,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
@@ -376,6 +428,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  // button "fermé" du modal
   button: {
     borderRadius: 20,
     padding: 10,
@@ -387,9 +440,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"
   },
+  // Titre du modal
   modalText: {
-    marginBottom: 15,
+    marginBottom: 5,
     textAlign: "center"
+  },
+  // inputTexte du modal
+  input: {
+    padding: 10
   }
 });
 

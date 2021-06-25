@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput} from 'react-native';
+import { Dimensions } from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -33,11 +34,13 @@ function engagementScreen({navigation}) {
 
   //Fonction pour chercher les données
   useEffect(() => {
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID)
-      .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); setUpToDate(true);})
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+    if(upToDate == false){
+      fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID)
+        .then((response) => response.text())
+        .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); setUpToDate(true);})
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+    }
   }, [upToDate]);
 
 
@@ -163,7 +166,7 @@ function engagementScreen({navigation}) {
             </View>
           </View>
         </Modal>
-
+        
         <FlatList
           data={ligne}
           renderItem={renderItem}
@@ -178,16 +181,23 @@ function engagementScreen({navigation}) {
 
 
 
+// width: (Dimensions.get('window').width / 2) ,
 
 // Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
+    alignContent: "center",
+    justifyContent: "center",
+    
   },
   item: {
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
     flexDirection: "row",
-    justifyContent:"space-evenly",
+    justifyContent:"space-between",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
