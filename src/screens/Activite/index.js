@@ -14,7 +14,7 @@ function activiteScreen({route, navigation}) {
   const [data, setData] = useState('');
 
   // Reload
-  const [upToDate, setUpToDate] = useState(false);
+  const [upToDate, setUpToDate] = useState(true);
   
   // Pour le pop up de commentaire
   const [modalVisible, setModalVisible] = useState(false);
@@ -50,6 +50,7 @@ function activiteScreen({route, navigation}) {
   useEffect(() => {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
+	  setLoading(true);
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
@@ -71,8 +72,9 @@ function activiteScreen({route, navigation}) {
 
   // On va chercher le commentaire d'activité
   useEffect(() => {
-    if(true){ // if !upTodate, mais ne marche pas ... TODO(val defaut 'livre')
+    if(!upToDate){
       // Update la liste et les info Activité
+  	  setLoading(true);
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
         .then((response) => response.text())
         .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
@@ -224,10 +226,6 @@ function activiteScreen({route, navigation}) {
   return (
     <>
     <SafeAreaView style={styles.container}>
-    {isLoading ? (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>) : (
       <View>
         <Modal
           animationType="slide"
@@ -384,7 +382,12 @@ function activiteScreen({route, navigation}) {
           keyExtractor={item => item}
         />
       </View>
-      )}
+      )
+	{isLoading &&
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color="#00ff00" />
+    </View>
+	}
     </SafeAreaView>
 	</>
   );
