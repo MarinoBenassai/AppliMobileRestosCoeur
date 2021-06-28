@@ -1,0 +1,191 @@
+import { StyleSheet, Button, Text, View, Image, TextInput, StatusBar} from 'react-native';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+    justifyContent: "center",
+  },
+  // chaque item de la flatlist
+  item: {
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
+    justifyContent:"space-between",
+    flexDirection: "row",
+    backgroundColor: '#00ffff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 50,
+  },
+  info: {
+    fontSize: 20,
+  },
+
+  // Couleur dynamique
+  BENEVOLE: {
+    backgroundColor: '#6fe3d2',
+  },
+  REFERENT: {
+    backgroundColor: '#f9c2ff',
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+      backgroundColor: '#F5FCFF88',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    justifyContent: "space-evenly",
+    height: "40%",
+    minHeight: 300,
+    width: "80%",
+    maxWidth: 600,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: "#2196F3",
+},
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },  
+  title: {
+    fontSize: 20,
+    marginVertical: 16,
+    marginHorizontal: 20,
+  },
+  data: {
+    marginVertical: 4,
+    marginHorizontal: 16,
+  },
+  input: {
+    padding: 10
+  },
+  field: {
+    marginVertical: 4,
+    marginHorizontal: 16,
+  },
+  ligne: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginVertical: 20,
+  },
+    browser: {
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
+  },
+  // chaque colonne d'un item de la flatlist
+  colomn: { 
+    flexDirection: "column", 
+    marginVertical: 8, 
+    justifyContent:"space-evenly",
+  },
+  modalContactView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+	  paddingBottom: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+	alignSelf: "center",
+  },
+  modalContactTitle: {
+    textAlign: "center",
+	fontSize: 20,
+    fontWeight: "bold",
+	marginBottom: 20,
+  },
+  modalContactContentView: {
+    alignItems: "flex-start",
+  },
+  modalContactButtonView: {
+    alignItems: "flex-start",
+	flexDirection: "row",
+  },
+  buttonContactLeft: {
+	flex: 3,
+    padding: 10,
+    elevation: 2,
+	alignSelf: "flex-start"
+  },
+  buttonContactMid: {
+    alignItems: "flex-start",
+	flex: 1,
+    padding: 10,
+    elevation: 2,
+	alignSelf: "flex-end"
+  },
+  buttonContactRight: {
+    alignItems: "flex-start",
+	flex: 1,
+    padding: 10,
+    elevation: 2,
+	alignSelf: "flex-end"
+  },
+  textStyle: {
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  idInput: {
+    height: 40,
+	width : 200,
+    margin: 12,
+	borderBottomColor: '#000000',
+	borderBottomWidth: 1,
+  },
+  idTexte : {
+    margin : 20,
+	textAlign: 'center',
+  },
+  logo: {
+    width: 200,
+    height: 200,
+  },
+  conteneur: {
+    backgroundColor: '#00ffff',
+    padding: 10,
+    marginVertical: 8,
+  },
+}); 
+export default styles;

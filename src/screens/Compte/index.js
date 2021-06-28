@@ -5,6 +5,7 @@ import * as Crypto from 'expo-crypto';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
+import styles from '../../styles';
 
 // Fonction Principale
 const compteScreen = () => {
@@ -346,72 +347,6 @@ async function compareToHash (mdp, hash) {
 	}
 	return hPassword;
   }
-
-// Styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  browser: {
-    width: "100%",
-    maxWidth: 600,
-    alignSelf: "center",
-  },
-  item: {
-    width: "100%",
-    maxWidth: 600,
-    alignSelf: "center",
-    justifyContent:"space-between",
-    flexDirection: "row",
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 20,
-    marginVertical: 16,
-    marginHorizontal: 20,
-  },
-  data: {
-    marginVertical: 4,
-    marginHorizontal: 16,
-  },
-  input: {
-    marginVertical: 4,
-    marginHorizontal: -10,
-  },
-  field: {
-    marginVertical: 4,
-    marginHorizontal: 16,
-  },
-  ligne: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    marginVertical: 20,
-  },
-
-  // pour changer la couleur de la flatlist dynamiquement
-  BENEVOLE: {
-    backgroundColor: '#6fe3d2',
-  },
-  REFERENT: {
-    backgroundColor: '#f9c2ff',
-  },
-
-  // Chargement
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-	  backgroundColor: '#F5FCFF88',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-}); 
 
 
 

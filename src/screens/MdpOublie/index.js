@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, TextInput, Button, StatusBar, Pressable, Alert} from 'react-native';
 
 import constantes from '../../constantes';
+import styles from '../../styles';
 import * as Crypto from 'expo-crypto';
 import * as Random from 'expo-random';
 
@@ -68,10 +69,10 @@ function oublieScreen({navigation}){
   
   return (
     <>
-	<View style={styles.container}>
-<Text style={styles.texte}>Entrez votre addresse email ci-dessous. Un nouveau mot de passe vous sera envoyé.</Text>
+	<View style={[styles.container,{alignItems: "center"}]}>
+<Text style={styles.idTexte}>Entrez votre addresse email ci-dessous. Un nouveau mot de passe vous sera envoyé.</Text>
 	  <TextInput
-		style={styles.input}
+		style={styles.idInput}
 		placeholder="votre@email.fr"
 		onChangeText={onChangeTextEmail}
 		keyboardType = "email-address"
@@ -109,38 +110,5 @@ function getRandomWord(nbChar){
 	
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-    input: {
-    height: 40,
-	width : 200,
-    margin: 12,
-	borderBottomColor: '#000000',
-	borderBottomWidth: 1,
-  },
-    logo: {
-    width: 200,
-    height: 200,
-  },
-    texte : {
-    margin : 20,
-	textAlign: 'center',
-  },
-    loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-	backgroundColor: '#F5FCFF88',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-});
 
 export default oublieScreen;
