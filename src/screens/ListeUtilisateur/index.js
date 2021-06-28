@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
+import styles from '../../styles';
 
 // Fonction Principale
 function listeUtilisateurScreen({route, navigation: { goBack }}) {
@@ -128,67 +129,6 @@ const createContactAlert = (mail, phone) =>{
     ]
   );
 }
-
-
-
-
-// styles
-const styles = StyleSheet.create({
-  
-  // le conteneur
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-
-  conteneur: {
-    backgroundColor: '#00ffff',
-    padding: 10,
-    marginVertical: 8,
-  },
-  // chaque item de la flatlist
-  item: {
-    justifyContent:"space-around",
-    flexDirection: "row",
-    backgroundColor: '#00ffff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-    borderBottomRightRadius: 50,
-    borderBottomLeftRadius: 50,
-  },
-
-  // chaque colonne d'un item de la flatlist
-  colomn: { 
-    flexDirection: "column", 
-    marginVertical: 8, 
-    justifyContent:"space-around",
-  },
-
-  // chaque colonne d'un item de la flatlist
-  colomn: { 
-    flexDirection: "column", 
-    marginVertical: 8, 
-    justifyContent:"space-around",
-  },
-	loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-	  backgroundColor: '#F5FCFF88',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    marginVertical: 4,
-    marginHorizontal: -10,
-  },
-}); 
-
 
 // On exporte la fonction principale
 export default listeUtilisateurScreen;

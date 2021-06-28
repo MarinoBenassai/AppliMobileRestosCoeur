@@ -7,6 +7,7 @@ import Clipboard from 'expo-clipboard';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
+import styles from '../../styles';
 
 // Fonction Principale
 function contactScreen() {
@@ -86,30 +87,30 @@ function contactScreen() {
       }}
     >
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-		      <Text style={styles.modalTitle}>Informations de contact</Text>
-		      <View style={styles.modalContentView}>
+        <View style={styles.modalContactView}>
+		      <Text style={styles.modalContactTitle}>Informations de contact</Text>
+		      <View style={styles.modalContactContentView}>
             <Text style={styles.modalText} onPress={() => {setToClipboard(mail);alert('Copié dans le presse-papier');}}>{"Mail : " + mail}</Text> //TODO Comprendre pourquoi ça marche pas sans alerte
 		        <Text style={styles.modalText} onPress={() => {setToClipboard(phone);alert('Copié dans le presse-papier');}}>{"Tel : " + phone}</Text>
 		      </View>
-          <View style={styles.modalButtonView}>
+          <View style={styles.modalContactButtonView}>
             <Pressable
-              style={styles.buttonLeft}
+              style={styles.buttonContactLeft}
               onPress={() => {setModalVisible(!modalVisible);console.log("OK  Contact Pressed");}}
             >
-              <Text style={styles.textStyle}>OK</Text>
+              <Text style={styles.textContactStyle}>OK</Text>
             </Pressable>
             <Pressable
-              style={styles.buttonMid}
+              style={styles.buttonContactMid}
               onPress={() => {setModalVisible(!modalVisible);Linking.openURL(`sms:${phone}`);}}
             >
-              <Text style={styles.textStyle}>SMS</Text>
+              <Text style={styles.textContactStyle}>SMS</Text>
             </Pressable>
             <Pressable
-              style={styles.buttonRight}
+              style={styles.buttonContactRight}
               onPress={() => {setModalVisible(!modalVisible);Linking.openURL(`mailto:${mail}`);}}
             >
-              <Text style={styles.textStyle}>MAIL</Text>
+              <Text style={styles.textContactStyle}>MAIL</Text>
             </Pressable>
 		      </View>
         </View>
@@ -131,115 +132,6 @@ function contactScreen() {
   );
 
 }
-
-
-
-
-
-// styles
-const styles = StyleSheet.create({
-  
-  // le conteneur
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-
-  // chaque item de la flatlist
-  item: {
-    width: "100%",
-    maxWidth: 600,
-    alignSelf: "center",
-    justifyContent:"space-between",
-    flexDirection: "row",
-    backgroundColor: '#00ffff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-    borderBottomRightRadius: 50,
-    borderBottomLeftRadius: 50,
-  },
-
-  // chaque colonne d'un item de la flatlist
-  colomn: { 
-    flexDirection: "column", 
-    marginVertical: 8, 
-    justifyContent:"space-evenly",
-  },
-	loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-	  backgroundColor: '#F5FCFF88',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-    modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-	  paddingBottom: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-	  alignSelf: "center",
-  },
-    modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  },
-  modalTitle: {
-    textAlign: "center",
-	  fontSize: 20,
-    fontWeight: "bold",
-	  marginBottom: 20,
-  },
-  modalContentView: {
-    alignItems: "flex-start",
-	},
-    modalButtonView: {
-    alignItems: "flex-start",
-	  flexDirection: "row",
-	},
-    buttonLeft: {
-	  flex: 3,
-    padding: 10,
-    elevation: 2,
-	  alignSelf: "flex-start"
-  },
-  buttonMid: {
-    alignItems: "flex-start",
-	  flex: 1,
-    padding: 10,
-    elevation: 2,
-	  alignSelf: "flex-end"
-  },
-  buttonRight: {
-    alignItems: "flex-start",
-	  flex: 1,
-    padding: 10,
-    elevation: 2,
-	  alignSelf: "flex-end"
-  },
-    centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    marginTop: 22,
-
-  },
-}); 
-
 
 // On exporte la fonction principale
 export default contactScreen;

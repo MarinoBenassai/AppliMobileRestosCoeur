@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
+import styles from '../../styles';
 
 // Fonction Principale
 function activiteScreen({route, navigation}) {
@@ -414,94 +415,6 @@ const chargerCommentaire = (commentaire) => {
 
   );
 }
-
-
-
-// Styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    width: "100%",
-    maxWidth: 600,
-    alignSelf: "center",
-    flexDirection: "row",
-    justifyContent:"space-between",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  info: {
-    fontSize: 20,
-  },
-
-  // Couleur dynamique
-  BENEVOLE: {
-    backgroundColor: '#6fe3d2',
-  },
-  REFERENT: {
-    backgroundColor: '#f9c2ff',
-  },
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-	  backgroundColor: '#F5FCFF88',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  // vue gloabl du modal
-  modalView: {
-    justifyContent: "space-evenly",
-    height: "40%",
-    minHeight: 300,
-    width: "80%",
-    maxWidth: 600,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  // button "fermé" du modal
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  // Titre du modal
-  modalText: {
-    marginBottom: 5,
-    textAlign: "center"
-  },
-  // inputTexte du modal
-  input: {
-    padding: 10
-  }
-});
 
 // On exporte la fonction principale
 export default activiteScreen;

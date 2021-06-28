@@ -4,6 +4,7 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
+import styles from '../../styles';
 
 // Fonction Principale
 function referentScreen({navigation}) {
@@ -39,7 +40,7 @@ function referentScreen({navigation}) {
     <View>
       <Pressable onPress={() => versActivite({navigation}, item)} >
       {({ pressed }) => (
-        <View style={[styles.item, {color: pressed ? 'white' : 'black',},]}>
+        <View style={[styles.item, styles.REFERENT, {color: pressed ? 'white' : 'black',},]}>
           <Text>{item.split(/\t/)[2]}</Text>
           <Text>{item.split(/\t/)[1]}</Text>
           {/* date */}
@@ -93,37 +94,6 @@ function Synthese(props) {
 
   }
 }
-
-
-// Style
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    width: "100%",
-    maxWidth: 600,
-    alignSelf: "center",
-    justifyContent:"space-between",
-    flexDirection: "row",
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-	  backgroundColor: '#F5FCFF88',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-}); 
-
 
 // On exporte la fonction principale
 export default referentScreen;

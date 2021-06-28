@@ -4,6 +4,7 @@ import * as Crypto from 'expo-crypto';
 
 import constantes from '../../constantes';
 import {userContext} from '../../contexts/userContext';
+import styles from '../../styles';
 
 
 export default function IdScreen({navigation}) {
@@ -83,7 +84,7 @@ export default function IdScreen({navigation}) {
   
   return (
     <>
-    <View style={styles.container}>
+    <View style={[styles.container,{alignItems: "center"}]}>
 	  <Image
 		style={styles.logo}
         source={{
@@ -92,7 +93,7 @@ export default function IdScreen({navigation}) {
       />
       <Text>Adresse mail</Text>
 	  <TextInput
-		style={styles.input}
+		style={styles.idInput}
 		placeholder="votre@email.fr"
 		onChangeText={onChangeTextEmail}
 		keyboardType = "email-address"
@@ -102,7 +103,7 @@ export default function IdScreen({navigation}) {
 	  />
 	  <Text>Mot de passe</Text>
 	  <TextInput
-		style={styles.input}
+		style={styles.idInput}
 		placeholder="********"
 		secureTextEntry = {true}
         onChangeText={onChangeTextPassword}
@@ -116,7 +117,7 @@ export default function IdScreen({navigation}) {
 		color="#841584"
 		accessibilityLabel="Bouton de connexion"
 	  />
-	  <Pressable title = "mdp" onPress = {() => navigation.navigate("Oublie")} style={styles.texte}>
+	  <Pressable title = "mdp" onPress = {() => navigation.navigate("Oublie")} style={styles.idTexte}>
 		<Text>Mot de passe oublié ?</Text>
 	  </Pressable>
 	  	
@@ -134,39 +135,3 @@ export default function IdScreen({navigation}) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-    input: {
-    height: 40,
-	width : 200,
-    margin: 12,
-	borderBottomColor: '#000000',
-	borderBottomWidth: 1,
-  },
-    logo: {
-    width: 200,
-    height: 200,
-  },
-    texte : {
-    margin : 20
-  },
-    loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-	backgroundColor: '#F5FCFF88',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-});
-	
-	
-	
