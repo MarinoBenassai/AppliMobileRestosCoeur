@@ -7,6 +7,8 @@ import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
 
+import ModalContact from '../../components/modalContact';
+
 // Fonction Principale
 function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // on définit les états : data et loading
@@ -16,6 +18,13 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // Bénévole à chercher
   const [ajout, setAjout] = useState('');
   const [visibleData, setVisibleData] = useState('');
+  
+  //Pop-up infos de contact
+  const [modalVisibleContact, setmodalVisibleContact] = useState(false);
+  
+  //Données pour le modal de contact
+  const [mail, setMail] = useState('');
+  const [phone, setPhone] = useState('');
 
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -60,7 +69,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal
-    <View style={styles.item}>
+    <View style={[styles.item, styles.BENEVOLE]}>
       {/* Conteneur 1ere colonne : info personne */}
       <View style={styles.colomn}>
         <Pressable onPress={() => ajouterBenevole(item.split(/\t/)[4])}>
@@ -79,7 +88,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
           name='mail' 
           size={30}
           color='#000'
-          onPress={() => createContactAlert(item.split(/\t/)[2], item.split(/\t/)[3])}
+          onPress={() => {setMail(item.split(/\t/)[2]); setPhone(item.split(/\t/)[3]); setmodalVisibleContact(!modalVisibleContact);}}
         />
       </View>
     </View>
@@ -93,6 +102,8 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
         <View style={styles.loading}>
          <ActivityIndicator size="large" color="green" />
 	      </View>) : (
+		<>
+	    <ModalContact visible = {modalVisibleContact} setVisible = {setmodalVisibleContact} mail = {mail} phone = {phone}/>
         <FlatList
           data={visibleData}
           renderItem={renderItem}
@@ -109,6 +120,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
             </>
           }
         />
+		</>
       )}
     </SafeAreaView>
 	</>
@@ -116,19 +128,6 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
 }
 
-
-// Fonction d'affichage pop-up des informations de contact
-const createContactAlert = (mail, phone) =>{
-  Alert.alert(
-    "Contact information",
-    "\nmail : " + mail + "\n\n" + "tel : " + phone,
-    [
-      { text: "OK", onPress: () => console.log("OK  Contact Pressed") },
-      { text: "sms", onPress: () => Linking.openURL(`sms:${phone}`) },
-      { text: "mail", onPress: () => Linking.openURL(`mailto:${mail}`) }
-    ]
-  );
-}
 
 // On exporte la fonction principale
 export default listeUtilisateurScreen;
