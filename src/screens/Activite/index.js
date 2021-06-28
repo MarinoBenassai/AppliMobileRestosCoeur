@@ -27,7 +27,11 @@ function activiteScreen({route, navigation}) {
   const [infoActivite, setInfoActivite] = useState('');
   const [commentActivite, setCommentActivite] = useState('');
   const [beneficiaireActivite, setBeneficiaireActivite] = useState('');
-  
+
+  // Mode d'affichage
+  const [affichage, setAffichage] = useState("ALPHABETIQUE"); // ("ALPHABETIQUE", "PRESENT", "ABSENT", "NONDEFINI");
+  const [visibleData, setVisibleData] = useState('');
+
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
 
@@ -64,7 +68,7 @@ function activiteScreen({route, navigation}) {
     
   }, [navigation]);
 
-    
+  // On va chercher le commentaire d'activité
   useEffect(() => {
     if(true){ // if !upTodate, mais ne marche pas ... TODO(val defaut 'livre')
       // Update la liste et les info Activité
@@ -91,6 +95,26 @@ function activiteScreen({route, navigation}) {
   ligne.shift(); //enlève le premier élement (et le retourne)
   ligne.pop();   //enlève le dernier élement (et le retourne)
 
+  // on met à jour la liste visible
+  useEffect(() => {
+    if(affichage == "ALPHABETIQUE"){
+      setVisibleData( ligne );
+    }
+    else if(affichage == "PRESENT") {
+      setVisibleData( ligne.filter( (l) => ( l.split("\t")[6] == "Présent" ) ) );
+    }
+    else if(affichage == "ABSENT") {
+      setVisibleData( ligne.filter( (l) => ( l.split("\t")[6] == "Absent" ) ) );
+    }
+    else if (affichage == "NONDEFINI") {
+      setVisibleData( ligne.filter( (l) => ( l.split("\t")[6] == "Non défini" ) ) );
+    }
+    else{
+      console.log("ERREUR : Affichage inconnu dans useEffect");
+    }
+
+    // ligne.filter( (nom) => ( nom.toLowerCase().startsWith(ajout.toLowerCase()) ) )
+  }, [upToDate, affichage]);
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
@@ -108,7 +132,7 @@ function activiteScreen({route, navigation}) {
       <View style={{ justifyContent:"space-evenly", flexDirection: "column"}}>
 
         {/* Statut */}
-        <Pressable onPress={() => changerStatut(item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
+        <Pressable onPress={() => changerStatut(constantes.BDD, item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
                    disabled={(idRole=="2") ? false : true}>
           <Text style={{ color: (item.split(/\t/)[6] == "Absent") ? 'black' : 
             ((item.split(/\t/)[6] == "Présent") ? "green" : "red") }}>
@@ -138,12 +162,12 @@ function activiteScreen({route, navigation}) {
 
 
   // Fonction de changement de statut
-  const changerStatut = (statut, benevole, jour, activite, site, role) => {
+  const changerStatut = (bdd, statut, benevole, jour, activite, site, role) => {
 
     // Si absent
     if(statut == "Absent"){
       console.log("Vous ête actuellement 'Absent'");
-      fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
+      fetch("http://" + bdd + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
         .then((response) => response.text())
         .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
         .catch((error) => console.error(error));
@@ -174,12 +198,25 @@ function activiteScreen({route, navigation}) {
       setUpToDate(false);
   }
 
-  // Fonction de changement du commentaire d'activité
-  const commentaireActivite = () => {
-    setModal2Visible(true);
+  // Fonction de chnagement de l'ordre d'affichage
+  const changerOrdre = () => {
+    if(affichage == "ALPHABETIQUE"){
+      setAffichage("PRESENT");
+    }
+    else if(affichage == "PRESENT") {
+      setAffichage("ABSENT");
+    }
+    else if(affichage == "ABSENT") {
+      setAffichage("NONDEFINI");
+    }
+    else if (affichage == "NONDEFINI") {
+      setAffichage("ALPHABETIQUE");
+    }
+    else{
+      console.log("ERREUR : Affichage inconnu dans changerOrdre");
+    }
+    
   }
-
-
 
   // On retourne la flatlist
   return (
@@ -215,7 +252,7 @@ function activiteScreen({route, navigation}) {
               />
               <Pressable
                 style={styles.button}
-                // TODO : envoyer le commentaire
+                // écrire et envoyer le commentaire
                 onPress={() => {setModal2Visible(false)
                                 if(infoActivite.length == 0){
                                   fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
@@ -260,7 +297,7 @@ function activiteScreen({route, navigation}) {
               />
               <Pressable
                 style={styles.button}
-                // TODO : envoyer le commentaire
+                // écrire et envoyer le commentaire
                 onPress={() => {setModalVisible(!modalVisible);
                   fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
                   .then((response) => response.text())
@@ -279,7 +316,7 @@ function activiteScreen({route, navigation}) {
         </Modal>
 
         <FlatList
-          data={ligne}
+          data={visibleData}
           ListHeaderComponent={
             <>
               <View style={{marginVertical: 16,}}>
@@ -306,21 +343,36 @@ function activiteScreen({route, navigation}) {
                 <Text style={[styles.info, {fontWeight: "bold"}]}>Engagé : </Text>
                 {(idRole == "2") &&	
                   <View style={{flexDirection: "row"}}>
+
+                    {/* Comentaire d'activité */}
                     <Icon 
                       name='repo' 
                       size={30}
                       color='#000'
-                      onPress={() => commentaireActivite()}
+                      onPress={() =>  setModal2Visible(true)}
                       disabled={(idRole=="2") ? false : true}
-                      style={{paddingRight: 40}}
+                      style={{paddingRight: 20}}
                     />
+                    
+                    {/* Ajout bénévole */}
                     <Icon 
                       name='plus' 
                       size={30}
                       color='#000'
                       onPress={() => versListe({navigation})}
                       disabled={(idRole=="2") ? false : true}
+                      style={{paddingLeft: 20, paddingRight: 20}}
                     />
+
+                    {/* Réordonnancement - Sélection */}
+                    <Icon 
+                      name='list-unordered' 
+                      size={30}
+                      color='#000'
+                      onPress={() => changerOrdre()}
+                      style={{paddingLeft: 20}}
+                    />
+
                   </View>
                 }
               </View>
