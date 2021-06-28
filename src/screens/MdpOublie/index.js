@@ -83,7 +83,7 @@ function oublieScreen({navigation}){
 	  <Button
 		onPress = {() => resetPassword()}
 		title="ENVOYER"
-		color="#841584"
+		color="#e7007d"
 		accessibilityLabel="Envoyer email"
 	  />	  	
     </View>

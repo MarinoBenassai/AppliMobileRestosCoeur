@@ -47,7 +47,7 @@ function contactScreen() {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal
-    <View style={styles.item}>
+    <View style={[styles.item, styles.REFERENT]}>
 
       {/* Conteneur 1ere colonne : info personne */}
       <View style={styles.colomn}>

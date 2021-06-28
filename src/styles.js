@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent:"space-between",
     flexDirection: "row",
-    backgroundColor: '#00ffff',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -25,10 +24,10 @@ const styles = StyleSheet.create({
 
   // Couleur dynamique
   BENEVOLE: {
-    backgroundColor: '#6fe3d2',
+    backgroundColor: '#c8e7df',
   },
   REFERENT: {
-    backgroundColor: '#f9c2ff',
+    backgroundColor: '#f7d4e8',
   },
   loading: {
     position: 'absolute',
@@ -170,13 +169,15 @@ const styles = StyleSheet.create({
   idInput: {
     height: 40,
 	width : 200,
-    margin: 12,
+    marginBottom: 15,
 	borderBottomColor: '#000000',
 	borderBottomWidth: 1,
+	
   },
   idTexte : {
-    margin : 20,
+    marginTop : 15,
 	textAlign: 'center',
+	color : '#656565'
   },
   logo: {
     width: 200,

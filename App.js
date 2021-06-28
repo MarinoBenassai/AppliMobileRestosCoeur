@@ -84,7 +84,7 @@ function identification() {
   );
 }
 
-const screenOptionsBase = {headerRight: () => (boutonLogOut()), headerStyle: {backgroundColor: '#45968c',}, headerRightContainerStyle: {paddingRight: 20},};
+const screenOptionsBase = {headerRight: () => (boutonLogOut()), headerStyle: {backgroundColor: '#41b495',}, headerRightContainerStyle: {paddingRight: 20},};
 function screenOptionsFirstPage (nav, title) {return {title: title, headerLeft: () => (boutonMenu({nav})), headerLeftContainerStyle: {paddingLeft: 20},}}
 
 function engagement({navigation}) {
