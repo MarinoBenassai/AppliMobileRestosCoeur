@@ -2,17 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput, useFocusEffect } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
+import {Picker} from '@react-native-picker/picker';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
 import ModalContact from '../../components/modalContact';
+import ViewStatus from '../../components/viewStatut';
 
 // Fonction Principale
 function activiteScreen({route, navigation}) {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
+
+  const [selectedLanguage, setSelectedLanguage] = useState();
+
 
   // Reload
   const [upToDate, setUpToDate] = useState(true);
@@ -137,35 +142,22 @@ function activiteScreen({route, navigation}) {
         <Text>{item.split(/\t/)[3]}</Text>
       </View>
       
-
+      <View style={{flexDirection: "row"}}>
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
-      <View style={{ justifyContent:"space-evenly", flexDirection: "column"}}>
+      <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
+                  fctCommentaire={() => chargerCommentaire(item.split(/\t/)[7])}
+                  status={item.split(/\t/)[6]} role={idRole} align="row"/>
 
-        {/* Statut */}
-        <Pressable onPress={() => changerStatut(constantes.BDD, item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
-                   disabled={(idRole=="2" || item.split(/\t/)[9] == userID ) ? false : true}>
-          <Text style={{ color: (item.split(/\t/)[6] == "Absent") ? 'black' : 
-            ((item.split(/\t/)[6] == "Présent") ? "green" : "red") }}>
-              {item.split(/\t/)[6]}
-          </Text>
-        </Pressable>
-
-        {/* Commentaire */}
-        <Pressable onPress={() => chargerCommentaire(item.split(/\t/)[7])}
-                    disabled={(idRole=="2" || item.split(/\t/)[9] == userID ) ? false : true}>
-          <Text>Commentaire</Text>
-        </Pressable>
-      </View>
-
-      {/* Conteneur 3eme colonne */}
-      <View>
-        <Icon 
-          name='mail' 
-          size={30}
-          color='#000'
-          onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }
-        />
-        
+        {/* Conteneur 3eme colonne */}
+        <View>
+          <Icon 
+            name='mail' 
+            size={32}
+            color='#000'
+            onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }
+          />
+          
+        </View>
       </View>
     </View>
   );
@@ -321,6 +313,16 @@ function activiteScreen({route, navigation}) {
             </View>
           </View>
         </Modal>
+
+        <Picker
+          selectedValue={selectedLanguage}
+          onValueChange={(itemValue, itemIndex) =>
+            setSelectedLanguage(itemValue)
+          }>
+          <Picker.Item label="Java" value="java" />
+          <Picker.Item label="JavaScript" value="js" />
+        </Picker>
+
 
         <FlatList
           data={visibleData}

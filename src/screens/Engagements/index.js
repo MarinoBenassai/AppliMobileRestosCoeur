@@ -6,6 +6,7 @@ import { Dimensions } from 'react-native';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
+import ViewStatus from '../../components/viewStatut';
 
 // Fonction Principale
 function engagementScreen({navigation}) {
@@ -71,25 +72,21 @@ function engagementScreen({navigation}) {
       </Pressable>
 
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
-      <View style={{ flexDirection: "column"}}>
-        <Pressable onPressOut={() => changerStatut(item.split(/\t/)[4], userID, item.split(/\t/)[0], item.split(/\t/)[9], item.split(/\t/)[10], (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}>
-          <Text style={{ color: (item.split(/\t/)[4] == "Absent") ? 'black' : 
-            ((item.split(/\t/)[4] == "Présent") ? "green" : "red") }}>{item.split(/\t/)[4]}</Text>
-        </Pressable>
-        
-        <Text style={{width: 100}}>{item.split(/\t/)[5]}</Text>
-      </View>
+      <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[4], userID, item.split(/\t/)[0], item.split(/\t/)[9], item.split(/\t/)[10], (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
+                  fctCommentaire={() => chargerCommentaire(item.split(/\t/)[5])}
+                  status={item.split(/\t/)[4]} role="2" align="column"/>
+      
     </View>
   );
 
 
   // Fonction de changement de statut
-  const changerStatut = (statut, benevole, jour, activite, site, role) => {
+  const changerStatut = (bdd, statut, benevole, jour, activite, site, role) => {
 
     // Si absent
     if(statut == "Absent"){
       console.log("Vous ête actuellement 'Absent'");
-      fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
+      fetch("http://" + bdd + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
         .then((response) => response.text())
         .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
         .catch((error) => console.error(error));
@@ -110,7 +107,7 @@ function engagementScreen({navigation}) {
       // Si non-défini
       else{
         console.log("Vous êtes actuellement 'Non défini'");
-        fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role)
+        fetch("http://" + bdd + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role)
           .then((response) => response.text())
           .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
           .catch((error) => console.error(error))
@@ -176,6 +173,19 @@ function engagementScreen({navigation}) {
       </View>
       )}
     </SafeAreaView>
+
+  );
+}
+
+
+// Fonction de changement de statut
+const chargerCommentaire = (commentaire) => {
+  Alert.alert(
+    "Commenaire d'Absence",
+    commentaire,
+    [
+      { text: "OK", onPress: () => console.log("OK Commentaire d'activité") }
+    ]
 
   );
 }
