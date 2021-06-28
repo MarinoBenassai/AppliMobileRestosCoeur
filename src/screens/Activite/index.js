@@ -52,7 +52,7 @@ function activiteScreen({route, navigation}) {
     const unsubscribe = navigation.addListener('focus', () => {
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées ");})
+      .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
       .then(
         fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
         .then((response) => response.text())
@@ -75,7 +75,7 @@ function activiteScreen({route, navigation}) {
       // Update la liste et les info Activité
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
         .then((response) => response.text())
-        .then((texte) =>  {setData(texte); console.log("Infos Activité : chargées ");})
+        .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
         .then(
           fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
           .then((response) => response.text())
@@ -86,18 +86,20 @@ function activiteScreen({route, navigation}) {
         .catch((error) => console.error(error))
         .finally(() => {setLoading(false); setUpToDate(true)});
 
-      // Update commenatire d'activité (dans le fetch au dessus)
+      // Update commentaire d'activité (dans le fetch au dessus)
     }
     
   }, [upToDate]);
   
-  // On traite les données
-  const ligne = data.split(/\n/);
-  ligne.shift(); //enlève le premier élement (et le retourne)
-  ligne.pop();   //enlève le dernier élement (et le retourne)
+  
 
   // on met à jour la liste visible
   useEffect(() => {
+    // On traite les données
+    const ligne = data.split(/\n/);
+    ligne.shift(); //enlève le premier élement (et le retourne)
+    ligne.pop();   //enlève le dernier élement (et le retourne)
+    console.log("debut affichage");
     if(affichage == "ALPHABETIQUE"){
       setVisibleData( ligne );
     }
@@ -114,8 +116,7 @@ function activiteScreen({route, navigation}) {
       console.log("ERREUR : Affichage inconnu dans useEffect");
     }
 
-    // ligne.filter( (nom) => ( nom.toLowerCase().startsWith(ajout.toLowerCase()) ) )
-  }, [upToDate, affichage]);
+  }, [data, affichage]);
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
@@ -167,16 +168,16 @@ function activiteScreen({route, navigation}) {
 
     // Si absent
     if(statut == "Absent"){
-      console.log("Vous ête actuellement 'Absent'");
+      console.log("Vous êtiez actuellement 'Absent'");
       fetch("http://" + bdd + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
         .then((response) => response.text())
-        .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+        .then((texte) =>  {console.log("changement status : non défini : "); console.log(texte)})
         .catch((error) => console.error(error));
     }
 
     // Si présent
     else if(statut == "Présent"){
-      console.log("Vous ête actuellement 'Présent'");
+      console.log("Vous êtiez actuellement 'Présent'");
 
       setInfoComment([ jour, activite, site, benevole ]);
       //On rend le modal visible
@@ -188,10 +189,10 @@ function activiteScreen({route, navigation}) {
 
       // Si non-défini
       else{
-        console.log("Vous êtes actuellement 'Non défini'");
+        console.log("Vous êtiez actuellement 'Non défini'");
         fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role)
           .then((response) => response.text())
-          .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+          .then((texte) =>  {console.log("changement statut : présent : "); console.log(texte)})
           .catch((error) => console.error(error))
       }
       
@@ -216,7 +217,7 @@ function activiteScreen({route, navigation}) {
     else{
       console.log("ERREUR : Affichage inconnu dans changerOrdre");
     }
-    
+
   }
 
   // On retourne la flatlist
@@ -302,7 +303,7 @@ function activiteScreen({route, navigation}) {
                 onPress={() => {setModalVisible(!modalVisible);
                   fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
                   .then((response) => response.text())
-                  .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+                  .then((texte) =>  {console.log("changement statut : absent :"); console.log(texte)})
                   .catch((error) => console.error(error));
 
                   // On raffraichi et reset le commentaire pour la prochaine fois
@@ -341,7 +342,7 @@ function activiteScreen({route, navigation}) {
 
               {/* "header" de la flatlist */}
               <View style={[styles.item, {flexDirection: "row", justifyContent: "space-between"}]}>
-                <Text style={[styles.info, {fontWeight: "bold"}]}>Engagé : </Text>
+                <Text style={[styles.info, {fontWeight: "bold"}]}>Engagé : {affichage}</Text>
                 {(idRole == "2") &&	
                   <View style={{flexDirection: "row"}}>
 
