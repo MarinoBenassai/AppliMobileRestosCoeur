@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
+import ModalContact from '../../components/modalContact';
 
 // Fonction Principale
 function activiteScreen({route, navigation}) {
@@ -14,11 +15,12 @@ function activiteScreen({route, navigation}) {
   const [data, setData] = useState('');
 
   // Reload
-  const [upToDate, setUpToDate] = useState(false);
+  const [upToDate, setUpToDate] = useState(true);
   
   // Pour le pop up de commentaire
   const [modalVisibleAbsence, setmodalVisibleAbsence] = useState(false);
   const [modalVisibleCommentaireActivite, setmodalVisibleCommentaireActivite] = useState(false);
+  const [modalVisibleContact, setmodalVisibleContact] = useState(false);
 
   // Pour le commentaire
   const [comment, setComment] = useState('');
@@ -32,6 +34,10 @@ function activiteScreen({route, navigation}) {
   // Mode d'affichage
   const [affichage, setAffichage] = useState("ALPHABETIQUE"); // ("ALPHABETIQUE", "PRESENT", "ABSENT", "NONDEFINI");
   const [visibleData, setVisibleData] = useState('');
+
+  //Données pour le modal de contact
+  const [mail, setMail] = useState('');
+  const [phone, setPhone] = useState('');
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -50,6 +56,7 @@ function activiteScreen({route, navigation}) {
   useEffect(() => {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
+	  setLoading(true);
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
@@ -71,7 +78,8 @@ function activiteScreen({route, navigation}) {
 
   // On va chercher le commentaire d'activité
   useEffect(() => {
-    if(true){ // if !upTodate, mais ne marche pas ... TODO(val defaut 'livre')
+    if(!upToDate){
+	  setLoading(true);
       // Update la liste et les info Activité
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
         .then((response) => response.text())
@@ -155,7 +163,7 @@ function activiteScreen({route, navigation}) {
           name='mail' 
           size={30}
           color='#000'
-          onPress={() => {createContactAlert(item.split(/\t/)[10], item.split(/\t/)[11])} }
+          onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }
         />
         
       </View>
@@ -223,12 +231,9 @@ function activiteScreen({route, navigation}) {
   // On retourne la flatlist
   return (
     <>
-    <SafeAreaView style={styles.container}>
-    {isLoading ? (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>) : (
+    <SafeAreaView style={styles.container}>	  
       <View>
+	    <ModalContact visible = {modalVisibleContact} setVisible = {setmodalVisibleContact} mail = {mail} phone = {phone}/>
         <Modal
           animationType="slide"
           transparent={true}
@@ -239,7 +244,7 @@ function activiteScreen({route, navigation}) {
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Nombre de Bénéficiaire :</Text>
               <TextInput
-                style={styles.input}
+                style={styles.idInput}
                 onChangeText={setBeneficiaireActivite}
                 defaultValue={beneficiaireActivite}
                 keyboardType="numeric"
@@ -247,7 +252,7 @@ function activiteScreen({route, navigation}) {
               />
               <Text style={styles.modalText}>Commentaire d'activité :</Text>
               <TextInput
-                style={styles.input}
+                style={styles.idInput}
                 onChangeText={setCommentActivite}
                 defaultValue={commentActivite}
                 maxLength={99}
@@ -392,25 +397,15 @@ function activiteScreen({route, navigation}) {
           keyExtractor={item => item}
         />
       </View>
-      )}
+	  {isLoading &&
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#00ff00" />
+        </View>
+	  }
     </SafeAreaView>
 	</>
   );
 }
-
-
-
-// Fonction d'affichage pop-up des informations de contact
-const createContactAlert = (mail, phone) =>{
-  Alert.alert(
-    "Contact information",
-    "\nmail : " + mail + "\n\n" + "tel : " + phone,
-    [
-      { text: "OK", onPress: () => console.log("OK  Contact Pressed") }
-    ]
-  );
-}
-
 
 
 // Fonction de changement de statut
