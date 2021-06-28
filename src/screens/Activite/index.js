@@ -14,11 +14,11 @@ function activiteScreen({route, navigation}) {
   const [data, setData] = useState('');
 
   // Reload
-  const [upToDate, setUpToDate] = useState(true);
+  const [upToDate, setUpToDate] = useState(false);
   
   // Pour le pop up de commentaire
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modal2Visible, setModal2Visible] = useState(false);
+  const [modalVisibleAbsence, setmodalVisibleAbsence] = useState(false);
+  const [modalVisibleCommentaireActivite, setmodalVisibleCommentaireActivite] = useState(false);
 
   // Pour le commentaire
   const [comment, setComment] = useState('');
@@ -50,7 +50,6 @@ function activiteScreen({route, navigation}) {
   useEffect(() => {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
-	  setLoading(true);
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
@@ -72,9 +71,8 @@ function activiteScreen({route, navigation}) {
 
   // On va chercher le commentaire d'activité
   useEffect(() => {
-    if(!upToDate){
+    if(true){ // if !upTodate, mais ne marche pas ... TODO(val defaut 'livre')
       // Update la liste et les info Activité
-  	  setLoading(true);
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
         .then((response) => response.text())
         .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
@@ -137,7 +135,7 @@ function activiteScreen({route, navigation}) {
 
         {/* Statut */}
         <Pressable onPress={() => changerStatut(constantes.BDD, item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
-                   disabled={(idRole=="2") ? false : true}>
+                   disabled={(idRole=="2" || item.split(/\t/)[9] == userID ) ? false : true}>
           <Text style={{ color: (item.split(/\t/)[6] == "Absent") ? 'black' : 
             ((item.split(/\t/)[6] == "Présent") ? "green" : "red") }}>
               {item.split(/\t/)[6]}
@@ -146,7 +144,7 @@ function activiteScreen({route, navigation}) {
 
         {/* Commentaire */}
         <Pressable onPress={() => chargerCommentaire(item.split(/\t/)[7])}
-                    disabled={(idRole=="2") ? false : true}>
+                    disabled={(idRole=="2" || item.split(/\t/)[9] == userID ) ? false : true}>
           <Text>Commentaire</Text>
         </Pressable>
       </View>
@@ -183,7 +181,7 @@ function activiteScreen({route, navigation}) {
 
       setInfoComment([ jour, activite, site, benevole ]);
       //On rend le modal visible
-      setModalVisible(true);
+      setmodalVisibleAbsence(true);
       
       // Le traitement se fait sur le modal afin d'éviter les désynchronisations
 
@@ -226,12 +224,16 @@ function activiteScreen({route, navigation}) {
   return (
     <>
     <SafeAreaView style={styles.container}>
+    {isLoading ? (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color="#00ff00" />
+      </View>) : (
       <View>
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modal2Visible}
-          onRequestClose={() => {setModal2Visible(false)}}
+          visible={modalVisibleCommentaireActivite}
+          onRequestClose={() => {setmodalVisibleCommentaireActivite(false)}}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -253,7 +255,7 @@ function activiteScreen({route, navigation}) {
               <Pressable
                 style={styles.button}
                 // écrire et envoyer le commentaire
-                onPress={() => {setModal2Visible(false)
+                onPress={() => {setmodalVisibleCommentaireActivite(false)
                                 if(infoActivite.length == 0){
                                   fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
                                   .then((response) => response.text())
@@ -282,8 +284,8 @@ function activiteScreen({route, navigation}) {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {setModalVisible(false)}}
+          visible={modalVisibleAbsence}
+          onRequestClose={() => {setmodalVisibleAbsence(false)}}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -298,7 +300,7 @@ function activiteScreen({route, navigation}) {
               <Pressable
                 style={styles.button}
                 // écrire et envoyer le commentaire
-                onPress={() => {setModalVisible(!modalVisible);
+                onPress={() => {setmodalVisibleAbsence(!modalVisibleAbsence);
                   fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
                   .then((response) => response.text())
                   .then((texte) =>  {console.log("changement statut : absent :"); console.log(texte)})
@@ -341,7 +343,7 @@ function activiteScreen({route, navigation}) {
               {/* "header" de la flatlist */}
               <View style={[styles.item, {flexDirection: "row", justifyContent: "space-between"}]}>
                 <Text style={[styles.info, {fontWeight: "bold"}]}>Engagé : {affichage}</Text>
-                {(idRole == "2") &&	
+                {(idRole == "2") ?	
                   <View style={{flexDirection: "row"}}>
 
                     {/* Comentaire d'activité */}
@@ -349,8 +351,7 @@ function activiteScreen({route, navigation}) {
                       name='repo' 
                       size={30}
                       color='#000'
-                      onPress={() =>  setModal2Visible(true)}
-                      disabled={(idRole=="2") ? false : true}
+                      onPress={() =>  setmodalVisibleCommentaireActivite(true)}
                       style={{paddingRight: 20}}
                     />
                     
@@ -360,9 +361,19 @@ function activiteScreen({route, navigation}) {
                       size={30}
                       color='#000'
                       onPress={() => versListe({navigation})}
-                      disabled={(idRole=="2") ? false : true}
                       style={{paddingLeft: 20, paddingRight: 20}}
                     />
+                
+                    {/* Réordonnancement - Sélection */}
+                    <Icon 
+                      name='list-unordered' 
+                      size={30}
+                      color='#000'
+                      onPress={() => changerOrdre()}
+                      style={{paddingLeft: 20}}
+                    />
+                  </View> :
+                  <View style={{flexDirection: "row"}}>
 
                     {/* Réordonnancement - Sélection */}
                     <Icon 
@@ -372,7 +383,6 @@ function activiteScreen({route, navigation}) {
                       onPress={() => changerOrdre()}
                       style={{paddingLeft: 20}}
                     />
-
                   </View>
                 }
               </View>
@@ -382,12 +392,7 @@ function activiteScreen({route, navigation}) {
           keyExtractor={item => item}
         />
       </View>
-      )
-	{isLoading &&
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color="#00ff00" />
-    </View>
-	}
+      )}
     </SafeAreaView>
 	</>
   );
