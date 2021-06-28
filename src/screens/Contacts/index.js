@@ -3,9 +3,10 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput} from 'react-native';
 import {Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-import Clipboard from 'expo-clipboard';
+
 
 import {userContext} from '../../contexts/userContext';
+import ModalContact from '../../components/modalContact';
 import constantes from '../../constantes';
 import styles from '../../styles';
 
@@ -17,15 +18,6 @@ function contactScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [mail, setMail] = useState("");
   const [phone, setPhone] = useState("");
-  const [toClipboard, setToClipboard] = useState("");
-
-  useEffect(() => {
-	if (toClipboard != "") {
-	  Clipboard.setString(toClipboard);
-	}
-	setToClipboard("");
-  }, [toClipboard]);
-  
   
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -78,45 +70,8 @@ function contactScreen() {
   // on retourne la flatliste
   return (
     <>
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalContactView}>
-		      <Text style={styles.modalContactTitle}>Informations de contact</Text>
-		      <View style={styles.modalContactContentView}>
-            <Text style={styles.modalText} onPress={() => {setToClipboard(mail);alert('Copié dans le presse-papier');}}>{"Mail : " + mail}</Text> //TODO Comprendre pourquoi ça marche pas sans alerte
-		        <Text style={styles.modalText} onPress={() => {setToClipboard(phone);alert('Copié dans le presse-papier');}}>{"Tel : " + phone}</Text>
-		      </View>
-          <View style={styles.modalContactButtonView}>
-            <Pressable
-              style={styles.buttonContactLeft}
-              onPress={() => {setModalVisible(!modalVisible);console.log("OK  Contact Pressed");}}
-            >
-              <Text style={styles.textContactStyle}>OK</Text>
-            </Pressable>
-            <Pressable
-              style={styles.buttonContactMid}
-              onPress={() => {setModalVisible(!modalVisible);Linking.openURL(`sms:${phone}`);}}
-            >
-              <Text style={styles.textContactStyle}>SMS</Text>
-            </Pressable>
-            <Pressable
-              style={styles.buttonContactRight}
-              onPress={() => {setModalVisible(!modalVisible);Linking.openURL(`mailto:${mail}`);}}
-            >
-              <Text style={styles.textContactStyle}>MAIL</Text>
-            </Pressable>
-		      </View>
-        </View>
-      </View>
-    </Modal>
     <SafeAreaView style={styles.container}>
+	<ModalContact visible = {modalVisible} setVisible = {setModalVisible} mail = {mail} phone = {phone}/>
     {isLoading ? (
         <View style={styles.loading}>
          <ActivityIndicator size="large" color="#00ff00" />
