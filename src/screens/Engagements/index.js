@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput} from 'react-native';
 import { Dimensions } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -23,6 +24,10 @@ function engagementScreen({navigation}) {
   // Pour le commentaire
   const [comment, setComment] = useState('');
   const [infoComment, setInfoComment] = useState(['', '', '']);
+
+  // Mode d'affichage
+  const [affichage, setAffichage] = useState("CHRONOLOGIQUE"); // ("CHRONOLOGIQUE", "PRESENT", "ABSENT", "NONDEFINI");
+  const [visibleData, setVisibleData] = useState('');
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -46,10 +51,30 @@ function engagementScreen({navigation}) {
   }, [upToDate]);
 
 
-  // On traite les données
-  const ligne = data.split(/\n/);
-  ligne.shift(); //enlève le premier élement (et le retourne)
-  ligne.pop();   //enlève le dernier élement (et le retourne)
+  // on met à jour la liste visible
+  useEffect(() => {
+    // On traite les données
+    const ligne = data.split(/\n/);
+    ligne.shift(); //enlève le premier élement (et le retourne)
+    ligne.pop();   //enlève le dernier élement (et le retourne)
+    console.log("debut affichage");
+    if(affichage == "CHRONOLOGIQUE"){
+      setVisibleData( ligne );
+    }
+    else if(affichage == "PRESENT") {
+      setVisibleData( ligne.filter( (l) => ( l.split("\t")[4] == "Présent" ) ) );
+    }
+    else if(affichage == "ABSENT") {
+      setVisibleData( ligne.filter( (l) => ( l.split("\t")[4] == "Absent" ) ) );
+    }
+    else if (affichage == "NONDEFINI") {
+      setVisibleData( ligne.filter( (l) => ( l.split("\t")[4] == "Non défini" ) ) );
+    }
+    else{
+      console.log("ERREUR : Affichage inconnu dans useEffect");
+    }
+
+  }, [data, affichage]);
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
@@ -166,9 +191,27 @@ function engagementScreen({navigation}) {
         </Modal>
         
         <FlatList
-          data={ligne}
+          data={visibleData}
           renderItem={renderItem}
           keyExtractor={item => item}
+          ListHeaderComponent={
+            <>
+              {/* Réordonnancement - Sélection */}
+              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 30}}>
+                <Picker
+                  style={{height: 30, width: "50%", maxWidth: 190, alignSelf: "flex-end"}}
+                  selectedValue={affichage}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setAffichage(itemValue)
+                  }>
+                  <Picker.Item label="chronologique" value="CHRONOLOGIQUE" />
+                  <Picker.Item label="présent" value="PRESENT" />
+                  <Picker.Item label="absent" value="ABSENT" />
+                  <Picker.Item label="non défini" value="NONDEFINI" />
+                </Picker>
+              </View>
+            </>
+          }
         />
       </View>
       )}

@@ -16,9 +16,6 @@ function activiteScreen({route, navigation}) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState('');
 
-  const [selectedLanguage, setSelectedLanguage] = useState();
-
-
   // Reload
   const [upToDate, setUpToDate] = useState(true);
   
@@ -200,82 +197,62 @@ function activiteScreen({route, navigation}) {
       setUpToDate(false);
   }
 
-  // Fonction de chnagement de l'ordre d'affichage
-  const changerOrdre = () => {
-    if(affichage == "ALPHABETIQUE"){
-      setAffichage("PRESENT");
-    }
-    else if(affichage == "PRESENT") {
-      setAffichage("ABSENT");
-    }
-    else if(affichage == "ABSENT") {
-      setAffichage("NONDEFINI");
-    }
-    else if (affichage == "NONDEFINI") {
-      setAffichage("ALPHABETIQUE");
-    }
-    else{
-      console.log("ERREUR : Affichage inconnu dans changerOrdre");
-    }
-
-  }
-
   // On retourne la flatlist
   return (
     <>
-    <SafeAreaView style={styles.container}>	  
-      <View>
-	    <ModalContact visible = {modalVisibleContact} setVisible = {setmodalVisibleContact} mail = {mail} phone = {phone}/>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisibleCommentaireActivite}
-          onRequestClose={() => {setmodalVisibleCommentaireActivite(false)}}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Nombre de Bénéficiaire :</Text>
-              <TextInput
-                style={styles.idInput}
-                onChangeText={setBeneficiaireActivite}
-                defaultValue={beneficiaireActivite}
-                keyboardType="numeric"
-                maxLength={10}
-              />
-              <Text style={styles.modalText}>Commentaire d'activité :</Text>
-              <TextInput
-                style={styles.idInput}
-                onChangeText={setCommentActivite}
-                defaultValue={commentActivite}
-                maxLength={99}
-              />
-              <Pressable
-                style={styles.button}
-                // écrire et envoyer le commentaire
-                onPress={() => {setmodalVisibleCommentaireActivite(false)
-                                if(infoActivite.length == 0){
-                                  fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
-                                  .then((response) => response.text())
-                                  .then((texte) => console.log(texte))
-                                  .then(() => console.log("Nouvelle entrée : commentaire d'activité"))
-                                  .catch((error) => console.error(error));
-                                }
-                                else{
-                                  fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
-                                  .then((response) => response.text())
-                                  .then((texte) => console.log(texte))
-                                  .then(() => console.log("update entrée : commentaire d'activité "))
-                                  .catch((error) => console.error(error));
-                                }
+      <SafeAreaView style={styles.container}>	  
+        <View>
+	        <ModalContact visible = {modalVisibleContact} setVisible = {setmodalVisibleContact} mail = {mail} phone = {phone}/>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisibleCommentaireActivite}
+            onRequestClose={() => {setmodalVisibleCommentaireActivite(false)}}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>Nombre de Bénéficiaire :</Text>
+                <TextInput
+                  style={styles.idInput}
+                  onChangeText={setBeneficiaireActivite}
+                  defaultValue={beneficiaireActivite}
+                  keyboardType="numeric"
+                  maxLength={10}
+                />
+                <Text style={styles.modalText}>Commentaire d'activité :</Text>
+                <TextInput
+                  style={styles.idInput}
+                  onChangeText={setCommentActivite}
+                  defaultValue={commentActivite}
+                  maxLength={99}
+                />
+                <Pressable
+                  style={styles.button}
+                  // écrire et envoyer le commentaire
+                  onPress={() => {setmodalVisibleCommentaireActivite(false)
+                                  if(infoActivite.length == 0){
+                                    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
+                                    .then((response) => response.text())
+                                    .then((texte) => console.log(texte))
+                                    .then(() => console.log("Nouvelle entrée : commentaire d'activité"))
+                                    .catch((error) => console.error(error));
+                                  }
+                                  else{
+                                    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
+                                    .then((response) => response.text())
+                                    .then((texte) => console.log(texte))
+                                    .then(() => console.log("update entrée : commentaire d'activité "))
+                                    .catch((error) => console.error(error));
+                                  }
                                 // On raffraichi et reset le commentaire pour la prochaine fois
                                 setUpToDate(false);
-                }}
-              >
-                <Text style={styles.textStyle}>Valider</Text>
-              </Pressable>
+                          }}
+                >
+                  <Text style={styles.textStyle}>Valider</Text>
+                </Pressable>
+              </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
         
 
         <Modal
@@ -314,16 +291,6 @@ function activiteScreen({route, navigation}) {
           </View>
         </Modal>
 
-        <Picker
-          selectedValue={selectedLanguage}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedLanguage(itemValue)
-          }>
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
-        </Picker>
-
-
         <FlatList
           data={visibleData}
           ListHeaderComponent={
@@ -349,8 +316,8 @@ function activiteScreen({route, navigation}) {
 
               {/* "header" de la flatlist */}
               <View style={[styles.item, {flexDirection: "row", justifyContent: "space-between"}]}>
-                <Text style={[styles.info, {fontWeight: "bold"}]}>Engagé : {affichage}</Text>
-                {(idRole == "2") ?	
+                <Text style={[styles.info, {fontWeight: "bold"}]}>Engagés :</Text>
+                {(idRole == "2") &&	
                   <View style={{flexDirection: "row"}}>
 
                     {/* Comentaire d'activité */}
@@ -371,27 +338,23 @@ function activiteScreen({route, navigation}) {
                       style={{paddingLeft: 20, paddingRight: 20}}
                     />
                 
-                    {/* Réordonnancement - Sélection */}
-                    <Icon 
-                      name='list-unordered' 
-                      size={30}
-                      color='#000'
-                      onPress={() => changerOrdre()}
-                      style={{paddingLeft: 20}}
-                    />
-                  </View> :
-                  <View style={{flexDirection: "row"}}>
-
-                    {/* Réordonnancement - Sélection */}
-                    <Icon 
-                      name='list-unordered' 
-                      size={30}
-                      color='#000'
-                      onPress={() => changerOrdre()}
-                      style={{paddingLeft: 20}}
-                    />
                   </View>
                 }
+              </View>
+
+              {/* Réordonnancement - Sélection */}
+              <View style={{alignSelf: "center", width: "100%", maxWidth: 550}}>
+                <Picker
+                  style={{height: 30, width: "45%", maxWidth: 180, alignSelf: "flex-end"}}
+                  selectedValue={affichage}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setAffichage(itemValue)
+                  }>
+                  <Picker.Item label="alphabétique" value="ALPHABETIQUE" />
+                  <Picker.Item label="présent" value="PRESENT" />
+                  <Picker.Item label="absent" value="ABSENT" />
+                  <Picker.Item label="non défini" value="NONDEFINI" />
+                </Picker>
               </View>
             </>
           }
