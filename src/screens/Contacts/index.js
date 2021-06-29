@@ -39,19 +39,19 @@ function contactScreen() {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal
-    <View style={[styles.item, styles.REFERENT, {textAlign: "center"}]}>
+    <View style={[styles.item, styles.REFERENT]}>
 
       {/* Conteneur 1ere colonne : info personne */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Text >{item.split(/\t/)[3]}</Text>
-        <Text >{item.split(/\t/)[4]}</Text>
+        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[3]}</Text>
+        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[4]}</Text>
       </View>
 
       {/* Conteneur 2eme colonne : info lieu */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Text >{item.split(/\t/)[0]}</Text>
-        <Text >{item.split(/\t/)[2]}</Text>
-        <Text >{item.split(/\t/)[1]}</Text>
+        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[0]}</Text>
+        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[2]}</Text>
+        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
       </View>
 
       {/* Conteneur 3eme colonne : contacter */}
