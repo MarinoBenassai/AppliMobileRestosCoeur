@@ -185,6 +185,20 @@ const compteScreen = () => {
 					<View style = {styles.item}>
                       <Text style={styles.title}>Mes Activités</Text>
 					</View>
+					
+					{/*Header de la liste*/}
+				    <View style = {styles.header}>
+			          <View style={{width:'33%'}}>
+				        <Text style = {styles.headerTitle}>Jour</Text>
+					  </View>
+					  <View style={{width:'33%'}}>
+				        <Text style = {styles.headerTitle}>Activité</Text>
+			          </View>
+			          <View style={{width:'33%'}}>
+				        <Text style = {styles.headerTitle}>Site</Text>
+			          </View>
+		            </View>
+					
                   </View>
                 </>
               }

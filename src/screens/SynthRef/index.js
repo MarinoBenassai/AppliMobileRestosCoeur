@@ -85,11 +85,28 @@ function Synthese(props) {
   const renderItem = props.renderItem;
   if (ligne.length != 0){
     return  <View>
+			  <>
+		      {/*Header de la liste*/}
+			  <View style = {styles.header}>
+			    <View style={{width:'25%'}}>
+				  <Text style = {styles.headerTitle}>Site</Text>
+			    </View>
+			    <View style={{width:'25%'}}>
+				  <Text style = {styles.headerTitle}>Activité</Text>
+			    </View>
+			    <View style={{width:'25%'}}>
+				  <Text style = {styles.headerTitle}>Date</Text>
+			    </View>
+				<View style={{width:'25%'}}>
+				  <Text style = {styles.headerTitle}>Nb participant</Text>
+			    </View>
+			  </View>
               <FlatList
                 data={ligne}
                 renderItem={renderItem}
                 keyExtractor={item => item}
               />
+			  </>
             </View>;
       
   }

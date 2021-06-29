@@ -18,6 +18,22 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 50,
   },
+  header: {    
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
+    justifyContent:"space-between",
+    flexDirection: "row",
+    marginVertical: 8,
+    marginHorizontal: 16,
+	paddingLeft: 20,
+	paddingRight: 20,
+  },
+  headerTitle: {
+	textAlign: "center",
+	fontWeight: 'bold',
+	fontSize: 15
+  },
   info: {
     fontSize: 20,
   },

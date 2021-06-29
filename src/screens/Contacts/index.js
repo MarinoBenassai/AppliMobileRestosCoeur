@@ -77,11 +77,25 @@ function contactScreen() {
         <View style={styles.loading}>
          <ActivityIndicator size="large" color="#00ff00" />
 	      </View>) : (
+		<>
+		{/*Header de la liste*/}
+		<View style = {styles.header}>
+			<View style={{width:'33%'}}>
+				<Text style = {styles.headerTitle}>Nom/Prénom</Text>
+			</View>
+			<View style={{width:'33%'}}>
+				<Text style = {styles.headerTitle}>Activité et jour</Text>
+			</View>
+			<View style={{width:'33%'}}>
+				<Text style = {styles.headerTitle}>Info contact</Text>
+			</View>
+		</View>
         <FlatList
           data={ligne}
           renderItem={renderItem}
           keyExtractor={item => item}
         />
+		</>
       )}
     </SafeAreaView>
 	</>
