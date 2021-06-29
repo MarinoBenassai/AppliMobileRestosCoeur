@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Modal, TextInput, useFocusEffect } from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, useFocusEffect } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import {Picker} from '@react-native-picker/picker';
 
@@ -391,18 +391,6 @@ function activiteScreen({route, navigation}) {
   );
 }
 
-
-// Fonction de changement de statut
-const chargerCommentaire = (commentaire) => {
-  Alert.alert(
-    "Commenaire d'Absence",
-    commentaire,
-    [
-      { text: "OK", onPress: () => console.log("OK Commentaire d'activité") }
-    ]
-
-  );
-}
 
 // On exporte la fonction principale
 export default activiteScreen;

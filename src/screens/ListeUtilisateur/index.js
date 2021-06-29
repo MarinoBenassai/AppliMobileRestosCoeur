@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Alert, Linking, TextInput} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, Linking, TextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 
 import {userContext} from '../../contexts/userContext';
