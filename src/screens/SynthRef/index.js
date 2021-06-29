@@ -41,13 +41,21 @@ function referentScreen({navigation}) {
       <Pressable onPress={() => versActivite({navigation}, item)} >
       {({ pressed }) => (
         <View style={[styles.item, styles.REFERENT, {color: pressed ? 'white' : 'black',},]}>
-          <Text>{item.split(/\t/)[2]}</Text>
-          <Text>{item.split(/\t/)[1]}</Text>
+		  <View style = {{width: '25%'}}>
+            <Text>{item.split(/\t/)[2]}</Text>
+		  </View>
+		  <View style = {{width: '25%'}}>
+            <Text>{item.split(/\t/)[1]}</Text>
+		  </View>
           {/* date */}
-          <Text>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
-            {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
-            {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
-          <Text>{item.split(/\t/)[3]}/x</Text>
+		  <View style = {{width: '25%'}}>
+            <Text>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
+              {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
+              {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
+		  </View>
+		  <View style = {{width: '25%'}}>
+            <Text>{item.split(/\t/)[3]}/x</Text>
+		  </View>
         </View>)}
       </Pressable>
     </View>

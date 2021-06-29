@@ -60,13 +60,13 @@ const compteScreen = () => {
   const renderItem = ({ item }) => (
     <View style={[styles.item, styles[item.split(/\t/)[3]] ]}>
       <View style={{width:'33%'}}>
-        <Text style= {{textAlign: "left"}}>{item.split(/\t/)[0]}</Text>
+        <Text>{item.split(/\t/)[0]}</Text>
       </View>
       <View style={{width:'33%'}}>
-        <Text style= {{textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
+        <Text>{item.split(/\t/)[1]}</Text>
       </View>
       <View style={{width:'33%'}}>
-        <Text style= {{textAlign: "right"}}>{item.split(/\t/)[2]}</Text>
+        <Text>{item.split(/\t/)[2]}</Text>
       </View>
     </View>
   );
