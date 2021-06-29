@@ -85,7 +85,7 @@ function engagementScreen({navigation}) {
     <View style={[styles.item, styles[item.split(/\t/)[3]]]}>
       
       {/* Conteneur 1ere colonne */}
-      <Pressable onPress={() => versActivite({navigation}, item)} >
+      <Pressable onPress={() => versActivite({navigation}, item)} style={{width: "75%"}} >
       {({ pressed }) => (
         <View style={{flexDirection: "column",}}>
           <Text style={{color: pressed ? 'white' : 'black',}}>{item.split(/\t/)[2]}</Text>
