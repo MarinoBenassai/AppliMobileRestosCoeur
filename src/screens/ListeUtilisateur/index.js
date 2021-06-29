@@ -104,21 +104,31 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 	      </View>) : (
 		<>
 	    <ModalContact visible = {modalVisibleContact} setVisible = {setmodalVisibleContact} mail = {mail} phone = {phone}/>
+		
+		<>
+		  <View>
+			<TextInput
+			  style={[, styles.input, styles.item, {backgroundColor: "#ebe0c3"}]}
+			  onChangeText={text => setAjout(text)}
+			  placeholder="Nom du bénévole à ajouter :"
+			/>
+		  </View>
+		</>
+		
+		{/*Header de la flatlist*/}
+		<View style = {styles.header}>
+	   	  <View style={{width:'50%'}}>
+		   <Text style = {[styles.headerTitle, {textAlign: "left"}]}>Activité</Text>
+		  </View>
+		  <View style={{width:'50%'}}>
+		    <Text style = {[styles.headerTitle, {textAlign: "right"}]}>Présent ?</Text>
+		  </View>
+		</View>
+		
         <FlatList
           data={visibleData}
           renderItem={renderItem}
           keyExtractor={item => item}
-          ListHeaderComponent={
-            <>
-              <View>
-                <TextInput
-                  style={[, styles.input, styles.item, {backgroundColor: "#ebe0c3"}]}
-                  onChangeText={text => setAjout(text)}
-                  placeholder="Nom du bénévole à ajouter :"
-                />
-              </View>
-            </>
-          }
         />
 		</>
       )}

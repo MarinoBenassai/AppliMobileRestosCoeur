@@ -212,12 +212,15 @@ function engagementScreen({navigation}) {
           </View>
         </Modal>
         
+		
         <FlatList
           data={visibleData}
           renderItem={renderItem}
           keyExtractor={item => item}
           ListHeaderComponent={
             <>
+
+			
               {/* Réordonnancement - Sélection */}
               <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20}}>
                 <Picker
@@ -232,6 +235,16 @@ function engagementScreen({navigation}) {
                   <Picker.Item label="non défini" value="NONDEFINI" />
                 </Picker>
               </View>
+			  
+			  {/*Header de la flatlist*/}
+			  <View style = {styles.header}>
+			  	<View style={{width:'50%'}}>
+			      <Text style = {[styles.headerTitle, {textAlign: "left"}]}>Activité</Text>
+				</View>
+				<View style={{width:'50%'}}>
+				  <Text style = {[styles.headerTitle, {textAlign: "right"}]}>Présent ?</Text>
+			    </View>
+  			  </View>
             </>
           }
         />

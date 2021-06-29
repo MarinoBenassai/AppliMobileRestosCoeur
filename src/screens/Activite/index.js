@@ -375,6 +375,20 @@ function activiteScreen({route, navigation}) {
                   <Picker.Item label="non défini" value="NONDEFINI" />
                 </Picker>
               </View>
+			  {/*Header de la flatlist*/}
+			  <View style = {[styles.header,{paddingRight: 5}]}>
+			  	<View style={{width:'50%'}}>
+			      <Text style = {[styles.headerTitle, {textAlign: "left"}]}>Nom/Prénom</Text>
+				</View>
+				<View style={{width:'50%', flexDirection: 'row', justifyContent: "flex-end"}}>
+				  <View>
+				    <Text style = {[styles.headerTitle, {textAlign: "right", paddingRight: 20}]}>Présent ?</Text>
+				  </View>
+				  <View>
+				    <Text style = {[styles.headerTitle, {textAlign: "right"}]}>Contact</Text>
+				  </View>
+			    </View>
+  			  </View>
             </>
           }
           renderItem={renderItem}
