@@ -59,14 +59,14 @@ const compteScreen = () => {
   // On crée le renderer pour la liste
   const renderItem = ({ item }) => (
     <View style={[styles.item, styles[item.split(/\t/)[3]] ]}>
-      <View>
-        <Text>{item.split(/\t/)[0]}</Text>
+      <View style={{width:'33%'}}>
+        <Text style= {{textAlign: "left"}}>{item.split(/\t/)[0]}</Text>
       </View>
-      <View>
-        <Text>{item.split(/\t/)[1]}</Text>
+      <View style={{width:'33%'}}>
+        <Text style= {{textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
       </View>
-      <View>
-        <Text>{item.split(/\t/)[2]}</Text>
+      <View style={{width:'33%'}}>
+        <Text style= {{textAlign: "right"}}>{item.split(/\t/)[2]}</Text>
       </View>
     </View>
   );
@@ -182,7 +182,9 @@ const compteScreen = () => {
                       />
                       <View style={styles.ligne}/>
                     </View>
-                    <Text style={styles.title}>Mes Activités</Text>
+					<View style = {styles.item}>
+                      <Text style={styles.title}>Mes Activités</Text>
+					</View>
                   </View>
                 </>
               }

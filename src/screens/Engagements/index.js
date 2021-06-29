@@ -197,7 +197,7 @@ function engagementScreen({navigation}) {
           ListHeaderComponent={
             <>
               {/* Réordonnancement - Sélection */}
-              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 30}}>
+              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20}}>
                 <Picker
                   style={{height: 30, width: "50%", maxWidth: 190, alignSelf: "flex-end"}}
                   selectedValue={affichage}
