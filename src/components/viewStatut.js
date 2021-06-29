@@ -16,7 +16,7 @@ function ViewStatus(props) {
     const fctCommentaire = props.fctCommentaire;
 
     if(status == "Présent"){
-        return (<View>
+        return (<View style={{justifyContent: "center"}}>
             <Icon 
                 name='check' 
                 size={size}
@@ -47,7 +47,7 @@ function ViewStatus(props) {
         </View>);
     }
     else if(status == "Absent") {
-        return(<View>
+        return(<View  style={{justifyContent: "center"}}>
             <Icon 
                 name='x' 
                 size={size}
@@ -58,7 +58,7 @@ function ViewStatus(props) {
         </View>);
     }
     else{
-        return(<View>
+        return(<View style={{justifyContent: "center"}}>
             <Icon 
                 name='unverified' 
                 size={size}

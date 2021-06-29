@@ -21,6 +21,7 @@ function activiteScreen({route, navigation}) {
   
   // Pour le pop up de commentaire
   const [modalVisibleAbsence, setmodalVisibleAbsence] = useState(false);
+  const [modalVisibleCommentaireAbsence, setModalVisibleCommentaireAbsence] = useState(false);
   const [modalVisibleCommentaireActivite, setmodalVisibleCommentaireActivite] = useState(false);
   const [modalVisibleContact, setmodalVisibleContact] = useState(false);
 
@@ -142,8 +143,8 @@ function activiteScreen({route, navigation}) {
       <View style={{flexDirection: "row"}}>
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
-                  fctCommentaire={() => chargerCommentaire(item.split(/\t/)[7])}
-                  status={item.split(/\t/)[6]} role={idRole} align="row"/>
+                  fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.split(/\t/)[7])}}
+                  status={item.split(/\t/)[6]} role={idRole} align="row" />
 
         {/* Conteneur 3eme colonne */}
         <View>
@@ -283,6 +284,27 @@ function activiteScreen({route, navigation}) {
                 }}
               >
                 <Text style={styles.textStyle}>Valider</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisibleCommentaireAbsence}
+          onRequestClose={() => {setModalVisibleCommentaireAbsence(false); setComment("")}}
+        >
+            
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Commentaire d'absence</Text>
+              <Text style={styles.modalText}>{comment}</Text>
+              <Pressable
+                  style={styles.button}
+                  onPress={() => {setModalVisibleCommentaireAbsence(false)}}
+              >
+                <Text style={styles.modalText}>fermer</Text>
               </Pressable>
             </View>
           </View>

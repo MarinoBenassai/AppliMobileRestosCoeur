@@ -101,7 +101,7 @@ function engagementScreen({navigation}) {
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[4], userID, item.split(/\t/)[0], item.split(/\t/)[9], item.split(/\t/)[10], (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
                   fctCommentaire={() => {setModalVisibleGet(true); setComment(item.split(/\t/)[5])}}
-                  status={item.split(/\t/)[4]} role="2" align="column"/>
+                  status={item.split(/\t/)[4]} role="2" align="column-reverse"/>
       
     </View>
   );
