@@ -19,7 +19,8 @@ function engagementScreen({navigation}) {
   const [upToDate, setUpToDate] = useState(false);
   
   // Pour le pop up de commentaire
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleSet, setModalVisibleSet] = useState(false);
+  const [modalVisibleGet, setModalVisibleGet] = useState(false);
 
   // Pour le commentaire
   const [comment, setComment] = useState('');
@@ -79,6 +80,7 @@ function engagementScreen({navigation}) {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal de chaque item
+   
     <View style={[styles.item, styles[item.split(/\t/)[3]]]}>
       
       {/* Conteneur 1ere colonne */}
@@ -98,7 +100,7 @@ function engagementScreen({navigation}) {
 
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[4], userID, item.split(/\t/)[0], item.split(/\t/)[9], item.split(/\t/)[10], (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
-                  fctCommentaire={() => chargerCommentaire(item.split(/\t/)[5])}
+                  fctCommentaire={() => {setModalVisibleGet(true); setComment(item.split(/\t/)[5])}}
                   status={item.split(/\t/)[4]} role="2" align="column"/>
       
     </View>
@@ -114,7 +116,8 @@ function engagementScreen({navigation}) {
       fetch("http://" + bdd + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
         .then((response) => response.text())
         .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
+        .finally(() => setUpToDate(false));
     }
 
     // Si présent
@@ -123,7 +126,7 @@ function engagementScreen({navigation}) {
 
       setInfoComment([ jour, activite, site ]);
       //On rend le modal visible
-      setModalVisible(true);
+      setModalVisibleSet(true);
       
       // Le traitement se fait sur le modal afin d'éviter les désynchronisations
 
@@ -136,10 +139,11 @@ function engagementScreen({navigation}) {
           .then((response) => response.text())
           .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
           .catch((error) => console.error(error))
+          .finally(() => setUpToDate(false));
       }
       
       // On raffraichie les composants quoi qu'il arrive
-      setUpToDate(false);
+      
   }
 
   // On retourne la flatliste
@@ -154,11 +158,8 @@ function engagementScreen({navigation}) {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Changement annulé.");
-            setModalVisible(!modalVisible);
-          }}
+          visible={modalVisibleSet}
+          onRequestClose={() => {setModalVisibleSet(!modalVisibleSet)}}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -173,18 +174,39 @@ function engagementScreen({navigation}) {
               <Pressable
                 style={styles.button}
                 // TODO : envoyer le commentaire
-                onPress={() => {setModalVisible(!modalVisible);
+                onPress={() => {setModalVisibleSet(!modalVisibleSet);
                   fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
                   .then((response) => response.text())
                   .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-                  .catch((error) => console.error(error));
+                  .catch((error) => console.error(error))
+                  .finally(() => {setUpToDate(false); setComment("");})
 
-                  // On raffraichi et reset le commentaire pour la prochaine fois
-                  setComment("");
-                  setUpToDate(false);
+                  // On raffraichi et reset le commentaire pour la prochaine fois (au dessus - finally)
+                  
                 }}
               >
                 <Text style={styles.textStyle}>Valider</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisibleGet}
+          onRequestClose={() => {setModalVisibleGet(false); setComment("")}}
+        >
+            
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Commentaire d'absence</Text>
+              <Text style={styles.modalText}>{comment}</Text>
+              <Pressable
+                  style={styles.button}
+                  onPress={() => {setModalVisibleGet(false)}}
+              >
+                <Text style={styles.modalText}>fermer</Text>
               </Pressable>
             </View>
           </View>
@@ -220,18 +242,6 @@ function engagementScreen({navigation}) {
   );
 }
 
-
-// Fonction de changement de statut
-const chargerCommentaire = (commentaire) => {
-  Alert.alert(
-    "Commenaire d'Absence",
-    commentaire,
-    [
-      { text: "OK", onPress: () => console.log("OK Commentaire d'activité") }
-    ]
-
-  );
-}
 
 
 

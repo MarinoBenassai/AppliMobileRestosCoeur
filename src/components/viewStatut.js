@@ -29,6 +29,14 @@ function ViewStatus(props) {
     else if( (status == "Absent") && (role == "2") ) {
         return(<View style={{ justifyContent:"space-evenly", flexDirection: align}}>
             <Icon 
+                name='note' 
+                size={size}
+                color='black'
+                onPress={fctCommentaire}
+                style={{paddingRight: pad}}
+            />
+            
+            <Icon 
                 name='x' 
                 size={size}
                 color='red'
@@ -36,13 +44,6 @@ function ViewStatus(props) {
                 style={{paddingRight: pad}}
             />
         
-            <Icon 
-                name='note' 
-                size={size}
-                color='black'
-                onPress={fctCommentaire}
-                style={{paddingRight: pad}}
-            />
         </View>);
     }
     else if(status == "Absent") {

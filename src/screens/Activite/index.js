@@ -109,7 +109,7 @@ function activiteScreen({route, navigation}) {
     const ligne = data.split(/\n/);
     ligne.shift(); //enlève le premier élement (et le retourne)
     ligne.pop();   //enlève le dernier élement (et le retourne)
-    console.log("debut affichage");
+    
     if(affichage == "ALPHABETIQUE"){
       setVisibleData( ligne );
     }
@@ -169,7 +169,8 @@ function activiteScreen({route, navigation}) {
       fetch("http://" + bdd + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
         .then((response) => response.text())
         .then((texte) =>  {console.log("changement status : non défini : "); console.log(texte)})
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
+        .finally(() => setUpToDate(false));
     }
 
     // Si présent
@@ -191,10 +192,8 @@ function activiteScreen({route, navigation}) {
           .then((response) => response.text())
           .then((texte) =>  {console.log("changement statut : présent : "); console.log(texte)})
           .catch((error) => console.error(error))
+          .finally(() => setUpToDate(false));
       }
-      
-      // On raffraichie les composants quoi qu'il arrive
-      setUpToDate(false);
   }
 
   // On retourne la flatlist
@@ -235,17 +234,17 @@ function activiteScreen({route, navigation}) {
                                     .then((response) => response.text())
                                     .then((texte) => console.log(texte))
                                     .then(() => console.log("Nouvelle entrée : commentaire d'activité"))
-                                    .catch((error) => console.error(error));
+                                    .catch((error) => console.error(error))
+                                    .finally(() => setUpToDate(false));
                                   }
                                   else{
                                     fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
                                     .then((response) => response.text())
                                     .then((texte) => console.log(texte))
                                     .then(() => console.log("update entrée : commentaire d'activité "))
-                                    .catch((error) => console.error(error));
+                                    .catch((error) => console.error(error))
+                                    .finally(() => setUpToDate(false));
                                   }
-                                // On raffraichi et reset le commentaire pour la prochaine fois
-                                setUpToDate(false);
                           }}
                 >
                   <Text style={styles.textStyle}>Valider</Text>
@@ -278,11 +277,9 @@ function activiteScreen({route, navigation}) {
                   fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
                   .then((response) => response.text())
                   .then((texte) =>  {console.log("changement statut : absent :"); console.log(texte)})
-                  .catch((error) => console.error(error));
+                  .catch((error) => console.error(error))
+                  .finally(() => {setUpToDate(false); setComment("");});
 
-                  // On raffraichi et reset le commentaire pour la prochaine fois
-                  setComment("");
-                  setUpToDate(false);
                 }}
               >
                 <Text style={styles.textStyle}>Valider</Text>
