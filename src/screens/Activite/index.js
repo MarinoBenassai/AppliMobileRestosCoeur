@@ -33,7 +33,7 @@ function activiteScreen({route, navigation}) {
   const [infoActivite, setInfoActivite] = useState('');
   const [commentActivite, setCommentActivite] = useState('');
   const [beneficiaireActivite, setBeneficiaireActivite] = useState('');
-
+ 
   // Mode d'affichage
   const [affichage, setAffichage] = useState("ALPHABETIQUE"); // ("ALPHABETIQUE", "PRESENT", "ABSENT", "NONDEFINI");
   const [visibleData, setVisibleData] = useState('');
@@ -63,15 +63,13 @@ function activiteScreen({route, navigation}) {
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
-      .then(
-        fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
-        .then((response) => response.text())
-        .then((texte) =>  {setInfoActivite(texte.split("\n")[1]); console.log("Info commentaire d'activité : chargées");})
-        .then(() => {setCommentActivite(infoActivite.split("\t")[1]); setBeneficiaireActivite(infoActivite.split("\t")[0])})
-        .catch((error) => console.error(error))
-      )
+      .then(() => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour))
+      .then((response) => response.text())
+      .then((texte) =>  {console.log(texte);setInfoActivite(texte.split("\n")[1]); console.log("Info commentaire d'activité : chargées");
+      setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
+
       .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+      .finally(() => {setLoading(false); setUpToDate(true)});
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -87,13 +85,11 @@ function activiteScreen({route, navigation}) {
       fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
         .then((response) => response.text())
         .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
-        .then(
-          fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
-          .then((response) => response.text())
-          .then((texte) =>  {setInfoActivite(texte.split("\n")[1]); console.log("Info commentaire d'activité : chargées");})
-          .then(() => {setCommentActivite(infoActivite.split("\t")[1]); setBeneficiaireActivite(infoActivite.split("\t")[0])})
-          .catch((error) => console.error(error))
-        )
+        .then(() => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour))
+        .then((response) => response.text())
+        .then((texte) =>  {console.log(texte);setInfoActivite(""); console.log("Info commentaire d'activité : chargées");
+          setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
+        
         .catch((error) => console.error(error))
         .finally(() => {setLoading(false); setUpToDate(true)});
 
@@ -197,6 +193,10 @@ function activiteScreen({route, navigation}) {
       }
   }
 
+  const handleChangeNumber = ( value ) => { 
+    setBeneficiaireActivite( normalizeInputNumber(value, beneficiaireActivite) );
+  };
+
   // On retourne la flatlist
   return (
     <>
@@ -214,8 +214,8 @@ function activiteScreen({route, navigation}) {
                 <Text style={styles.modalText}>Nombre de Bénéficiaire :</Text>
                 <TextInput
                   style={styles.idInput}
-                  onChangeText={setBeneficiaireActivite}
-                  defaultValue={beneficiaireActivite}
+                  onChangeText={handleChangeNumber}
+                  value={beneficiaireActivite}
                   keyboardType="numeric"
                   maxLength={10}
                 />
@@ -405,6 +405,17 @@ function activiteScreen({route, navigation}) {
   );
 }
 
+
+// Number only
+const normalizeInputNumber = (value, previousValue) => {
+  if (!value) return value;
+  const currentValue = value.replace(/[^\d]/g, '');
+
+  if (!previousValue || value.length > previousValue.length) {
+    return currentValue;
+  }
+  
+};
 
 // On exporte la fonction principale
 export default activiteScreen;

@@ -23,7 +23,7 @@ const compteScreen = () => {
   const [verifP, setVerifP] = useState('');
   const [persoUpToDate, setPersoUpToDate] = useState(false);
   
-  // O récupère l'id de l'utilisateur courrant
+  // On récupère l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
 
   // On récupère les informations d'engagement par défaut
@@ -71,6 +71,11 @@ const compteScreen = () => {
     </View>
   );
 
+  // handler phone change
+  const handleChangePhone = ( value ) => { 
+    setPhone( normalizeInputPhone(value) );
+  };
+
   // On retourne la flatliste
   return (
     <SafeAreaView style={styles.container}>
@@ -106,11 +111,11 @@ const compteScreen = () => {
                         <Text style={styles.data}>Téléphone : </Text>
                         <TextInput
                           style={styles.input}
-                          placeholder={lignePerso[1].split("\t")[3]}
+                          placeholder={normalizeInputPhone(lignePerso[1].split("\t")[3])}
                           autoCorrect={false}
                           textContentType='telephoneNumber'
                           keyboardType='phone-pad'
-                          onChangeText={text => setPhone(text)}
+                          onChangeText={handleChangePhone}
 						              value = {phone}
                         />
                       </View>
@@ -292,6 +297,9 @@ const compteScreen = () => {
 
 	// Fonction de changement d'information de contact
 	function changeContact (phone, mail) {
+    phone = phone.replace(/[^\d+]/g, ''); //TODO check
+    phone = phone.replace(/\+/g, '%2B');
+    console.log(phone);
 	  if (phone != "" || mail != ""){
 	    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
 		.then((resp) => resp.text())
@@ -314,6 +322,34 @@ const compteScreen = () => {
 }
 
 
+// Phone only
+const normalizeInputPhone = (value) => {
+  // retourne rien si rien
+  if (!value) return value; 
+
+  // nombre et +
+  const currentValue = value.replace(/[^\d+]|(?<=[\d+])\+/g, '');
+
+  var newValue = "";
+  for(let i = 0; i<currentValue.length; i++){
+    // on gère le +33
+    if( currentValue[0] == "+" ){
+      if( i == 3 ){
+        newValue += " "
+      }
+    }
+    // on met un espace tous les 2 nombres
+    if( (i != 0) && (i%2 == 0) && (( currentValue[0] != "+" ) || ( i>=3 )) ){
+      newValue += " "
+    }
+
+    // on écrit le nombre
+    newValue += currentValue[i];
+  }
+
+  return newValue;
+  
+};
 
 
 async function compareToHash (mdp, hash) {
