@@ -28,13 +28,14 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
+  const token = React.useContext(userContext).token
 
   // On récupère les informations données en paramètres
   const { IDActivite, IDSite, IDJour } = route.params;
 
   // on va chercher les informations sur la BDD
   useEffect(() => {
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_ALL_BENEVOLE')
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_ALL_BENEVOLE' + '/P_TOKEN=' + token)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Liste Utilisateurs : chargées")})
       .catch((error) => console.error(error))
@@ -58,7 +59,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   //Fonction d'ajout de bénévole
   const ajouterBenevole = (benevole) => {
     console.log("Vous avez ajouter l'id : " + benevole + " " + IDJour + " " + IDActivite + " " + IDSite);
-      fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + IDJour + "/P_IDACTIVITE=" + IDActivite + "/P_IDSITE=" + IDSite + "/P_IDROLE=1")
+      fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + IDJour + "/P_IDACTIVITE=" + IDActivite + "/P_IDSITE=" + IDSite + "/P_IDROLE=1" + '/P_TOKEN=' + token)
         .then((response) => response.text())
         .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
         .then( () => goBack() )

@@ -13,6 +13,7 @@ function referentScreen({navigation}) {
 
   // On importe l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
+  const token = React.useContext(userContext).token
 
   // Fonction de sélection de l'activité
   function versActivite({navigation}, item) {
@@ -23,7 +24,7 @@ function referentScreen({navigation}) {
 
   // On récupère les données
   useEffect(() => {
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos Synthèse Réferent : chargées")})
       .catch((error) => console.error(error))

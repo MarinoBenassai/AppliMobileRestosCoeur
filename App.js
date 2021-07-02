@@ -27,20 +27,28 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [userID,setUserID] = React.useState("");
+  const [token, setToken] = React.useState("");
   
   function changeID(ID) {
     setUserID(ID);
   }
   
+  function changeToken(token) {
+    setToken(token);
+  }
+  
   function logout() {
 	setUserID("");
+	setToken("");
   }
   
   return (
     <userContext.Provider value = {{
       userID: userID,
+	  token: token,
       logoutUser: logout,
 	  changeID: changeID,
+	  changeToken: changeToken,
     }}>
     <NavigationContainer>
       <Drawer.Navigator screenOptions = {{swipeEnabled : false}}>

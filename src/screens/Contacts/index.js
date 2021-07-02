@@ -21,10 +21,11 @@ function contactScreen() {
   
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
-
+  const token = React.useContext(userContext).token
+  
   // on va chercher les informations sur la BDD
   useEffect(() => {
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_CONTACT/P_IDBENEVOLE=' + userID)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_CONTACT/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées")})
       .catch((error) => console.error(error))

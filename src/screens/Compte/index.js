@@ -25,10 +25,11 @@ const compteScreen = () => {
   
   // On récupère l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
-
+  const token = React.useContext(userContext).token
+  
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
       .then((response) => response.text())
       .then((texte) =>  {setDataEngagementDefaut(texte); console.log("Infos Engagement Défaut : chargées")})
       .catch((error) => {
@@ -41,7 +42,7 @@ const compteScreen = () => {
 	if (persoUpToDate === false) {
 	setPersoUpToDate(true);
 	console.log("fait");
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
       .then((response) => response.text())
       .then((texte) =>  {setDataPerso(texte); console.log("Infos Perosnelles : chargées")})
       .catch((error) => console.error(error))
@@ -252,9 +253,9 @@ const compteScreen = () => {
 	  // tout est bon
 	  else {
 		setLoading(true);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
+		fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
 		.then((response) => response.text())
-		.then((texte) => {const emailAdd = getEmailFromData(texte); return fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_ACCES_BEN/P_EMAIL=' + emailAdd)})
+		.then((texte) => {const emailAdd = getEmailFromData(texte); return fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_ACCES_BEN/P_EMAIL=' + emailAdd + '/P_TOKEN=' + token)})
 		.then((response) => response.text())
 		.then((texte) =>  {const hash = getPasswordFromData(texte); return compareToHash(oldP,hash);})
 		.then((correct) => {
@@ -272,7 +273,7 @@ const compteScreen = () => {
 			else{
 				setLoading(true);
 				Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256,newP)
-				.then((hash) => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_MOTDEPASSE/P_IDBENEVOLE=' + userID + '/P_MOTDEPASSE=' + hash))
+				.then((hash) => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_MOTDEPASSE/P_IDBENEVOLE=' + userID + '/P_MOTDEPASSE=' + hash + '/P_TOKEN=' + token))
 				.then((rep) => rep.text())
 				.then(texte => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
 				.catch((error) => console.error(error));
@@ -301,10 +302,10 @@ const compteScreen = () => {
     phone = phone.replace(/\+/g, '%2B');
     console.log(phone);
 	  if (phone != "" || mail != ""){
-	    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID)
+	    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
 		.then((resp) => resp.text())
 	    .then((texte) => {console.log(texte);if (phone === "") {phone = getPhoneFromData(texte)} if (mail === "") {mail = getEmailFromData(texte)}})
-	    .then(() => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone))
+	    .then(() => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone + '/P_TOKEN=' + token))
 	    .then((rep) => rep.text())
 	    .then(texte => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
 		.catch((error) => console.error(error))

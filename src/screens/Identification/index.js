@@ -10,77 +10,37 @@ import styles from '../../styles';
 export default function IdScreen({navigation}) {
   const [textEmail, onChangeTextEmail] = React.useState('');
   const [textPassword, onChangeTextPassword] = React.useState('');
-  const [data, setData] = React.useState('');
-  const [hash, setHash] = React.useState('');
+  const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   
   const changeID = React.useContext(userContext).changeID;
+  const changeToken = React.useContext(userContext).changeToken;
   
   function checkPassword() {
 	if (textEmail != '' && textPassword != '') {
 		setLoading(true);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_ACCES_BEN/P_EMAIL=' + textEmail) //A changer
-		  .then((response) => response.text())
-		  .then((texte) =>  {setData(texte);setLoading(false);})
-		  .catch((error) => {
-			(setData(-1));
-			setLoading(false);
-		  });
-		Crypto.digestStringAsync(
-			Crypto.CryptoDigestAlgorithm.SHA256,
-			textPassword
-		  )
-		.then((hash1) => setHash(hash1))
-		.catch();
+		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_LOGIN/P_EMAIL=' + textEmail +"/P_MOTDEPASSE=" + textPassword)
+		  .then((response) => {
+			if (response.ok) {
+				return response.json();
+			}
+			else {
+				throw new Error('Une erreur est survenue.');
+			}
+		  })
+		  .then((data) => login(data))
+		  .catch((error) => alert("Une erreur est survenue"))
+		  .finally(setLoading(false));
+		  
 		onChangeTextPassword(''); //On vide le champ mot de passe
 	}
   }
   
-  useEffect(() => {
-	if (data != "" && hash != "") {
-	  const hPassword = getPasswordFromData(data);
-	  if (hPassword != null) {
-		  if (hPassword === hash) {
-			  changeID(getIDFromData(data));
-		  }
-		  else {
-			alert("Mot de Passe incorrect !");
-		  }
-	  }
-	  else {
-		  alert("Identifiant incorrect");
-	  }
-	  setData("");
-	  setHash('');
-	}
-	
-  }, [data,hash]);
   
-  function getPasswordFromData(data) {
-	const lignes = data.split(/\n/);
-	var i;
-	var hPassword = null;
-	for (i = 1; i<lignes.length; i++){
-		if (lignes[i] != ""){
-			const valeurs = lignes[i].split(/\t/);
-			hPassword = valeurs[2];
-		}
-	}
-	return hPassword;
-  }
-  
-  function getIDFromData(data) {
-	const lignes = data.split(/\n/);
-	var i;
-	var ID = null;
-	for (i = 1; i<lignes.length; i++){
-		if (lignes[i] != ""){
-			const valeurs = lignes[i].split(/\t/);
-			ID = valeurs[3];
-		}
-	}
-	return ID;
-  }
+  function login(data) {
+	  changeToken(data.token);
+	  changeID(data.id);
+    }
   
   return (
     <>
@@ -123,7 +83,7 @@ export default function IdScreen({navigation}) {
 	  </Pressable>
 	  	
     <Button
-	  onPress = {() => changeID(constantes.IDDebug)}
+	  onPress = {() => {changeID(constantes.IDDebug); changeToken(constantes.IDDebug)}}
 	  title="PASSER"
 	  color="#041584"
     />

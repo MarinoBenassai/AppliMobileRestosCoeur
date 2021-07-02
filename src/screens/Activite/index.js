@@ -43,7 +43,8 @@ function activiteScreen({route, navigation}) {
   const [phone, setPhone] = useState('');
 
   // On charge l'id de l'utilisateur courrant
-  const userID = React.useContext(userContext).userID
+  const userID = React.useContext(userContext).userID;
+  const token = React.useContext(userContext).token;
 
   // On récupère les informations données en paramètres
   const { IDActivite, IDSite, IDJour, NomActivite, NomSite, idRole } = route.params;
@@ -60,10 +61,10 @@ function activiteScreen({route, navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-      fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
+      fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_TOKEN=' + token)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
-      .then(() => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour))
+      .then(() => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_TOKEN=' + token))
       .then((response) => response.text())
       .then((texte) =>  {console.log(texte);setInfoActivite(texte.split("\n")[1]); console.log("Info commentaire d'activité : chargées");
       setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
@@ -82,10 +83,10 @@ function activiteScreen({route, navigation}) {
     if(!upToDate){
 	  setLoading(true);
       // Update la liste et les info Activité
-      fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour)
+      fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_TOKEN=' + token)
         .then((response) => response.text())
         .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
-        .then(() => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour))
+        .then(() => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_TOKEN=' + token))
         .then((response) => response.text())
         .then((texte) =>  {console.log(texte);setInfoActivite(""); console.log("Info commentaire d'activité : chargées");
           setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
@@ -163,7 +164,7 @@ function activiteScreen({route, navigation}) {
     // Si absent
     if(statut == "Absent"){
       console.log("Vous êtiez actuellement 'Absent'");
-      fetch("http://" + bdd + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site)
+      fetch("http://" + bdd + "/Axoptim.php/REQ/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + '/P_TOKEN=' + token)
         .then((response) => response.text())
         .then((texte) =>  {console.log("changement status : non défini : "); console.log(texte)})
         .catch((error) => console.error(error))
@@ -185,7 +186,7 @@ function activiteScreen({route, navigation}) {
       // Si non-défini
       else{
         console.log("Vous êtiez actuellement 'Non défini'");
-        fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role)
+        fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role + '/P_TOKEN=' + token)
           .then((response) => response.text())
           .then((texte) =>  {console.log("changement statut : présent : "); console.log(texte)})
           .catch((error) => console.error(error))
@@ -231,7 +232,7 @@ function activiteScreen({route, navigation}) {
                   // écrire et envoyer le commentaire
                   onPress={() => {setmodalVisibleCommentaireActivite(false)
                                   if(infoActivite.length == 0){
-                                    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
+                                    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite + '/P_TOKEN=' + token)
                                     .then((response) => response.text())
                                     .then((texte) => console.log(texte))
                                     .then(() => console.log("Nouvelle entrée : commentaire d'activité"))
@@ -239,7 +240,7 @@ function activiteScreen({route, navigation}) {
                                     .finally(() => setUpToDate(false));
                                   }
                                   else{
-                                    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite)
+                                    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite + '/P_TOKEN=' + token)
                                     .then((response) => response.text())
                                     .then((texte) => console.log(texte))
                                     .then(() => console.log("update entrée : commentaire d'activité "))
@@ -275,7 +276,7 @@ function activiteScreen({route, navigation}) {
                 style={styles.button}
                 // écrire et envoyer le commentaire
                 onPress={() => {setmodalVisibleAbsence(!modalVisibleAbsence);
-                  fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment)
+                  fetch("http://" + constantes.BDD + "/Axoptim.php/REQ/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment + '/P_TOKEN=' + token)
                   .then((response) => response.text())
                   .then((texte) =>  {console.log("changement statut : absent :"); console.log(texte)})
                   .catch((error) => console.error(error))
