@@ -329,8 +329,9 @@ const normalizeInputPhone = (value) => {
   if (!value) return value; 
 
   // nombre et +
-  const currentValue = value.replace(/[^\d+]|(?<=[\d+])\+/g, '');
-
+  //const currentValue = value.replace(/[^\d+]|(?<=[\d+])\+/g, '');
+  const currentValue = value.slice(0,1).replace(/[^\d+]/g, '') + value.slice(1).replace(/[^\d]/g, '');
+  
   var newValue = "";
   for(let i = 0; i<currentValue.length; i++){
     // on gère le +33

@@ -30,7 +30,7 @@ export default function IdScreen({navigation}) {
 		  })
 		  .then((data) => login(data))
 		  .catch((error) => alert("Une erreur est survenue"))
-		  .finally(setLoading(false));
+		  .finally(() => setLoading(false));
 		  
 		onChangeTextPassword(''); //On vide le champ mot de passe
 	}
