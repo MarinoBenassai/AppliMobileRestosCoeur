@@ -1,10 +1,14 @@
 import React from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Button, Text, View, Image, TextInput} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Octicons';
+import Constants from 'expo-constants';
+
+import * as Notifications from 'expo-notifications';
 
 import IdScreen from './src/screens/Identification';
 import compteScreen from './src/screens/Compte';
@@ -25,9 +29,38 @@ const identificationStack = createStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
+// handler de notification
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
 export default function App() {
   const [userID,setUserID] = React.useState("");
   const [token, setToken] = React.useState("");
+
+  // Notification
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+//ExponentPushToken[vTpWliDgX7_KFLUO69inj7]
+  useEffect(() => {
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
   
   function changeID(ID) {
     setUserID(ID);
