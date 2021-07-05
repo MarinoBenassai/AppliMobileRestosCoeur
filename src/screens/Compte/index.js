@@ -253,37 +253,17 @@ const compteScreen = () => {
 	  // tout est bon
 	  else {
 		setLoading(true);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_MON_COMPTE/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
-		.then((response) => response.text())
-		.then((texte) => {const emailAdd = getEmailFromData(texte); return fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_ACCES_BEN/P_EMAIL=' + emailAdd + '/P_TOKEN=' + token)})
-		.then((response) => response.text())
-		.then((texte) =>  {const hash = getPasswordFromData(texte); return compareToHash(oldP,hash);})
-		.then((correct) => {
-			// ancien mot de passe faux
-			if(!correct){
-				alert(
-				"L'ancien mot de passe est incorrect.",
-				"",
-				[
-				  { text: "OK", onPress: () => console.log("Error MdP Pressed") }
-				]
-			  );
+		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_UPD_MOTDEPASSE/P_IDBENEVOLE=' + userID + '/P_MOTDEPASSE=' + oldP + '/P_NOUV_MOTDEPASSE=' + newP)
+		.then((response) => {
+			if (response.ok) {
+				return response.json();
 			}
-
-			else{
-				setLoading(true);
-				Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256,newP)
-				.then((hash) => fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_MOTDEPASSE/P_IDBENEVOLE=' + userID + '/P_MOTDEPASSE=' + hash + '/P_TOKEN=' + token))
-				.then((rep) => rep.text())
-				.then(texte => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
-				.catch((error) => console.error(error));
-			  alert(
-				"Votre mot de passe a bien été modifié.",
-				[
-				  { text: "OK", onPress: () => console.log("OK MdP Pressed") }
-				]
-			  );
+			else {
+				throw new Error('Une erreur est survenue.');
 			}
+		})
+		.then((json) => {
+			alert("Votre mot de passe a bien été modifié.");
 		})
 		.catch((error) => console.error(error))
         .finally(() => setLoading(false));
@@ -329,7 +309,7 @@ const normalizeInputPhone = (value) => {
   if (!value) return value; 
 
   // nombre et +
-  //const currentValue = value.replace(/[^\d+]|(?<=[\d+])\+/g, '');
+  //const currentValue = value.replace(/[^\d+]|(?<=[\d+])\+/g, ''); //Ne fonctionne pas sur portable
   const currentValue = value.slice(0,1).replace(/[^\d+]/g, '') + value.slice(1).replace(/[^\d]/g, '');
   
   var newValue = "";
