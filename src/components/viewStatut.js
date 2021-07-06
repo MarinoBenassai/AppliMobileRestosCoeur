@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
+import styles from '../styles';
 
 // Div status
 function ViewStatus(props) {
@@ -10,7 +11,7 @@ function ViewStatus(props) {
     const align = props.align;
 
     const size = 32;
-    const pad = 30;
+    const pad = 15;
 
     const fctStatut = props.fctStatut;
     const fctCommentaire = props.fctCommentaire;
@@ -22,7 +23,7 @@ function ViewStatus(props) {
                 size={size}
                 color='green'
                 onPress={role=="2" ? fctStatut : ()=>{}}
-                style={{paddingRight: pad}}
+                style={styles.statusIcon}
             />
         </View>);
     }
@@ -33,7 +34,7 @@ function ViewStatus(props) {
                 size={size}
                 color='black'
                 onPress={fctCommentaire}
-                style={{paddingRight: pad}}
+                style={styles.statusIcon}
             />
             
             <Icon 
@@ -41,7 +42,7 @@ function ViewStatus(props) {
                 size={size}
                 color='red'
                 onPress={fctStatut}
-                style={{paddingRight: pad}}
+                style={styles.statusIcon}
             />
         
         </View>);
@@ -52,7 +53,7 @@ function ViewStatus(props) {
                 name='x' 
                 size={size}
                 color='red'
-                style={{paddingRight: pad}}
+                style={styles.statusIcon}
             />
         
         </View>);
@@ -64,7 +65,7 @@ function ViewStatus(props) {
                 size={size}
                 color='black'
                 onPress={role=="2" ? fctStatut : ()=>{}}
-                style={{paddingRight: pad}}
+                style={styles.statusIcon}
             />
         </View>);
     }

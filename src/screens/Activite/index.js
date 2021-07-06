@@ -150,6 +150,7 @@ function activiteScreen({route, navigation}) {
             size={32}
             color='#000'
             onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }
+			style={styles.statusIcon}
           />
           
         </View>
