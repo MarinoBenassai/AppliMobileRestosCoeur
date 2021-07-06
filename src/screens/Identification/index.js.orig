@@ -11,29 +11,49 @@ import LogoRdC from '../../components/logoRdC';
 
 
 export default function IdScreen({navigation}) {
-
+<<<<<<< HEAD
+  const [textEmail, onChangeTextEmail] = React.useState('');
+  const [textPassword, onChangeTextPassword] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  
+  const changeID = React.useContext(userContext).changeID;
+  const changeToken = React.useContext(userContext).changeToken;
+  const handleError = React.useContext(userContext).handleError;
+=======
 	const [textEmail, onChangeTextEmail] = React.useState('');
 	const [textPassword, onChangeTextPassword] = React.useState('');
-
+	const [data, setData] = React.useState([]);
 	const [loading, setLoading] = React.useState(false);
 
 	const [expoPushToken, setExpoPushToken] = useState('');
 	
 	const changeID = React.useContext(userContext).changeID;
 	const changeToken = React.useContext(userContext).changeToken;
-    const handleError = React.useContext(userContext).handleError;
 
 	// On va chercher le token de notification
 /* 	useEffect(() => {
 		registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 	}, []); */
-
+>>>>>>> dc0b248b9d9738d66f66ee398c8ed7eebc542d7c
   
   function checkPassword() {
 	if (textEmail != '' && textPassword != '') {
 		setLoading(true);
 		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_LOGIN/P_EMAIL=' + textEmail +"/P_MOTDEPASSE=" + textPassword)
-
+<<<<<<< HEAD
+		  .then((response) => {
+			if (response.ok) {
+				return response.json();
+			}
+			else {
+				const json = response.json();
+				throw new Error(json['error']);
+			}
+		  })
+		  .then((data) => login(data))
+		  .catch((error) => handleError(error))
+		  .finally(() => setLoading(false));
+=======
 			.then((response) => {
 				if (response.ok) {
 					const a = response.json();
@@ -42,22 +62,19 @@ export default function IdScreen({navigation}) {
 					return Promise.all([a, b])
 				}
 				else {
-					const json = response.json();
-					throw new Error(json['error']);
+					throw new Error('Une erreur est survenue.');
 				}
 			})
 			
 			
-			.then(([data, token]) => {
-				fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token + "/P_TOKEN=" + data.token);
-				login(data);
-			})
+			.then(([data, token]) => 
+				fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token + "/P_TOKEN=" + data.token))
 
-			//.then((response) => response.text())
-			//.then(texte => console.log(texte))
-			.catch((error) => {handleError(error); setLoading(false)})
+			.then((response) => response.text())
+			.then(texte => console.log(texte))
+			.catch((error) => {alert(error); setLoading(false)})
 		  
-
+>>>>>>> dc0b248b9d9738d66f66ee398c8ed7eebc542d7c
 		onChangeTextPassword(''); //On vide le champ mot de passe
 	}
   }
