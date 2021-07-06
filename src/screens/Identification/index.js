@@ -133,7 +133,7 @@ async function registerForPushNotificationsAsync() {
 		// Notification non autorisée
 		if (finalStatus !== 'granted') {
 			alert('Failed to get push token for push notification!');
-			//return;
+			return "-1";
 		}
 
 		token = (await Notifications.getExpoPushTokenAsync()).data;
