@@ -7,7 +7,7 @@ import Constants from 'expo-constants';
 import constantes from '../../constantes';
 import {userContext} from '../../contexts/userContext';
 import styles from '../../styles';
-import LogoRdC from '../../components/logoRdC';
+import logo from '../../../assets/logoRdC.png'
 
 
 export default function IdScreen({navigation}) {
@@ -71,7 +71,10 @@ export default function IdScreen({navigation}) {
   return (
     <>
     <View style={[styles.container,{alignItems: "center"}]}>
-	  <LogoRdC/>
+	  <Image
+		style={styles.logo}
+        source={logo}
+      />
       <Text style={styles.idTexte}>Adresse mail</Text>
 	  <TextInput
 		style={styles.idInput}
