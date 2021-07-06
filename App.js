@@ -91,8 +91,8 @@ export default function App() {
 	  .finally(() => console.log("finally"));
   }
   
-  function handleError (error) {
-	  if (error === "Bad Token"){
+  function handleError (erreur) {
+	  if (erreur === "Bad Token"){
 		//TODO message de deconnexion
 		setUserID("");
 		setToken("");
