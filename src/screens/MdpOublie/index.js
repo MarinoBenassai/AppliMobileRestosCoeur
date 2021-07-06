@@ -4,8 +4,8 @@ import {SafeAreaView, StyleSheet, TextInput, Button, StatusBar, Pressable, Alert
 
 import constantes from '../../constantes';
 import styles from '../../styles';
-import * as Crypto from 'expo-crypto';
-import * as Random from 'expo-random';
+import {userContext} from '../../contexts/userContext';
+
 
 
 function oublieScreen({navigation}){
@@ -13,23 +13,26 @@ function oublieScreen({navigation}){
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState('');
   
+  const handleError = React.useContext(userContext).handleError;
+  
   function resetPassword() {
 	if (textEmail != '') {
 		setLoading(true);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_RST_MOTDEPASSE/P_EMAIL=' + textEmail) //A changer
+		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_RST_MOTDEPASSE/P_EMAIL=' + textEmail)
 		  .then((response) => {
 			if (response.ok) {
 				return response.json();
 			}
 			else {
-				throw new Error('Une erreur est survenue.');
+				const json = response.json();
+				throw new Error(json['error']);
 			}
 		  })
 		  .then((json) => {
 			  alert("Si cette adresse est associée à un compte, un mail contenant votre nouveau mot de passe vient de vous être envoyé. Votre nouveau mot de passe est " + json["mdp"] +".");
 		      navigation.goBack();
 		  })
-		  .catch((error) => alert("Une erreur est survenue"))
+		  .catch((error) => handleError)
 		  .finally(() => setLoading(false));
 		  
 	    onChangeTextEmail(""); //On vide le champ email

@@ -10,11 +10,11 @@ import styles from '../../styles';
 export default function IdScreen({navigation}) {
   const [textEmail, onChangeTextEmail] = React.useState('');
   const [textPassword, onChangeTextPassword] = React.useState('');
-  const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   
   const changeID = React.useContext(userContext).changeID;
   const changeToken = React.useContext(userContext).changeToken;
+  const handleError = React.useContext(userContext).handleError;
   
   function checkPassword() {
 	if (textEmail != '' && textPassword != '') {
@@ -25,13 +25,13 @@ export default function IdScreen({navigation}) {
 				return response.json();
 			}
 			else {
-				throw new Error('Une erreur est survenue.');
+				const json = response.json();
+				throw new Error(json['error']);
 			}
 		  })
 		  .then((data) => login(data))
-		  .catch((error) => alert("Une erreur est survenue"))
+		  .catch((error) => handleError(error))
 		  .finally(() => setLoading(false));
-		  
 		onChangeTextPassword(''); //On vide le champ mot de passe
 	}
   }

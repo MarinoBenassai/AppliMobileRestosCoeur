@@ -17,6 +17,8 @@ import listeUtilisateurScreen from './src/screens/ListeUtilisateur';
 
 import {userContext} from './src/contexts/userContext';
 
+import constantes from './src/constantes';
+
 const engagementStack = createStackNavigator();
 const synthRefStack = createStackNavigator();
 const compteStack = createStackNavigator();
@@ -38,10 +40,35 @@ export default function App() {
   }
   
   function logout() {
-	setUserID("");
-	setToken("");
+	fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_LOGOUT/P_TOKEN=' + token)
+	  .then((response) => {
+		if (response.ok) {
+			return response.json();
+		}
+		else {
+			throw new Error('Une erreur est survenue.');
+		}
+	  })
+	  .then((json) => {
+		  setUserID("");
+		  setToken("");
+		  alert("Déconnexion réussie.");
+	  })
+	  .catch((error) => alert("Une erreur est survenue"))
+	  .finally(() => console.log("finally"));
   }
   
+  function handleError (error) {
+	  if (error === "Bad Token"){
+		//TODO message de deconnexion
+		setUserID("");
+		setToken("");
+	  }
+	  else {
+		alert(erreur);
+		console.log(erreur);
+	  }
+  }
   return (
     <userContext.Provider value = {{
       userID: userID,
@@ -49,6 +76,7 @@ export default function App() {
       logoutUser: logout,
 	  changeID: changeID,
 	  changeToken: changeToken,
+	  handleError: handleError
     }}>
     <NavigationContainer>
       <Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
