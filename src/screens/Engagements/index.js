@@ -45,7 +45,11 @@ function engagementScreen({navigation}) {
   useEffect(() => {
     if(upToDate == false){
 	  setLoading(true);
-      fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token )
+      let body = new FormData();
+	  body.append('token',token);
+	  fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID  , {
+	  method: 'POST',
+	  body: body})
         .then((response) => response.text())
         .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); setUpToDate(true);})
         .catch((error) => console.error(error))
@@ -115,7 +119,11 @@ function engagementScreen({navigation}) {
     if(statut == "Absent"){
       console.log("Vous ête actuellement 'Absent'");
 	  setLoading(true);
-      fetch("http://" + bdd + "/Axoptim.php/APP/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + '/P_TOKEN=' + token)
+      let body = new FormData();
+	  body.append('token',token);
+	  fetch("http://" + bdd + "/Axoptim.php/APP/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site , {
+	  method: 'POST',
+	  body: body})
         .then((response) => response.text())
         .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
         .catch((error) => console.error(error))
@@ -138,7 +146,11 @@ function engagementScreen({navigation}) {
       else{
 		setLoading(true);
         console.log("Vous êtes actuellement 'Non défini'");
-        fetch("http://" + bdd + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role + '/P_TOKEN=' + token)
+        let body = new FormData();
+		body.append('token',token);
+		fetch("http://" + bdd + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role , {
+		method: 'POST',
+		body: body})
           .then((response) => response.text())
           .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
           .catch((error) => console.error(error))
@@ -175,7 +187,11 @@ function engagementScreen({navigation}) {
                 // TODO : envoyer le commentaire
                 onPress={() => {setModalVisibleSet(!modalVisibleSet);
 				  setLoading(true);
-                  fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment + '/P_TOKEN=' + token)
+                  let body = new FormData();
+				  body.append('token',token);
+				  fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
+				  method: 'POST',
+				  body: body})
                   .then((response) => response.text())
                   .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
                   .catch((error) => console.error(error))
