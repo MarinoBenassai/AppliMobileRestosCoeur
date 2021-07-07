@@ -205,8 +205,8 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   statusIcon: {
-	paddingRight: 15,
-	paddingLeft: 15
+	paddingRight: 10,
+	paddingLeft: 10
   }
 }); 
 export default styles;
