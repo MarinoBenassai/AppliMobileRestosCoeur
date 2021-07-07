@@ -206,7 +206,9 @@ function engagementScreen({navigation}) {
                   style={styles.button}
                   onPress={() => {setModalVisibleGet(false)}}
               >
-                <Text style={styles.modalText}>fermer</Text>
+                {({ pressed }) => (
+                  <Text style={[styles.modalText, {color:pressed?'darkslategrey':'black'}]}>fermer</Text>
+                )}
               </Pressable>
             </View>
           </View>

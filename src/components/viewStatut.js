@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View} from 'react-native';
+import { ActivityIndicator, FlatList, Text, View, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styles from '../styles';
 
@@ -18,55 +18,75 @@ function ViewStatus(props) {
 
     if(status == "Présent"){
         return (<View style={{justifyContent: "center"}}>
-            <Icon 
-                name='check' 
-                size={size}
-                color='green'
-                onPress={role=="2" ? fctStatut : ()=>{}}
-                style={styles.statusIcon}
-            />
+            <Pressable>
+                {({ pressed }) => (
+                    <Icon 
+                        name='check' 
+                        size={size}
+                        color={pressed?'lightgreen':'green'}
+                        onPress={role=="2" ? fctStatut : ()=>{}}
+                        style={styles.statusIcon}
+                    />
+                )}
+            </Pressable>
         </View>);
     }
     else if( (status == "Absent") && (role == "2") ) {
         return(<View style={{ justifyContent:"center", flexDirection: align, alignSelf: "center"}}>
-            <Icon 
-                name='note' 
-                size={size}
-                color='black'
-                onPress={fctCommentaire}
-                style={styles.statusIcon}
-            />
+            <Pressable>
+                {({ pressed }) => (
+                    <Icon 
+                        name='note' 
+                        size={size}
+                        color={pressed?'darkslategrey':'black'}
+                        onPress={fctCommentaire}
+                        style={styles.statusIcon}
+                    />
+                )}
+            </Pressable>
             
-            <Icon 
-                name='x' 
-                size={size}
-                color='red'
-                onPress={fctStatut}
-                style={styles.statusIcon}
-            />
+            <Pressable>
+                {({ pressed }) => (
+                    <Icon 
+                        name='x' 
+                        size={size}
+                        color={pressed?'orangered':'red'}
+                        onPress={fctStatut}
+                        style={styles.statusIcon}
+                    />
+                )}
+            </Pressable>
         
         </View>);
     }
     else if(status == "Absent") {
         return(<View  style={{justifyContent: "center"}}>
-            <Icon 
-                name='x' 
-                size={size}
-                color='red'
-                style={styles.statusIcon}
-            />
+            <Pressable>
+                {({ pressed }) => (
+                    <Icon 
+                        name='x' 
+                        size={size}
+                        color={pressed?'orangered':'red'}
+                        style={styles.statusIcon}
+                    />
+                )}
+            </Pressable>
         
         </View>);
     }
     else{
         return(<View style={{justifyContent: "center"}}>
-            <Icon 
-                name='unverified' 
-                size={size}
-                color='black'
-                onPress={role=="2" ? fctStatut : ()=>{}}
-                style={styles.statusIcon}
-            />
+            <Pressable>
+                {({ pressed }) => (
+                    <Icon 
+                        name='unverified' 
+                        size={size}
+                        color={pressed?'darkslategrey':'black'}
+                        onPress={role=="2" ? fctStatut : ()=>{}}
+                        style={styles.statusIcon}
+                    />
+                )}
+            </Pressable>
         </View>);
     }
     

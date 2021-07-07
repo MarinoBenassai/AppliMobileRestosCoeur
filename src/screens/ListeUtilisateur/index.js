@@ -84,13 +84,17 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
       
 
       {/* Conteneur 2eme colonne : info lieu */}
-      <View style={{marginRight: 40, justifyContent: "center"}}> 
-        <Icon 
-          name='mail' 
-          size={30}
-          color='#000'
-          onPress={() => {setMail(item.split(/\t/)[2]); setPhone(item.split(/\t/)[3]); setmodalVisibleContact(!modalVisibleContact);}}
-        />
+      <View style={{marginRight: 40, justifyContent: "center"}}>
+      <Pressable>
+          {({ pressed }) => (
+            <Icon 
+              name='mail' 
+              size={30}
+              color={pressed?'darkslategrey':'black'}
+              onPress={() => {setMail(item.split(/\t/)[2]); setPhone(item.split(/\t/)[3]); setmodalVisibleContact(!modalVisibleContact);}}
+            />
+          )}
+      </Pressable>
       </View>
     </View>
   );
