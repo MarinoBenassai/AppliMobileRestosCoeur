@@ -28,7 +28,7 @@ function ViewStatus(props) {
         </View>);
     }
     else if( (status == "Absent") && (role == "2") ) {
-        return(<View style={{ justifyContent:"space-evenly", flexDirection: align}}>
+        return(<View style={{ justifyContent:"center", flexDirection: align, alignSelf: "center"}}>
             <Icon 
                 name='note' 
                 size={size}

@@ -72,19 +72,19 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
     // Conteneur Principal
     <View style={[styles.item, styles.BENEVOLE]}>
       {/* Conteneur 1ere colonne : info personne */}
-      <View style={styles.colomn}>
-        <Pressable onPress={() => ajouterBenevole(item.split(/\t/)[4])}>
+
+        <Pressable onPress={() => ajouterBenevole(item.split(/\t/)[4])} style={{width: "75%"}}>
         {({ pressed }) => (
-          <View style={{color: pressed ? 'white' : 'black',}}>
-            <Text>{item.split(/\t/)[0]}</Text>
-            <Text>{item.split(/\t/)[1]}</Text>
+          <View style={styles.colomn}>
+            <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.split(/\t/)[0]}</Text>
+            <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.split(/\t/)[1]}</Text>
           </View>
         )}
         </Pressable>
-      </View>
+      
 
       {/* Conteneur 2eme colonne : info lieu */}
-      <View style={styles.colomn}> 
+      <View style={{marginRight: 40, justifyContent: "center"}}> 
         <Icon 
           name='mail' 
           size={30}
@@ -119,10 +119,10 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 		{/*Header de la flatlist*/}
 		<View style = {styles.header}>
 	   	  <View style={{width:'50%'}}>
-		   <Text style = {[styles.headerTitle, {textAlign: "left"}]}>Activité</Text>
+		   <Text style = {[styles.headerTitle, {textAlign: "left", marginLeft: 20}]}>Nom/Prénom</Text>
 		  </View>
 		  <View style={{width:'50%'}}>
-		    <Text style = {[styles.headerTitle, {textAlign: "right"}]}>Présent ?</Text>
+		    <Text style = {[styles.headerTitle, {textAlign: "right", marginRight: 20}]}>Contacter</Text>
 		  </View>
 		</View>
 		
