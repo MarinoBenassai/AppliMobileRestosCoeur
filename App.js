@@ -94,6 +94,7 @@ export default function App() {
   function handleError (erreur) {
 	  if (erreur === "Bad Token"){
 		//TODO message de deconnexion
+		alert("Votre session a expiré, veuillez vous reconnecter");
 		setUserID("");
 		setToken("");
 	  }

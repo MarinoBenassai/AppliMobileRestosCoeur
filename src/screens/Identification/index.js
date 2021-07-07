@@ -7,7 +7,7 @@ import Constants from 'expo-constants';
 import constantes from '../../constantes';
 import {userContext} from '../../contexts/userContext';
 import styles from '../../styles';
-import LogoRdC from '../../components/logoRdC';
+import logo from '../../../assets/logoRdC.png'
 
 
 export default function IdScreen({navigation}) {
@@ -49,7 +49,10 @@ export default function IdScreen({navigation}) {
 			
 			
 			.then(([data, token]) => {
-				fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token + "/P_TOKEN=" + data.token);
+				//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
+				if (data.tokennotification != token){
+					fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token + "/P_TOKEN=" + data.token);
+				}
 				login(data);
 			})
 
@@ -71,7 +74,10 @@ export default function IdScreen({navigation}) {
   return (
     <>
     <View style={[styles.container,{alignItems: "center"}]}>
-	  <LogoRdC/>
+	  <Image
+		style={styles.logo}
+        source={logo}
+      />
       <Text style={styles.idTexte}>Adresse mail</Text>
 	  <TextInput
 		style={styles.idInput}

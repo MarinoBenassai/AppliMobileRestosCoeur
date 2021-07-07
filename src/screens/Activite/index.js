@@ -144,6 +144,7 @@ function activiteScreen({route, navigation}) {
                   status={item.split(/\t/)[6]} role={idRole} align="row"/>
 
         {/* Conteneur 3eme colonne */}
+
         <View style={{justifyContent: "space-evenly", marginRight: 0}}>
           <Pressable>
             {({ pressed }) => (
@@ -152,10 +153,11 @@ function activiteScreen({route, navigation}) {
                 size={32}
                 color={pressed?'darkslategrey':'#000'}
                 onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }
+                style={styles.statusIcon}
               />
             )}
           </Pressable>
-          
+         
         </View>
       </View>
     </View>
