@@ -25,7 +25,7 @@ function contactScreen() {
   
   // on va chercher les informations sur la BDD
   useEffect(() => {
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_CONTACT/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_CONTACT/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées")})
       .catch((error) => console.error(error))

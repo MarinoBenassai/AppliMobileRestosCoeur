@@ -24,7 +24,7 @@ function referentScreen({navigation}) {
 
   // On récupère les données
   useEffect(() => {
-    fetch('http://' + constantes.BDD + '/Axoptim.php/REQ/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
+    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID + '/P_TOKEN=' + token)
       .then((response) => response.text())
       .then((texte) =>  {setData(texte); console.log("Infos Synthèse Réferent : chargées")})
       .catch((error) => console.error(error))
