@@ -51,7 +51,11 @@ export default function IdScreen({navigation}) {
 			.then(([data, token]) => {
 				//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
 				if (data.tokennotification != token){
-					fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token + "/P_TOKEN=" + data.token);
+					let body = new FormData();
+					body.append('token',data.token);
+					fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token , {
+					method: 'POST',
+					body: body});
 				}
 				login(data);
 			})

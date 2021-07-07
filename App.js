@@ -73,16 +73,16 @@ export default function App() {
   }
   
   function logout() {
-	fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_LOGOUT/P_TOKEN=' + token)
+	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LOGOUT/P_TOKEN=' + token)
 	  .then((response) => {
 		if (response.ok) {
-			return response.json();
+			return response.text();
 		}
 		else {
 			throw new Error('Une erreur est survenue.');
 		}
 	  })
-	  .then((json) => {
+	  .then((data) => {
 		  setUserID("");
 		  setToken("");
 		  alert("Déconnexion réussie.");
@@ -92,7 +92,7 @@ export default function App() {
   }
   
   function handleError (erreur) {
-	  if (erreur === "Bad Token"){
+	  if (erreur === "Invalid Token"){
 		//TODO message de deconnexion
 		alert("Votre session a expiré, veuillez vous reconnecter");
 		setUserID("");
