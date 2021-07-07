@@ -38,28 +38,53 @@ function referentScreen({navigation}) {
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
-    <View>
-      <Pressable onPress={() => versActivite({navigation}, item)} >
+ 
+    
+      
+      <View style={[styles.item, styles.REFERENT, {padding: 5}]}>
+      <Pressable onPress={() => versActivite({navigation}, item)} style={{marginVertical: 5, alignSelf: "center", width: "100%", maxWidth: 600, padding: 0, justifyContent: "space-between",}}>
       {({ pressed }) => (
-        <View style={[styles.item, styles.REFERENT, {color: pressed ? 'white' : 'black',},]}>
-		  <View style = {{width: '25%'}}>
-            <Text style= {{textAlign: "center"}}>{item.split(/\t/)[2]}</Text>
-		  </View>
-		  <View style = {{width: '25%'}}>
-            <Text style= {{textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
-		  </View>
-          {/* date */}
-		  <View style = {{width: '25%'}}>
-            <Text style= {{textAlign: "center"}}>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
-              {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
-              {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
-		  </View>
-		  <View style = {{width: '25%'}}>
-            <Text style= {{textAlign: "center"}}>{item.split(/\t/)[3]}/x</Text>
-		  </View>
-        </View>)}
+        <View style={{flexDirection: "row"}}>
+
+        {/* Conteneur 1ere colonne : info personne */}
+        <View style={[styles.colomn, {width:'25%'}]}>
+          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[2]}</Text>
+        </View>
+
+        {/* Conteneur 2eme colonne : info lieu */}
+        <View style={[styles.colomn, {width:'25%'}]}>
+          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
+        </View>
+
+        {/* Conteneur 3eme colonne : contacter */}
+        <View style={[styles.colomn, {width:'35%'}]}>
+        <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
+          {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
+          {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
+        </View>
+
+        {/* Conteneur 2eme colonne : info lieu */}
+      <View style={[styles.colomn, {width:'15%'}]}>
+      <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[3]}/x</Text>
+        </View>
+
+        </View>
+      )}
+
+      
+
       </Pressable>
-    </View>
+      </View>
+
+
+    
+
+
+
+
+
+    
+   
   );
 
   // On retourne la flatliste
@@ -89,16 +114,16 @@ function Synthese(props) {
 			  <>
 		      {/*Header de la liste*/}
 			  <View style = {styles.header}>
-			    <View style={{width:'25%'}}>
+			    <View style={{width:'25%', justifyContent: 'center'}}>
 				  <Text style = {styles.headerTitle}>Site</Text>
 			    </View>
-			    <View style={{width:'25%'}}>
+			    <View style={{width:'25%', justifyContent: 'center'}}>
 				  <Text style = {styles.headerTitle}>Activité</Text>
 			    </View>
-			    <View style={{width:'25%'}}>
+			    <View style={{width:'25%', justifyContent: 'center'}}>
 				  <Text style = {styles.headerTitle}>Date</Text>
 			    </View>
-				<View style={{width:'25%'}}>
+				<View style={{width:'25%', justifyContent: 'center'}}>
 				  <Text style = {styles.headerTitle}>Nb participant</Text>
 			    </View>
 			  </View>
@@ -123,3 +148,21 @@ function Synthese(props) {
 
 // On exporte la fonction principale
 export default referentScreen;
+
+
+{/* <Pressable onPress={() => versActivite({navigation}, item)} style={{marginVertical: 5, alignSelf: "center", width: "100%", maxWidth: 600, padding: 0, justifyContent: "space-between",}} >
+      {({ pressed }) => (
+        <View style={[styles.item, styles.REFERENT]}>
+          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center", width: '25%'}}>{item.split(/\t/)[2]}</Text>
+    
+          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center", width: '25%'}}>{item.split(/\t/)[1]}</Text>
+
+          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center", width: '35%'}}>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
+            {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
+            {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
+
+          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center", width: '15%'}}>{item.split(/\t/)[3]}/x</Text>
+
+        </View>
+        )}
+      </Pressable> */}

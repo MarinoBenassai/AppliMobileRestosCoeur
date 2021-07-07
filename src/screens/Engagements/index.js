@@ -82,21 +82,20 @@ function engagementScreen({navigation}) {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal de chaque item
-   
     <View style={[styles.item, styles[item.split(/\t/)[3]]]}>
       
       {/* Conteneur 1ere colonne */}
       <Pressable onPress={() => versActivite({navigation}, item)} style={{width: "75%"}} >
       {({ pressed }) => (
         <View style={{flexDirection: "column",}}>
-          <Text style={{color: pressed ? 'white' : 'black',}}>{item.split(/\t/)[2]}</Text>
-          <Text style={{color: pressed ? 'white' : 'black',}}>{item.split(/\t/)[1]}</Text> 
-          <Text style={{color: pressed ? 'white' : 'black',}}>
+          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.split(/\t/)[2]}</Text>
+          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.split(/\t/)[1]}</Text> 
+          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>
             {item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
             {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
             {item.split(/\t/)[0].split(" ")[0].split("-")[0]}
           </Text>
-          <Text style={{color: pressed ? 'white' : 'black',}}>Participants : {item.split(/\t/)[6]}</Text>
+          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>Participants : {item.split(/\t/)[6]}</Text>
         </View> )}
       </Pressable>
 
@@ -240,10 +239,10 @@ function engagementScreen({navigation}) {
 			  {/*Header de la flatlist*/}
 			  <View style = {styles.header}>
 			  	<View style={{width:'50%'}}>
-			      <Text style = {[styles.headerTitle, {textAlign: "left"}]}>Activité</Text>
+			      <Text style = {[styles.headerTitle, {textAlign: "left",  marginLeft: 40}]}>Activité</Text>
 				</View>
 				<View style={{width:'50%'}}>
-				  <Text style = {[styles.headerTitle, {textAlign: "right"}]}>Présent ?</Text>
+				  <Text style = {[styles.headerTitle, {textAlign: "right",  marginRight: 20}]}>Présence</Text>
 			    </View>
   			  </View>
             </>

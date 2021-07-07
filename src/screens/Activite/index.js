@@ -137,20 +137,24 @@ function activiteScreen({route, navigation}) {
         <Text>{item.split(/\t/)[3]}</Text>
       </View>
       
-      <View style={{flexDirection: "row"}}>
+      <View style={{flexDirection: "row", marginRight: 20}}>
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
                   fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.split(/\t/)[7])}}
-                  status={item.split(/\t/)[6]} role={idRole} align="row" />
+                  status={item.split(/\t/)[6]} role={idRole} align="row"/>
 
         {/* Conteneur 3eme colonne */}
-        <View>
-          <Icon 
-            name='mail' 
-            size={32}
-            color='#000'
-            onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }
-          />
+        <View style={{justifyContent: "space-evenly", marginRight: 0}}>
+          <Pressable>
+            {({ pressed }) => (
+              <Icon 
+                name='mail' 
+                size={32}
+                color={pressed?'darkslategrey':'#000'}
+                onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }
+              />
+            )}
+          </Pressable>
           
         </View>
       </View>
@@ -336,7 +340,7 @@ function activiteScreen({route, navigation}) {
 
               {/* "header" de la flatlist */}
               <View style={[styles.item, {flexDirection: "row", justifyContent: "space-between"}]}>
-                <Text style={[styles.info, {fontWeight: "bold"}]}>Engagés :</Text>
+                <Text style={[styles.info, {fontWeight: "bold"}]}>Liste des Engagés :</Text>
                 {(idRole == "2") &&	
                   <View style={{flexDirection: "row"}}>
 
@@ -376,20 +380,15 @@ function activiteScreen({route, navigation}) {
                   <Picker.Item label="non défini" value="NONDEFINI" />
                 </Picker>
               </View>
-			  {/*Header de la flatlist*/}
-			  <View style = {[styles.header,{paddingRight: 5}]}>
-			  	<View style={{width:'50%'}}>
-			      <Text style = {[styles.headerTitle, {textAlign: "left"}]}>Nom/Prénom</Text>
-				</View>
-				<View style={{width:'50%', flexDirection: 'row', justifyContent: "flex-end"}}>
-				  <View>
-				    <Text style = {[styles.headerTitle, {textAlign: "right", paddingRight: 20}]}>Présent ?</Text>
-				  </View>
-				  <View>
-				    <Text style = {[styles.headerTitle, {textAlign: "right"}]}>Contact</Text>
-				  </View>
-			    </View>
-  			  </View>
+              {/*Header de la flatlist*/}
+              <View style = {[styles.header,{paddingRight: 5}]}>
+                <View style={{width:'50%'}}>
+                  <Text style = {[styles.headerTitle, {textAlign: "left",  marginLeft: 5}]}>Nom/Prénom</Text>
+                </View>
+                <View style={{width:'50%', justifyContent: "flex-end"}}>
+                  <Text style = {[styles.headerTitle, {textAlign: "right", paddingRight: 20}]}>Présence/Contacter</Text>
+                </View>
+              </View>
             </>
           }
           renderItem={renderItem}
