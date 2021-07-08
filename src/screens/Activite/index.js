@@ -152,27 +152,26 @@ function activiteScreen({route, navigation}) {
     <View style={[styles.item, styles[item.split(/\t/)[5]] ]}>
 
       {/* Conteneur 1ere colonne */}
-      <View style={{ justifyContent:"space-evenly", flexDirection: "column",}}>
+      <View style={{ justifyContent:"space-evenly", flexDirection: "column", marginLeft: 10, paddingLeft: "5%"}}>
         <Text>{item.split(/\t/)[4]}</Text>
         <Text>{item.split(/\t/)[3]}</Text>
       </View>
       
-      <View style={{flexDirection: "row", marginRight: 20}}>
-      {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
-      <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
-                  fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.split(/\t/)[7])}}
-                  status={item.split(/\t/)[6]} role={idRole} align="row"/>
+      <View style={{flexDirection: "row", paddingRight: "1%", justifyContent: "flex-end"}}>
+        {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
+        <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
+                    fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.split(/\t/)[7])}}
+                    status={item.split(/\t/)[6]} role={idRole} align="row"/>
 
         {/* Conteneur 3eme colonne */}
 
         <View style={{justifyContent: "space-evenly", marginRight: 0}}>
-          <Pressable>
+          <Pressable onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }>
             {({ pressed }) => (
               <Icon 
                 name='mail' 
                 size={32}
                 color={pressed?'darkslategrey':'black'}
-                onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }
                 style={styles.statusIcon}
               />
             )}
@@ -391,26 +390,24 @@ function activiteScreen({route, navigation}) {
                   <View style={{flexDirection: "row"}}>
 
                     {/* Comentaire d'activité */}
-                    <Pressable>
+                    <Pressable onPress={() =>  setmodalVisibleCommentaireActivite(true)}>
                       {({ pressed }) => (
                         <Icon 
                           name='repo' 
                           size={30}
                           color={pressed?'darkslategrey':'black'}
-                          onPress={() =>  setmodalVisibleCommentaireActivite(true)}
                           style={{paddingRight: 20}}
                         />
                       )}
                     </Pressable>
                     
                     {/* Ajout bénévole */}
-                    <Pressable>
+                    <Pressable onPress={() => versListe({navigation})}>
                       {({ pressed }) => (
                         <Icon 
                           name='plus' 
                           size={30}
                           color={pressed?'darkslategrey':'black'}
-                          onPress={() => versListe({navigation})}
                           style={{paddingLeft: 20, paddingRight: 20}}
                         />
                       )}

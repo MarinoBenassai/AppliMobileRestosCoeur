@@ -46,7 +46,7 @@ function referentScreen({navigation}) {
  
     
       
-      <View style={[styles.item, styles.REFERENT, {padding: 5}]}>
+      <View style={[styles.item, styles.REFERENT, {paddingVertical: 10}]}>
       <Pressable onPress={() => versActivite({navigation}, item)} style={{marginVertical: 5, alignSelf: "center", width: "100%", maxWidth: 600, padding: 0, justifyContent: "space-between",}}>
       {({ pressed }) => (
         <View style={{flexDirection: "row"}}>

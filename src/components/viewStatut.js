@@ -18,13 +18,12 @@ function ViewStatus(props) {
 
     if(status == "Présent"){
         return (<View style={{justifyContent: "center"}}>
-            <Pressable>
+            <Pressable onPress={role=="2" ? fctStatut : ()=>{}}>
                 {({ pressed }) => (
                     <Icon 
                         name='check' 
                         size={size}
                         color={pressed?'lightgreen':'green'}
-                        onPress={role=="2" ? fctStatut : ()=>{}}
                         style={styles.statusIcon}
                     />
                 )}
@@ -33,25 +32,23 @@ function ViewStatus(props) {
     }
     else if( (status == "Absent") && (role == "2") ) {
         return(<View style={{ justifyContent:"center", flexDirection: align, alignSelf: "center"}}>
-            <Pressable>
+            <Pressable onPress={fctCommentaire}>
                 {({ pressed }) => (
                     <Icon 
                         name='note' 
                         size={size}
                         color={pressed?'darkslategrey':'black'}
-                        onPress={fctCommentaire}
                         style={styles.statusIcon}
                     />
                 )}
             </Pressable>
             
-            <Pressable>
+            <Pressable onPress={fctStatut}>
                 {({ pressed }) => (
                     <Icon 
                         name='x' 
                         size={size}
                         color={pressed?'orangered':'red'}
-                        onPress={fctStatut}
                         style={styles.statusIcon}
                     />
                 )}
@@ -61,28 +58,22 @@ function ViewStatus(props) {
     }
     else if(status == "Absent") {
         return(<View  style={{justifyContent: "center"}}>
-            <Pressable>
-                {({ pressed }) => (
-                    <Icon 
-                        name='x' 
-                        size={size}
-                        color={pressed?'orangered':'red'}
-                        style={styles.statusIcon}
-                    />
-                )}
-            </Pressable>
-        
+            <Icon 
+                name='x' 
+                size={size}
+                color='red'
+                style={styles.statusIcon}
+            />
         </View>);
     }
     else{
         return(<View style={{justifyContent: "center"}}>
-            <Pressable>
+            <Pressable onPress={role=="2" ? fctStatut : ()=>{}}>
                 {({ pressed }) => (
                     <Icon 
                         name='unverified' 
                         size={size}
                         color={pressed?'darkslategrey':'black'}
-                        onPress={role=="2" ? fctStatut : ()=>{}}
                         style={styles.statusIcon}
                     />
                 )}
