@@ -3,6 +3,7 @@ import { StyleSheet, Button, Text, View, Image, TextInput, Pressable, ActivityIn
 import * as Crypto from 'expo-crypto';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 
 import constantes from '../../constantes';
 import {userContext} from '../../contexts/userContext';
@@ -37,11 +38,12 @@ export default function IdScreen({navigation}) {
 		body.append('motDePasse',textPassword);
 		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_LOGIN', {
 		method: 'POST',
-		body: body})	
-		.then((response) => {
+		body: body})
+		.then((response) => { const device = Device.getDeviceTypeAsync(); return Promise.all([response, device]) })
+		.then(([response, device]) => {
 				if (response.ok) {
 					const a = response.json();
-					const b = 1//registerForPushNotificationsAsync(); //TODO faire les modifs nécessaire pour que ça marche sur navigateur
+					const b = registerForPushNotificationsAsync(device); //TODO faire les modifs nécessaire pour que ça marche sur navigateur
 
 					return Promise.all([a, b])
 				}
@@ -54,7 +56,7 @@ export default function IdScreen({navigation}) {
 			
 			.then(([data, token]) => {
 				//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
-				if (data.tokennotification != token){
+				if (data.tokennotification != token && token != "-1"){
 					let body = new FormData();
 					body.append('token',data.token);
 					fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token , {
@@ -134,9 +136,13 @@ export default function IdScreen({navigation}) {
 
 
 // Fonction de création/registration du token de notification
-async function registerForPushNotificationsAsync() {
-	let token;
-	if (Constants.isDevice) {
+async function registerForPushNotificationsAsync(device) {
+	let token = "-1";
+	if (Device.isDevice) {
+		if(device != "1" && device != "2"){
+			console.log("on sort");
+			return token;
+		}
 		const { status: existingStatus } = await Notifications.getPermissionsAsync();
 		let finalStatus = existingStatus;
 		if (existingStatus !== 'granted') {
@@ -147,7 +153,7 @@ async function registerForPushNotificationsAsync() {
 		// Notification non autorisée
 		if (finalStatus !== 'granted') {
 			alert('Failed to get push token for push notification!');
-			return "-1";
+			return token;
 		}
 
 		token = (await Notifications.getExpoPushTokenAsync()).data;
