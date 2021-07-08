@@ -261,7 +261,13 @@ const compteScreen = () => {
 	  // tout est bon
 	  else {
 		setLoading(true);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_UPD_MOTDEPASSE/P_IDBENEVOLE=' + userID + '/P_MOTDEPASSE=' + oldP + '/P_NOUV_MOTDEPASSE=' + newP)
+	    let body = new FormData();
+		body.append('ancienMDP',oldP);
+		body.append('nouveauMDP',newP);
+		body.append('idBenevole',userID);
+		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_UPD_MOTDEPASSE', {
+		method: 'POST',
+		body: body})
 		.then((response) => {
 			if (response.ok) {
 				return response.json();

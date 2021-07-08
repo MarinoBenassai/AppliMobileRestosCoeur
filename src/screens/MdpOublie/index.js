@@ -18,7 +18,11 @@ function oublieScreen({navigation}){
   function resetPassword() {
 	if (textEmail != '') {
 		setLoading(true);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_RST_MOTDEPASSE/P_EMAIL=' + textEmail)
+		let body = new FormData();
+		body.append('email',textEmail);
+		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_RST_MOTDEPASSE', {
+		method: 'POST',
+		body: body})	
 		  .then((response) => {
 			if (response.ok) {
 				return response.json();

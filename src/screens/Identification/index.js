@@ -32,12 +32,16 @@ export default function IdScreen({navigation}) {
   function checkPassword() {
 	if (textEmail != '' && textPassword != '') {
 		setLoading(true);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_LOGIN/P_EMAIL=' + textEmail +"/P_MOTDEPASSE=" + textPassword)
-
-			.then((response) => {
+		let body = new FormData();
+		body.append('email',textEmail);
+		body.append('motDePasse',textPassword);
+		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_LOGIN', {
+		method: 'POST',
+		body: body})	
+		.then((response) => {
 				if (response.ok) {
 					const a = response.json();
-					const b = 1//registerForPushNotificationsAsync();
+					const b = 1//registerForPushNotificationsAsync(); //TODO faire les modifs nécessaire pour que ça marche sur navigateur
 
 					return Promise.all([a, b])
 				}
