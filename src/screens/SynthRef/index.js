@@ -51,27 +51,32 @@ function referentScreen({navigation}) {
       {({ pressed }) => (
         <View style={{flexDirection: "row"}}>
 
-        {/* Conteneur 1ere colonne : info personne */}
-        <View style={[styles.colomn, {width:'25%'}]}>
-          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[2]}</Text>
-        </View>
+          {/* Conteneur 1ere colonne : info personne */}
+          <View style={[styles.colomn, {width:'25%'}]}>
+            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[2]}</Text>
+          </View>
 
-        {/* Conteneur 2eme colonne : info lieu */}
-        <View style={[styles.colomn, {width:'25%'}]}>
-          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
-        </View>
+          {/* Conteneur 2eme colonne : info lieu */}
+          <View style={[styles.colomn, {width:'25%'}]}>
+            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
+          </View>
 
-        {/* Conteneur 3eme colonne : contacter */}
-        <View style={[styles.colomn, {width:'35%'}]}>
-        <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
-          {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
-          {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
-        </View>
+          {/* Conteneur 3eme colonne : contacter */}
+          <View style={[styles.colomn, {width:'35%'}]}>
+          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
+            {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
+            {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
+          </View>
 
-        {/* Conteneur 2eme colonne : info lieu */}
-      <View style={[styles.colomn, {width:'15%'}]}>
-      <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[3]}/x</Text>
-        </View>
+          {/* Conteneur 4eme colonne : nb Présent */}
+          <View style={[styles.colomn, {width:'15%'}]}>
+            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[3]}/{item.split(/\t/)[4]}</Text>
+          </View>
+
+         {/*  {/* Conteneur 5eme colonne : nb Présent 
+          <View style={[styles.colomn, {width:'8%'}]}>
+            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[4]}/x</Text>
+          </View> */}
 
         </View>
       )}
@@ -120,23 +125,27 @@ function Synthese(props) {
 		      {/*Header de la liste*/}
 			  <View style = {styles.header}>
 			    <View style={{width:'25%', justifyContent: 'center'}}>
-				  <Text style = {styles.headerTitle}>Site</Text>
+				    <Text style = {styles.headerTitle}>Site</Text>
 			    </View>
 			    <View style={{width:'25%', justifyContent: 'center'}}>
-				  <Text style = {styles.headerTitle}>Activité</Text>
+				    <Text style = {styles.headerTitle}>Activité</Text>
 			    </View>
-			    <View style={{width:'25%', justifyContent: 'center'}}>
-				  <Text style = {styles.headerTitle}>Date</Text>
+			    <View style={{width:'35%', justifyContent: 'center'}}>
+				    <Text style = {styles.headerTitle}>Date</Text>
 			    </View>
-				<View style={{width:'25%', justifyContent: 'center'}}>
-				  <Text style = {styles.headerTitle}>Nb participant</Text>
+				  <View style={{width:'15%', justifyContent: 'center'}}>
+				    <Text style = {styles.headerTitle}>Local/ Global</Text>
 			    </View>
+          {/* <View style={{width:'12%', justifyContent: 'center'}}>
+				    <Text style = {styles.headerTitle}>Nb total</Text>
+			    </View> */}
 			  </View>
-              <FlatList
-                data={ligne}
-                renderItem={renderItem}
-                keyExtractor={item => item}
-              />
+
+        <FlatList
+          data={ligne}
+          renderItem={renderItem}
+          keyExtractor={item => item}
+        />
 			  </>
             </View>;
       
