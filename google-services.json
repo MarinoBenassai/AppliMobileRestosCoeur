@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "315159673983",
+    "project_id": "ad31-suivi-activite",
+    "storage_bucket": "ad31-suivi-activite.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315159673983:android:2ae9ee14a682e998f6d34a",
+        "android_client_info": {
+          "package_name": "com.RdC.AppMobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315159673983-c2sdj528s4a5l21qo2p6q416fg64o3b6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsZZRywfIuNhz04VG6KKyKLxJ0v7cboz0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315159673983-c2sdj528s4a5l21qo2p6q416fg64o3b6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
