@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput, Alert} from 'react-native';
 import * as Crypto from 'expo-crypto';
 
+import {normalizeInputPhone} from '../../components/normalizeInputPhone';
 import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
@@ -326,7 +327,7 @@ const compteScreen = () => {
 }
 
 
-// Phone only
+/* // Phone only
 const normalizeInputPhone = (value) => {
   // retourne rien si rien
   if (!value) return value; 
@@ -355,57 +356,7 @@ const normalizeInputPhone = (value) => {
   return newValue;
   
 };
-
-
-async function compareToHash (mdp, hash) {
-	try {
-		let mdpHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256,mdp);
-		return mdpHash === hash;
-	} catch(error) {
-      console.error(error);
-    }
-}
-
-  function getEmailFromData(data) {
-	const lignes = data.split(/\n/);
-	var i;
-	var Email = null;
-	for (i = 1; i<lignes.length; i++){
-		if (lignes[i] != ""){
-			const valeurs = lignes[i].split(/\t/);
-			Email = valeurs[2];
-		}
-	}
-	return Email;
-  }
-  
-    function getPhoneFromData(data) {
-	const lignes = data.split(/\n/);
-	var i;
-	var phone = null;
-	for (i = 1; i<lignes.length; i++){
-		if (lignes[i] != ""){
-			const valeurs = lignes[i].split(/\t/);
-			phone = valeurs[3];
-		}
-	}
-	return phone;
-  }
-  
-    function getPasswordFromData(data) {
-	const lignes = data.split(/\n/);
-	var i;
-	var hPassword = null;
-	for (i = 1; i<lignes.length; i++){
-		if (lignes[i] != ""){
-			const valeurs = lignes[i].split(/\t/);
-			hPassword = valeurs[2];
-		}
-	}
-	return hPassword;
-  }
-
-
+ */
 
 // On exporte la fonction principale
 export default compteScreen;
