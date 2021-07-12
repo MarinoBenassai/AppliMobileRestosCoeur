@@ -218,14 +218,14 @@ function engagementScreen({navigation}) {
             
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Commentaire d'absence</Text>
+              <Text style={[styles.modalText, {fontWeight: "bold"}]}>Commentaire d'absence</Text>
               <Text style={styles.modalText}>{comment}</Text>
               <Pressable
-                  style={styles.button}
+                  style={[styles.button, {justifyContent: "center", alignItems: "center"}]}
                   onPress={() => {setModalVisibleGet(false)}}
               >
                 {({ pressed }) => (
-                  <Text style={[styles.modalText, {color:pressed?'darkslategrey':'black'}]}>fermer</Text>
+                  <Text style={{color:pressed?'darkslategrey':'black', textAlign: "center"}}>fermer</Text>
                 )}
               </Pressable>
             </View>

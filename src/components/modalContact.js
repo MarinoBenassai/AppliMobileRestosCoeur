@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import styles from '../styles';
 import Clipboard from 'expo-clipboard';
 
+import {normalizeInputPhone} from './normalizeInputPhone';
+
 const ModalContact = (props) => {
 	
   const [toClipboard, setToClipboard] = useState("");
@@ -31,7 +33,7 @@ const ModalContact = (props) => {
 		      <Text style={styles.modalContactTitle}>Informations de contact</Text>
 		      <View style={styles.modalContactContentView}>
             <Text style={styles.modalText} onPress={() => {setToClipboard(props.mail);alert('Copié dans le presse-papier');}}>{"Mail : " + props.mail}</Text>
-		        <Text style={styles.modalText} onPress={() => {setToClipboard(props.phone);alert('Copié dans le presse-papier');}}>{"Tel : " + props.phone}</Text>
+		        <Text style={styles.modalText} onPress={() => {setToClipboard(props.phone);alert('Copié dans le presse-papier');}}>{"Tel : " + normalizeInputPhone(props.phone)}</Text>
 		      </View>
           <View style={styles.modalContactButtonView}>
             <Pressable

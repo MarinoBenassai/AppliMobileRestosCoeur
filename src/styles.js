@@ -26,13 +26,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 8,
     marginHorizontal: 16,
-	paddingLeft: 20,
-	paddingRight: 20,
+	  paddingLeft: 20,
+	  paddingRight: 20,
   },
   headerTitle: {
-	textAlign: "center",
-	fontWeight: 'bold',
-	fontSize: 15
+	  textAlign: "center",
+	  fontWeight: 'bold',
+	  fontSize: 15
   },
   info: {
     fontSize: 20,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-      backgroundColor: '#F5FCFF88',
+    backgroundColor: '#F5FCFF88',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     height: "40%",
     minHeight: 300,
     width: "80%",
-    maxWidth: 600,
+    maxWidth: 400,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
@@ -142,40 +142,40 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-	alignSelf: "center",
+	  alignSelf: "center",
   },
   modalContactTitle: {
     textAlign: "center",
-	fontSize: 20,
+	  fontSize: 20,
     fontWeight: "bold",
-	marginBottom: 20,
+	  marginBottom: 20,
   },
   modalContactContentView: {
     alignItems: "flex-start",
   },
   modalContactButtonView: {
     alignItems: "flex-start",
-	flexDirection: "row",
+	  flexDirection: "row",
   },
   buttonContactLeft: {
-	flex: 3,
+	  flex: 3,
     padding: 10,
     elevation: 2,
-	alignSelf: "flex-start"
+	  alignSelf: "flex-start"
   },
   buttonContactMid: {
     alignItems: "flex-start",
-	flex: 1,
+	  flex: 1,
     padding: 10,
     elevation: 2,
-	alignSelf: "flex-end"
+	  alignSelf: "flex-end"
   },
   buttonContactRight: {
     alignItems: "flex-start",
 	flex: 1,
     padding: 10,
     elevation: 2,
-	alignSelf: "flex-end"
+	  alignSelf: "flex-end"
   },
   textStyle: {
     color: "black",
@@ -184,16 +184,16 @@ const styles = StyleSheet.create({
   },
   idInput: {
     height: 40,
-	width : 200,
+	  width : 200,
     marginBottom: 15,
-	borderBottomColor: '#000000',
-	borderBottomWidth: 1,
+    borderBottomColor: '#000000',
+    borderBottomWidth: 1,
 	
   },
   idTexte : {
     marginTop : 15,
-	textAlign: 'center',
-	color : '#656565'
+    textAlign: 'center',
+    color : '#656565'
   },
   logo: {
     width: 200,
@@ -205,8 +205,11 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   statusIcon: {
-	paddingRight: 10,
-	paddingLeft: 10
+    paddingRight: 10,
+    paddingLeft: 10
   }
-}); 
+});
+
+
+
 export default styles;
