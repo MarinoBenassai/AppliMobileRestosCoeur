@@ -61,26 +61,26 @@ function activiteScreen({route, navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-      let body = new FormData();
+    let body = new FormData();
 	  body.append('token',token);
 	  fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
-	  method: 'POST',
-	  body: body})
-      .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
-      .then(() => {
-	  let body = new FormData();
-	  body.append('token',token);
-	  return fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
-	  method: 'POST',
-	  body: body})
-	  })
-      .then((response) => response.text())
-      .then((texte) =>  {console.log(texte);setInfoActivite(texte.split("\n")[1]); console.log("Info commentaire d'activité : chargées");
-      setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
+	    method: 'POST',
+	    body: body})
+        .then((response) => response.text())
+        .then((texte) =>  {setData(texte);console.log("Infos bénévoles : chargées "); console.log(texte)})
+        .then(() => {
+          let body = new FormData();
+          body.append('token',token);
+          return fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
+          method: 'POST',
+          body: body})
+	      })
+        .then((response) => response.text())
+        .then((texte) =>  {console.log(texte);setInfoActivite(texte.split("\n")[1]); console.log("Info commentaire d'activité : chargées");
+        setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
 
-      .catch((error) => console.error(error))
-      .finally(() => {setLoading(false); setUpToDate(true)});
+        .catch((error) => console.error(error))
+        .finally(() => {setLoading(false); setUpToDate(true)});
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -92,21 +92,21 @@ function activiteScreen({route, navigation}) {
   useEffect(() => {
     if(!upToDate){
 	  setLoading(true);
-      // Update la liste et les info Activité
-      let body = new FormData();
+    // Update la liste et les info Activité
+    let body = new FormData();
 	  body.append('token',token);
 	  fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
-	  method: 'POST',
-	  body: body})
+	    method: 'POST',
+	    body: body})
         .then((response) => response.text())
         .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
         .then(() => {
-			let body = new FormData();
-			body.append('token',token);
-			return fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
-			method: 'POST',
-			body: body})
-		})
+			    let body = new FormData();
+			    body.append('token',token);
+			    return fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
+		      	method: 'POST',
+			      body: body})
+		    })
         .then((response) => response.text())
         .then((texte) =>  {console.log(texte);setInfoActivite(""); console.log("Info commentaire d'activité : chargées");
           setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
@@ -190,14 +190,14 @@ function activiteScreen({route, navigation}) {
     if(statut == "Absent"){
       console.log("Vous êtiez actuellement 'Absent'");
       let body = new FormData();
-	  body.append('token',token);
-	  fetch("http://" + bdd + "/Axoptim.php/APP/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site , {
-	  method: 'POST',
-	  body: body})
-        .then((response) => response.text())
-        .then((texte) =>  {console.log("changement status : non défini : "); console.log(texte)})
-        .catch((error) => console.error(error))
-        .finally(() => setUpToDate(false));
+	    body.append('token',token);
+	    fetch("http://" + bdd + "/Axoptim.php/APP/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site , {
+        method: 'POST',
+        body: body})
+          .then((response) => response.text())
+          .then((texte) =>  {console.log("changement status : non défini : "); console.log(texte)})
+          .catch((error) => console.error(error))
+          .finally(() => setUpToDate(false));
     }
 
     // Si présent
@@ -212,19 +212,19 @@ function activiteScreen({route, navigation}) {
 
     }
 
-      // Si non-défini
-      else{
-        console.log("Vous êtiez actuellement 'Non défini'");
-        let body = new FormData();
-		body.append('token',token);
-		fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role , {
-		method: 'POST',
-		body: body})
+    // Si non-défini
+    else{
+      console.log("Vous êtiez actuellement 'Non défini'");
+      let body = new FormData();
+      body.append('token',token);
+      fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role , {
+        method: 'POST',
+        body: body})
           .then((response) => response.text())
           .then((texte) =>  {console.log("changement statut : présent : "); console.log(texte)})
           .catch((error) => console.error(error))
           .finally(() => setUpToDate(false));
-      }
+    }
   }
 
   const handleChangeNumber = ( value ) => { 
@@ -266,27 +266,27 @@ function activiteScreen({route, navigation}) {
                   onPress={() => {setmodalVisibleCommentaireActivite(false)
                                   if(infoActivite.length == 0){
                                     let body = new FormData();
-									body.append('token',token);
-									fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite , {
-									method: 'POST',
-									body: body})
-                                    .then((response) => response.text())
-                                    .then((texte) => console.log(texte))
-                                    .then(() => console.log("Nouvelle entrée : commentaire d'activité"))
-                                    .catch((error) => console.error(error))
-                                    .finally(() => setUpToDate(false));
+                                    body.append('token',token);
+                                    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite , {
+                                      method: 'POST',
+                                      body: body})
+                                        .then((response) => response.text())
+                                        .then((texte) => console.log(texte))
+                                        .then(() => console.log("Nouvelle entrée : commentaire d'activité"))
+                                        .catch((error) => console.error(error))
+                                        .finally(() => setUpToDate(false));
                                   }
                                   else{
                                     let body = new FormData();
-									body.append('token',token);
-									fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite , {
-									method: 'POST',
-									body: body})
-                                    .then((response) => response.text())
-                                    .then((texte) => console.log(texte))
-                                    .then(() => console.log("update entrée : commentaire d'activité "))
-                                    .catch((error) => console.error(error))
-                                    .finally(() => setUpToDate(false));
+                                    body.append('token',token);
+                                    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite , {
+                                      method: 'POST',
+                                      body: body})
+                                        .then((response) => response.text())
+                                        .then((texte) => console.log(texte))
+                                        .then(() => console.log("update entrée : commentaire d'activité "))
+                                        .catch((error) => console.error(error))
+                                        .finally(() => setUpToDate(false));
                                   }
                           }}
                 >
@@ -320,14 +320,14 @@ function activiteScreen({route, navigation}) {
                 // écrire et envoyer le commentaire
                 onPress={() => {setmodalVisibleAbsence(!modalVisibleAbsence);
                   let body = new FormData();
-				  body.append('token',token);
-				  fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
-				  method: 'POST',
-				  body: body})
-                  .then((response) => response.text())
-                  .then((texte) =>  {console.log("changement statut : absent :"); console.log(texte)})
-                  .catch((error) => console.error(error))
-                  .finally(() => {setUpToDate(false); setComment("");});
+				          body.append('token',token);
+				          fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
+				            method: 'POST',
+				            body: body})
+                      .then((response) => response.text())
+                      .then((texte) =>  {console.log("changement statut : absent :"); console.log(texte)})
+                      .catch((error) => console.error(error))
+                      .finally(() => {setUpToDate(false); setComment("");});
 
                 }}
               >
