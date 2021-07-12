@@ -67,18 +67,7 @@ function activiteScreen({route, navigation}) {
 	    method: 'POST',
 	    body: body})
         .then((response) => response.text())
-        .then((texte) =>  {setData(texte);console.log("Infos bénévoles : chargées "); console.log(texte)})
-        .then(() => {
-          let body = new FormData();
-          body.append('token',token);
-          return fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
-          method: 'POST',
-          body: body})
-	      })
-        .then((response) => response.text())
-        .then((texte) =>  {console.log(texte);setInfoActivite(texte.split("\n")[1]); console.log("Info commentaire d'activité : chargées");
-        setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
-
+        .then((texte) =>  {setData(texte);console.log("Infos bénévoles : chargées ")})
         .catch((error) => console.error(error))
         .finally(() => {setLoading(false); setUpToDate(true)});
     });
@@ -100,17 +89,6 @@ function activiteScreen({route, navigation}) {
 	    body: body})
         .then((response) => response.text())
         .then((texte) =>  {setData(texte); console.log("Infos bénévoles : chargées ");})
-        .then(() => {
-			    let body = new FormData();
-			    body.append('token',token);
-			    return fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
-		      	method: 'POST',
-			      body: body})
-		    })
-        .then((response) => response.text())
-        .then((texte) =>  {console.log(texte);setInfoActivite(""); console.log("Info commentaire d'activité : chargées");
-          setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
-        
         .catch((error) => console.error(error))
         .finally(() => {setLoading(false); setUpToDate(true)});
 
@@ -250,6 +228,7 @@ function activiteScreen({route, navigation}) {
                   style={styles.idInput}
                   onChangeText={handleChangeNumber}
                   value={beneficiaireActivite}
+                  defaultValue={0}
                   keyboardType="numeric"
                   maxLength={10}
                 />
@@ -257,7 +236,7 @@ function activiteScreen({route, navigation}) {
                 <TextInput
                   style={styles.idInput}
                   onChangeText={setCommentActivite}
-                  defaultValue={commentActivite}
+                  value={commentActivite}
                   maxLength={99}
                 />
                 <Pressable
@@ -390,7 +369,19 @@ function activiteScreen({route, navigation}) {
                   <View style={{flexDirection: "row"}}>
 
                     {/* Comentaire d'activité */}
-                    <Pressable onPress={() =>  setmodalVisibleCommentaireActivite(true)}>
+                    <Pressable onPress={() =>  {
+                        let body = new FormData();
+                        body.append('token',token);
+                        fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
+                          method: 'POST',
+                          body: body})
+                            .then((response) => response.text())
+                            .then((texte) =>  {console.log(texte);setInfoActivite((texte.split("\n")[1])); console.log("Info commentaire d'activité : chargées");
+                              setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
+                            .catch((error) => console.error(error))
+                            .finally(() => {setLoading(false); setUpToDate(true)});
+
+                        setmodalVisibleCommentaireActivite(true)}}>
                       {({ pressed }) => (
                         <Icon 
                           name='repo' 
@@ -459,10 +450,15 @@ function activiteScreen({route, navigation}) {
 
 // Number only
 const normalizeInputNumber = (value, previousValue) => {
-  if (!value) return value;
+  if (!value || value == 0) return 0;
   const currentValue = value.replace(/[^\d]/g, '');
 
-  if (!previousValue || value.length > previousValue.length) {
+  console.log("previous : " + previousValue);
+  console.log("current : "  + currentValue)
+  if(previousValue == 0 && currentValue.length>0){
+    return currentValue.replace(/0/g, '')
+  }
+  else if (!previousValue || value.length > previousValue.length) {
     return currentValue;
   }
   
