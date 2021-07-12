@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput, Alert} from 'react-native';
 import * as Crypto from 'expo-crypto';
 
+import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
@@ -30,32 +31,30 @@ const compteScreen = () => {
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
     let body = new FormData();
-	body.append('token',token);
-	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID , {
-	method: 'POST',
-	body: body})
-      .then((response) => response.text())
-      .then((texte) =>  {setDataEngagementDefaut(texte); console.log("Infos Engagement Défaut : chargées")})
-      .catch((error) => {
-        (setData(-1));
-      });
+    body.append('token',token);
+    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID , {
+      method: 'POST',
+      body: body})
+        .then((response) => checkFetch(response))
+        .then((texte) =>  {setDataEngagementDefaut(texte); console.log("Infos Engagement Défaut : chargées")})
+        .catch((error) => console.error(error))
   }, []);
 
   // On récupère les informations personelles
   useEffect(() => {
-	if (persoUpToDate === false) {
-	setPersoUpToDate(true);
-	console.log("fait");
-    let body = new FormData();
-	body.append('token',token);
-	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
-	method: 'POST',
-	body: body})
-      .then((response) => response.text())
-      .then((texte) =>  {setDataPerso(texte); console.log("Infos Perosnelles : chargées")})
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));;
-	}
+    if (persoUpToDate === false) {
+      setPersoUpToDate(true);
+      console.log("fait");
+      let body = new FormData();
+      body.append('token',token);
+      fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
+        method: 'POST',
+        body: body})
+          .then((response) => checkFetch(response))
+          .then((texte) =>  {setDataPerso(texte); console.log("Infos Perosnelles : chargées")})
+          .catch((error) => console.error(error))
+          .finally(() => setLoading(false));;
+	  }
   }, [persoUpToDate]);
 
   // On traite ces informations
@@ -280,7 +279,7 @@ const compteScreen = () => {
 			alert("Votre mot de passe a bien été modifié.");
 		})
 		.catch((error) => console.error(error))
-        .finally(() => setLoading(false));
+    .finally(() => setLoading(false));
 
 	  }
 	  setOldP("");
@@ -292,27 +291,27 @@ const compteScreen = () => {
 
 	// Fonction de changement d'information de contact
 	function changeContact (phone, mail) {
-    phone = phone.replace(/[^\d+]/g, ''); //TODO check
+    phone = phone.replace(/[^\d+]/g, '');
     phone = phone.replace(/\+/g, '%2B');
     console.log(phone);
 	  if (phone != "" || mail != ""){
 	    let body = new FormData();
-		body.append('token',token);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
-		method: 'POST',
-		body: body})
-		.then((resp) => resp.text())
-	    .then((texte) => {console.log(texte);if (phone === "") {phone = getPhoneFromData(texte)} if (mail === "") {mail = getEmailFromData(texte)}})
-	    .then(() => {
-		let body = new FormData();
-		body.append('token',token);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
-		method: 'POST',
-		body: body})
-		})
-	    .then((rep) => rep.text())
-	    .then(texte => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
-		.catch((error) => console.error(error))
+      body.append('token',token);
+      fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
+        method: 'POST',
+        body: body})
+        .then((response) => checkFetch(response))
+        .then((texte) => {console.log(texte);if (phone === "") {phone = getPhoneFromData(texte)} if (mail === "") {mail = getEmailFromData(texte)}})
+        .then(() => {
+          let body = new FormData();
+          body.append('token',token);
+          fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
+            method: 'POST',
+            body: body})
+        })
+	      .then((response) => checkFetch(response))
+	      .then((texte) => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
+		    .catch((error) => console.error(error))
         .finally(() => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)});
 	    alert(
 		  "Vos informations ont bien été mises à jour.",

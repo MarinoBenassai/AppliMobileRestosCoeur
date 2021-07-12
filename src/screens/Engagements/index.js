@@ -4,10 +4,12 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput} from '
 import { Dimensions } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 
+import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
 import ViewStatus from '../../components/viewStatut';
+
 
 // Fonction Principale
 function engagementScreen({navigation}) {
@@ -44,16 +46,16 @@ function engagementScreen({navigation}) {
   //Fonction pour chercher les données
   useEffect(() => {
     if(upToDate == false){
-	  setLoading(true);
+      setLoading(true);
       let body = new FormData();
-	  body.append('token',token);
-	  fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID  , {
-	  method: 'POST',
-	  body: body})
-        .then((response) => response.text())
-        .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); setUpToDate(true);})
-        .catch((error) => console.error(error))
-        .finally(() => setLoading(false));
+      body.append('token',token);
+      fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID  , {
+        method: 'POST',
+        body: body})
+          .then((response) => checkFetch(response))
+          .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); setUpToDate(true);})
+          .catch((error) => console.error(error))
+          .finally(() => setLoading(false));
     }
   }, [upToDate]);
 
@@ -118,16 +120,16 @@ function engagementScreen({navigation}) {
     // Si absent
     if(statut == "Absent"){
       console.log("Vous ête actuellement 'Absent'");
-	  setLoading(true);
+	    setLoading(true);
       let body = new FormData();
-	  body.append('token',token);
-	  fetch("http://" + bdd + "/Axoptim.php/APP/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site , {
-	  method: 'POST',
-	  body: body})
-        .then((response) => response.text())
-        .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-        .catch((error) => console.error(error))
-        .finally(() => {setUpToDate(false); setLoading(false);});
+      body.append('token',token);
+      fetch("http://" + bdd + "/Axoptim.php/APP/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site , {
+        method: 'POST',
+        body: body})
+          .then((response) => checkFetch(response))
+          .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+          .catch((error) => console.error(error))
+          .finally(() => {setUpToDate(false); setLoading(false);});
     }
 
     // Si présent
@@ -144,17 +146,17 @@ function engagementScreen({navigation}) {
 
       // Si non-défini
       else{
-		setLoading(true);
+		    setLoading(true);
         console.log("Vous êtes actuellement 'Non défini'");
         let body = new FormData();
-		body.append('token',token);
-		fetch("http://" + bdd + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role , {
-		method: 'POST',
-		body: body})
-          .then((response) => response.text())
-          .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-          .catch((error) => console.error(error))
-          .finally(() => {setUpToDate(false); setLoading(false);});
+        body.append('token',token);
+        fetch("http://" + bdd + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role , {
+          method: 'POST',
+          body: body})
+            .then((response) => checkFetch(response))
+            .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+            .catch((error) => console.error(error))
+            .finally(() => {setUpToDate(false); setLoading(false);});
       }
       
       // On raffraichie les composants quoi qu'il arrive
@@ -184,20 +186,20 @@ function engagementScreen({navigation}) {
               />
               <Pressable
                 style={styles.button}
-                // TODO : envoyer le commentaire
+                // TODO : envoyer le commentaire (fait?)
                 onPress={() => {setModalVisibleSet(!modalVisibleSet);
-				  setLoading(true);
-                  let body = new FormData();
-				  body.append('token',token);
-				  fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
-				  method: 'POST',
-				  body: body})
-                  .then((response) => response.text())
-                  .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-                  .catch((error) => console.error(error))
-                  .finally(() => {setUpToDate(false); setComment(""); setLoading(false);})
+                                setLoading(true);
+                                let body = new FormData();
+                                body.append('token',token);
+                                fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
+                                  method: 'POST',
+                                  body: body})
+                                    .then((response) => checkFetch(response))
+                                    .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+                                    .catch((error) => console.error(error))
+                                    .finally(() => {setUpToDate(false); setComment(""); setLoading(false);})
 
-                  // On raffraichi et reset le commentaire pour la prochaine fois (au dessus - finally)
+                                  // On raffraichi et reset le commentaire pour la prochaine fois (au dessus - finally)
                   
                 }}
               >

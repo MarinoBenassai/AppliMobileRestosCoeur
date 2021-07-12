@@ -43,7 +43,7 @@ export default function IdScreen({navigation}) {
 		.then(([response, device]) => {
 				if (response.ok) {
 					const a = response.json();
-					const b = registerForPushNotificationsAsync(device); //TODO faire les modifs nécessaire pour que ça marche sur navigateur
+					const b = registerForPushNotificationsAsync(device);
 
 					return Promise.all([a, b])
 				}
@@ -53,7 +53,7 @@ export default function IdScreen({navigation}) {
 				}
 			})
 			
-			
+			// TODO : ausis le faire lors de la connexion automatique et pensez à gérer la déconnexion
 			.then(([data, token]) => {
 				//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
 				if (data.tokennotification != token && token != "-1"){

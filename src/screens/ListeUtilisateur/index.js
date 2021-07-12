@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Linking, TextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 
+import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
@@ -36,14 +37,14 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // on va chercher les informations sur la BDD
   useEffect(() => {
     let body = new FormData();
-	body.append('token',token);
-	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_ALL_BENEVOLE' , {
-	method: 'POST',
-	body: body})
-      .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Liste Utilisateurs : chargées")})
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+    body.append('token',token);
+    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_ALL_BENEVOLE' , {
+      method: 'POST',
+      body: body})
+        .then((response) => checkFetch(response))
+        .then((texte) =>  {setData(texte); console.log("Liste Utilisateurs : chargées")})
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
   }, []);
 
   // On traite ces informations
@@ -64,11 +65,11 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   const ajouterBenevole = (benevole) => {
     console.log("Vous avez ajouter l'id : " + benevole + " " + IDJour + " " + IDActivite + " " + IDSite);
     let body = new FormData();
-	body.append('token',token);
-	fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + IDJour + "/P_IDACTIVITE=" + IDActivite + "/P_IDSITE=" + IDSite + "/P_IDROLE=1" , {
-	method: 'POST',
-	body: body})
-        .then((response) => response.text())
+	  body.append('token',token);
+    fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + IDJour + "/P_IDACTIVITE=" + IDActivite + "/P_IDSITE=" + IDSite + "/P_IDROLE=1" , {
+      method: 'POST',
+      body: body})
+        .then((response) => checkFetch(response))
         .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
         .then( () => goBack() )
         .catch((error) => console.error(error));
