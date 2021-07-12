@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
 
-
+import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
@@ -28,12 +28,12 @@ function referentScreen({navigation}) {
     let body = new FormData();
 	body.append('token',token);
     fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID , {
-	method: 'POST',
-	body: body})
-      .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Infos Synthèse Réferent : chargées")})
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+    	method: 'POST',
+	    body: body})
+        .then((response) => checkFetch(response))
+        .then((texte) =>  {setData(texte); console.log("Infos Synthèse Réferent : chargées")})
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
   }, []);
 
   // On tarite les données

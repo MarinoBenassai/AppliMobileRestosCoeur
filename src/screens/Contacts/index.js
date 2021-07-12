@@ -4,7 +4,7 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput} from '
 import {Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 
-
+import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
 import ModalContact from '../../components/modalContact';
 import constantes from '../../constantes';
@@ -26,14 +26,14 @@ function contactScreen() {
   // on va chercher les informations sur la BDD
   useEffect(() => {
     let body = new FormData();
-	body.append('token',token);
-	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_CONTACT/P_IDBENEVOLE=' + userID , {
-	method: 'POST',
-	body: body})
-      .then((response) => response.text())
-      .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées")})
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+    body.append('token',token);
+    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_CONTACT/P_IDBENEVOLE=' + userID , {
+      method: 'POST',
+      body: body})
+        .then((response) => checkFetch(response))
+        .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées")})
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
   }, []);
 
   // On traite ces informations
