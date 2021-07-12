@@ -184,14 +184,14 @@ function engagementScreen({navigation}) {
               />
               <Pressable
                 style={styles.button}
-                // TODO : envoyer le commentaire
+                // TODO : envoyer le commentaire (fait?)
                 onPress={() => {setModalVisibleSet(!modalVisibleSet);
-				  setLoading(true);
-                  let body = new FormData();
-				  body.append('token',token);
-				  fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
-				  method: 'POST',
-				  body: body})
+				        setLoading(true);
+                let body = new FormData();
+                body.append('token',token);
+                fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
+                  method: 'POST',
+                  body: body})
                   .then((response) => response.text())
                   .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
                   .catch((error) => console.error(error))

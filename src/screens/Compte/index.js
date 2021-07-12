@@ -292,7 +292,7 @@ const compteScreen = () => {
 
 	// Fonction de changement d'information de contact
 	function changeContact (phone, mail) {
-    phone = phone.replace(/[^\d+]/g, ''); //TODO check
+    phone = phone.replace(/[^\d+]/g, '');
     phone = phone.replace(/\+/g, '%2B');
     console.log(phone);
 	  if (phone != "" || mail != ""){
