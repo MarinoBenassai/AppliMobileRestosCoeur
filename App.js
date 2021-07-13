@@ -25,6 +25,8 @@ import {userContext} from './src/contexts/userContext';
 
 import constantes from './src/constantes';
 
+import {registerForPushNotificationsAsync} from "./src/components/registerForPushNotificationsAsync.js";
+
 const engagementStack = createStackNavigator();
 const synthRefStack = createStackNavigator();
 const compteStack = createStackNavigator();
@@ -93,10 +95,12 @@ export default function App() {
     setToken(token);
   }
   
-  function logout() {
+  async function logout() {
+	const device = await Device.getDeviceTypeAsync();
+	const tokennotif = await registerForPushNotificationsAsync(device);
     let body = new FormData();
     body.append('token',token);
-	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LOGOUT/P_TOKEN=' + token, {
+	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LOGOUT/P_TOKEN=' + token +'/P_TOKENNOTIF=' + tokennotif, {
 	    method: 'POST',
 	    body: body})
 	  .then((response) => {
@@ -114,7 +118,6 @@ export default function App() {
 			  SecureStore.deleteItemAsync('id');
 			  SecureStore.deleteItemAsync('token');
 		  }
-		  alert("Déconnexion réussie.");
 	  })
 	  .catch((error) => alert("Une erreur est survenue"))
 	  .finally(() => console.log("finally"));

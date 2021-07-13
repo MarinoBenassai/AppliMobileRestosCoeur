@@ -9,8 +9,9 @@ import * as SecureStore from 'expo-secure-store';
 import constantes from '../../constantes';
 import {userContext} from '../../contexts/userContext';
 import styles from '../../styles';
-import logo from '../../../assets/logoRdC.png'
+import logo from '../../../assets/logoRdC.png';
 
+import {registerForPushNotificationsAsync} from "../../components/registerForPushNotificationsAsync.js";
 
 export default function IdScreen({navigation}) {
 
@@ -140,42 +141,3 @@ export default function IdScreen({navigation}) {
 }
 
 
-// Fonction de création/registration du token de notification
-async function registerForPushNotificationsAsync(device) {
-	let token = "-1";
-	if (Device.isDevice) {
-		if(device != "1" && device != "2"){
-			console.log("on sort");
-			return token;
-		}
-		const { status: existingStatus } = await Notifications.getPermissionsAsync();
-		let finalStatus = existingStatus;
-		if (existingStatus !== 'granted') {
-			const { status } = await Notifications.requestPermissionsAsync();
-			finalStatus = status;
-		}
-
-		// Notification non autorisée
-		if (finalStatus !== 'granted') {
-			alert('Failed to get push token for push notification!');
-			return token;
-		}
-
-		token = (await Notifications.getExpoPushTokenAsync()).data;
-		console.log(token);
-
-	} else {
-	  	alert('Must use physical device for Push Notifications');
-	}
-  
-	if (Platform.OS === 'android') {
-		Notifications.setNotificationChannelAsync('default', {
-			name: 'default',
-			importance: Notifications.AndroidImportance.MAX,
-			vibrationPattern: [0, 250, 250, 250],
-			lightColor: '#FF231F7C',
-		});
-	}
-  
-	return token;
-}
