@@ -28,7 +28,9 @@
     "expo-clipboard": "~1.0.2",
     "@react-native-picker/picker": "1.9.11",
     "expo-notifications": "~0.11.6",
-    "expo-device": "~3.2.0"
+    "expo-device": "~3.2.0",
+    "expo-splash-screen": "~0.10.2",
+    "expo-secure-store": "~10.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
