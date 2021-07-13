@@ -232,7 +232,7 @@ function activiteScreen({route, navigation}) {
                   style={styles.idInput}
                   onChangeText={handleChangeNumber}
                   value={beneficiaireActivite}
-                  defaultValue={0}
+                  defaultValue={'0'}
                   keyboardType="numeric"
                   maxLength={10}
                 />
@@ -454,7 +454,7 @@ function activiteScreen({route, navigation}) {
 
 // Number only
 const normalizeInputNumber = (value, previousValue) => {
-  if (!value || value == 0) return 0;
+  if (!value || value == 0) return '0';
   const currentValue = value.replace(/[^\d]/g, '');
 
   console.log("previous : " + previousValue);

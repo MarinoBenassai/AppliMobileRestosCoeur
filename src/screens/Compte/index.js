@@ -309,7 +309,7 @@ const compteScreen = () => {
         .then(() => {
           let body = new FormData();
           body.append('token',token);
-          fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
+          return fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
             method: 'POST',
             body: body})
         })
@@ -329,6 +329,31 @@ const compteScreen = () => {
 
 }
 
+  function getEmailFromData(data) {
+	const lignes = data.split(/\n/);
+	var i;
+	var Email = null;
+	for (i = 1; i<lignes.length; i++){
+		if (lignes[i] != ""){
+			const valeurs = lignes[i].split(/\t/);
+			Email = valeurs[2];
+		}
+	}
+	return Email;
+  }
+
+    function getPhoneFromData(data) {
+	const lignes = data.split(/\n/);
+	var i;
+	var phone = null;
+	for (i = 1; i<lignes.length; i++){
+		if (lignes[i] != ""){
+			const valeurs = lignes[i].split(/\t/);
+			phone = valeurs[3];
+		}
+	}
+	return phone;
+  }
 
 /* // Phone only
 const normalizeInputPhone = (value) => {
