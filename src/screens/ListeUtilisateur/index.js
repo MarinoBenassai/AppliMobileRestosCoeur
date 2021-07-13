@@ -30,6 +30,9 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
   const token = React.useContext(userContext).token
+  
+  //Handler des erreurs de serveur
+  const handleError = React.useContext(userContext).handleError;
 
   // On récupère les informations données en paramètres
   const { IDActivite, IDSite, IDJour } = route.params;
@@ -43,7 +46,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
       body: body})
         .then((response) => checkFetch(response))
         .then((texte) =>  {setData(texte); console.log("Liste Utilisateurs : chargées")})
-        .catch((error) => console.error(error))
+        .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);
 
@@ -72,7 +75,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
         .then((response) => checkFetch(response))
         .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
         .then( () => goBack() )
-        .catch((error) => console.error(error));
+        .catch((error) => handleError (error));
   }
   
 

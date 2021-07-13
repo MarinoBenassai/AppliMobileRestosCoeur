@@ -23,6 +23,9 @@ function contactScreen() {
   const userID = React.useContext(userContext).userID
   const token = React.useContext(userContext).token
   
+  //Handler des erreurs de serveur
+  const handleError = React.useContext(userContext).handleError;
+  
   // on va chercher les informations sur la BDD
   useEffect(() => {
     let body = new FormData();
@@ -32,7 +35,7 @@ function contactScreen() {
       body: body})
         .then((response) => checkFetch(response))
         .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées")})
-        .catch((error) => console.error(error))
+        .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);
 

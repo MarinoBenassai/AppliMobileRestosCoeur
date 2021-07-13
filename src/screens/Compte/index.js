@@ -29,6 +29,9 @@ const compteScreen = () => {
   const userID = React.useContext(userContext).userID
   const token = React.useContext(userContext).token
   
+  //Handler des erreurs de serveur
+  const handleError = React.useContext(userContext).handleError;
+  
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
     let body = new FormData();
@@ -38,7 +41,7 @@ const compteScreen = () => {
       body: body})
         .then((response) => checkFetch(response))
         .then((texte) =>  {setDataEngagementDefaut(texte); console.log("Infos Engagement Défaut : chargées")})
-        .catch((error) => console.error(error))
+        .catch((error) => handleError (error))
   }, []);
 
   // On récupère les informations personelles
@@ -53,7 +56,7 @@ const compteScreen = () => {
         body: body})
           .then((response) => checkFetch(response))
           .then((texte) =>  {setDataPerso(texte); console.log("Infos Perosnelles : chargées")})
-          .catch((error) => console.error(error))
+          .catch((error) => handleError (error))
           .finally(() => setLoading(false));;
 	  }
   }, [persoUpToDate]);
@@ -279,7 +282,7 @@ const compteScreen = () => {
 		.then((json) => {
 			alert("Votre mot de passe a bien été modifié.");
 		})
-		.catch((error) => console.error(error))
+		.catch((error) => handleError (error))
     .finally(() => setLoading(false));
 
 	  }
@@ -312,7 +315,7 @@ const compteScreen = () => {
         })
 	      .then((response) => checkFetch(response))
 	      .then((texte) => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
-		    .catch((error) => console.error(error))
+		    .catch((error) => handleError (error))
         .finally(() => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)});
 	    alert(
 		  "Vos informations ont bien été mises à jour.",

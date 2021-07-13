@@ -50,6 +50,9 @@ function activiteScreen({route, navigation}) {
   // On récupère les informations données en paramètres
   const { IDActivite, IDSite, IDJour, NomActivite, NomSite, idRole } = route.params;
 
+  //Handler des erreurs de serveur
+  const handleError = React.useContext(userContext).handleError;
+
   // Fonction de sélection de l'activité
   function versListe({navigation}) {
   	navigation.navigate('ListeUtilisateur', {
@@ -69,7 +72,7 @@ function activiteScreen({route, navigation}) {
 	    body: body})
         .then((response) => checkFetch(response))
         .then((texte) =>  {setData(texte);console.log("Infos bénévoles : chargées ")})
-        .catch((error) => console.error("error : " + error))
+        .catch((error) => handleError (error))
         .finally(() => {setLoading(false); setUpToDate(true)});
     });
 
@@ -90,7 +93,7 @@ function activiteScreen({route, navigation}) {
 	    body: body})
         .then((response) => checkFetch(response))
         .then((texte) =>  {setData(texte);console.log("Infos bénévoles : chargées ")})
-        .catch((error) => console.error(error))
+        .catch((error) => handleError (error))
         .finally(() => {setLoading(false); setUpToDate(true)});
 
       // Update commentaire d'activité (dans le fetch au dessus)
@@ -175,7 +178,7 @@ function activiteScreen({route, navigation}) {
         body: body})
           .then((response) => checkFetch(response))
           .then((texte) =>  {console.log("changement status : non défini : "); console.log(texte)})
-          .catch((error) => console.error(error))
+          .catch((error) => handleError (error))
           .finally(() => setUpToDate(false));
     }
 
@@ -201,7 +204,7 @@ function activiteScreen({route, navigation}) {
         body: body})
           .then((response) => checkFetch(response))
           .then((texte) =>  {console.log("changement statut : présent : "); console.log(texte)})
-          .catch((error) => console.error(error))
+          .catch((error) => handleError (error))
           .finally(() => setUpToDate(false));
     }
   }
@@ -253,7 +256,7 @@ function activiteScreen({route, navigation}) {
                                         .then((response) => checkFetch(response))
                                         .then((texte) => console.log(texte))
                                         .then(() => console.log("Nouvelle entrée : commentaire d'activité"))
-                                        .catch((error) => console.error(error))
+                                        .catch((error) => handleError (error))
                                         .finally(() => setUpToDate(false));
                                   }
                                   else{
@@ -265,7 +268,7 @@ function activiteScreen({route, navigation}) {
                                         .then((response) => checkFetch(response))
                                         .then((texte) => console.log(texte))
                                         .then(() => console.log("update entrée : commentaire d'activité "))
-                                        .catch((error) => console.error(error))
+                                        .catch((error) => handleError (error))
                                         .finally(() => setUpToDate(false));
                                   }
                           }}
@@ -306,7 +309,7 @@ function activiteScreen({route, navigation}) {
 				            body: body})
                       .then((response) => checkFetch(response))
                       .then((texte) =>  {console.log("changement statut : absent :"); console.log(texte)})
-                      .catch((error) => console.error(error))
+                      .catch((error) => handleError (error))
                       .finally(() => {setUpToDate(false); setComment("");});
 
                 }}
@@ -379,7 +382,7 @@ function activiteScreen({route, navigation}) {
                             .then((response) => checkFetch(response))
                             .then((texte) =>  {console.log(texte);setInfoActivite((texte.split("\n")[1])); console.log("Info commentaire d'activité : chargées");
                               setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
-                            .catch((error) => console.error(error))
+                            .catch((error) => handleError (error))
                             .finally(() => {setLoading(false); setUpToDate(true)});
 
                         setmodalVisibleCommentaireActivite(true)}}>

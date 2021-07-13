@@ -36,6 +36,9 @@ function engagementScreen({navigation}) {
   const userID = React.useContext(userContext).userID
   const token = React.useContext(userContext).token
 
+  //Handler des erreurs de serveur
+  const handleError = React.useContext(userContext).handleError;
+  
   // Focntion de chargement de l'activité
   function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
@@ -54,7 +57,7 @@ function engagementScreen({navigation}) {
         body: body})
           .then((response) => checkFetch(response))
           .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); setUpToDate(true);})
-          .catch((error) => console.error(error))
+          .catch((error) => handleError (error))
           .finally(() => setLoading(false));
     }
   }, [upToDate]);
@@ -128,7 +131,7 @@ function engagementScreen({navigation}) {
         body: body})
           .then((response) => checkFetch(response))
           .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-          .catch((error) => console.error(error))
+          .catch((error) => handleError (error))
           .finally(() => {setUpToDate(false); setLoading(false);});
     }
 
@@ -155,7 +158,7 @@ function engagementScreen({navigation}) {
           body: body})
             .then((response) => checkFetch(response))
             .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-            .catch((error) => console.error(error))
+            .catch((error) => handleError (error))
             .finally(() => {setUpToDate(false); setLoading(false);});
       }
       
@@ -196,7 +199,7 @@ function engagementScreen({navigation}) {
                                   body: body})
                                     .then((response) => checkFetch(response))
                                     .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
-                                    .catch((error) => console.error(error))
+                                    .catch((error) => handleError (error))
                                     .finally(() => {setUpToDate(false); setComment(""); setLoading(false);})
 
                                   // On raffraichi et reset le commentaire pour la prochaine fois (au dessus - finally)

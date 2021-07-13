@@ -73,7 +73,11 @@ export default function App() {
   }
   
   function logout() {
-	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LOGOUT/P_TOKEN=' + token)
+    let body = new FormData();
+    body.append('token',token);
+	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LOGOUT/P_TOKEN=' + token, {
+	    method: 'POST',
+	    body: body})
 	  .then((response) => {
 		if (response.ok) {
 			return response.text();
@@ -92,7 +96,7 @@ export default function App() {
   }
   
   function handleError (erreur) {
-	  if (erreur === "Invalid Token"){
+	  if (erreur === "Invalid token"){
 		//TODO message de deconnexion
 		alert("Votre session a expiré, veuillez vous reconnecter");
 		setUserID("");
@@ -103,6 +107,7 @@ export default function App() {
 		console.log(erreur);
 	  }
   }
+  
   return (
     <userContext.Provider value = {{
       userID: userID,

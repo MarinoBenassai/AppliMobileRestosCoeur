@@ -36,7 +36,7 @@ function oublieScreen({navigation}){
 			  alert("Si cette adresse est associée à un compte, un mail contenant votre nouveau mot de passe vient de vous être envoyé. Votre nouveau mot de passe est " + json["mdp"] +".");
 		      navigation.goBack();
 		  })
-		  .catch((error) => handleError)
+		  .catch((error) => handleError (error))
 		  .finally(() => setLoading(false));
 		  
 	    onChangeTextEmail(""); //On vide le champ email

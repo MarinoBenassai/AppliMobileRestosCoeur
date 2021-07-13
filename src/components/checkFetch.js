@@ -1,15 +1,17 @@
 import React from 'react';
 import {Alert} from 'react-native';
 
-export const  checkFetch = function(response) {
+export const  checkFetch = async function(response) {
     console.log("response : " + response + "\n" + response.ok + "\n" + response.status);
-
+	const texte = await response.text();
+	
     if(response.ok){
-        return response.text();
+        return texte;
     }
     else{
-        alert("Il y a eu un problème lors de la connexion à la page. Veuillez rééssayer.");
+		throw texte;
+        /*alert("Il y a eu un problème lors de la connexion à la page. Veuillez rééssayer.");
         console.log("Erreur Fetch : " + response.text());
-        return "-1";
+        return "-1";*/
     }
 }

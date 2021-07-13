@@ -15,6 +15,9 @@ function referentScreen({navigation}) {
   // On importe l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
   const token = React.useContext(userContext).token
+  
+  //Handler des erreurs de serveur
+  const handleError = React.useContext(userContext).handleError;
 
   // Fonction de sélection de l'activité
   function versActivite({navigation}, item) {
@@ -32,7 +35,7 @@ function referentScreen({navigation}) {
 	    body: body})
         .then((response) => checkFetch(response))
         .then((texte) =>  {setData(texte); console.log("Infos Synthèse Réferent : chargées")})
-        .catch((error) => console.error(error))
+        .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);
 
