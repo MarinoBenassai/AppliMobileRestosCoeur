@@ -7,7 +7,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Octicons';
 import Constants from 'expo-constants';
-
+import * as SecureStore from 'expo-secure-store';
+import * as Device from 'expo-device';
+import * as SplashScreen from 'expo-splash-screen';
 import * as Notifications from 'expo-notifications';
 
 import IdScreen from './src/screens/Identification';
@@ -64,6 +66,25 @@ export default function App() {
     };
   }, []);
   
+  useEffect(() => {
+	  autoConnect();
+  }, []);
+  
+  async function autoConnect() {
+	  
+	  if (Device.brand){
+		await SplashScreen.preventAutoHideAsync();
+		const token = await SecureStore.getItemAsync('token');
+		const id = await SecureStore.getItemAsync('id');
+		if (token !== null && id !== null){
+			setToken(token);
+			setUserID(id);
+		}
+		await SplashScreen.hideAsync();
+	  }
+	  
+  }
+  
   function changeID(ID) {
     setUserID(ID);
   }
@@ -89,6 +110,10 @@ export default function App() {
 	  .then((data) => {
 		  setUserID("");
 		  setToken("");
+		  if (Device.brand){
+			  SecureStore.deleteItemAsync('id');
+			  SecureStore.deleteItemAsync('token');
+		  }
 		  alert("Déconnexion réussie.");
 	  })
 	  .catch((error) => alert("Une erreur est survenue"))

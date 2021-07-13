@@ -4,6 +4,7 @@ import * as Crypto from 'expo-crypto';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
+import * as SecureStore from 'expo-secure-store';
 
 import constantes from '../../constantes';
 import {userContext} from '../../contexts/userContext';
@@ -53,7 +54,7 @@ export default function IdScreen({navigation}) {
 				}
 			})
 			
-			// TODO : ausis le faire lors de la connexion automatique et pensez à gérer la déconnexion
+			// TODO : aussi le faire lors de la connexion automatique et pensez à gérer la déconnexion
 			.then(([data, token]) => {
 				//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
 				if (data.tokennotification != token && token != "-1"){
@@ -77,6 +78,10 @@ export default function IdScreen({navigation}) {
   
   
   function login(data) {
+	  if (Device.brand){
+		SecureStore.setItemAsync('id', data.id);
+		SecureStore.setItemAsync('token', data.token);
+	  }
 	  changeToken(data.token);
 	  changeID(data.id);
     }
