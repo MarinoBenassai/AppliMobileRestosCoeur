@@ -283,12 +283,13 @@ const compteScreen = () => {
 		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_UPD_MOTDEPASSE', {
 		method: 'POST',
 		body: body})
-		.then((response) => {
+		.then(async function (response) {
 			if (response.ok) {
 				return response.json();
 			}
 			else {
-				throw new Error('Une erreur est survenue.');
+				const json = await response.json();
+				throw json['error'];
 			}
 		})
 		.then((json) => {
@@ -321,7 +322,7 @@ const compteScreen = () => {
         .then(() => {
           let body = new FormData();
           body.append('token',token);
-          fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
+          return fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
             method: 'POST',
             body: body})
         })
@@ -341,6 +342,31 @@ const compteScreen = () => {
 
 }
 
+  function getEmailFromData(data) {
+	const lignes = data.split(/\n/);
+	var i;
+	var Email = null;
+	for (i = 1; i<lignes.length; i++){
+		if (lignes[i] != ""){
+			const valeurs = lignes[i].split(/\t/);
+			Email = valeurs[2];
+		}
+	}
+	return Email;
+  }
+
+    function getPhoneFromData(data) {
+	const lignes = data.split(/\n/);
+	var i;
+	var phone = null;
+	for (i = 1; i<lignes.length; i++){
+		if (lignes[i] != ""){
+			const valeurs = lignes[i].split(/\t/);
+			phone = valeurs[3];
+		}
+	}
+	return phone;
+  }
 
 
 // On exporte la fonction principale
