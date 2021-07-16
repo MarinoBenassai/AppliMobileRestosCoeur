@@ -3,8 +3,10 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput} from 'react-native';
 import {Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
+import {Picker} from '@react-native-picker/picker';
 
 import {checkFetch} from '../../components/checkFetch';
+import {traitement} from '../../components/pickerActivite';
 import {userContext} from '../../contexts/userContext';
 import ModalContact from '../../components/modalContact';
 import constantes from '../../constantes';
@@ -14,10 +16,13 @@ import styles from '../../styles';
 function contactScreen() {
   // on définit les états : data et loading
   const [isLoading, setLoading] = useState(true);
+  const [visibleData, setVisibleData] = useState("");
   const [data, setData] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [mail, setMail] = useState("");
   const [phone, setPhone] = useState("");
+
+  const [picker, setPicker] = useState("nom");
   
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -34,15 +39,23 @@ function contactScreen() {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées")})
+        .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées");})
         .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);
 
-  // On traite ces informations
-  const ligne = data.split(/\n/);
-  ligne.shift(); //enlève le premier élement (et le retourne)
-  ligne.pop();   //enlève le dernier élement (et le retourne)
+  // on met à jour la liste visible initiale
+  useEffect(() => {
+    const ligne = data.split(/\n/);
+    ligne.shift(); //enlève le premier élement (et le retourne)
+    ligne.pop();   //enlève le dernier élement (et le retourne)
+    //setVisibleData(ligne);
+    traitement("NOM", data, ligne, setVisibleData, 1, 2, 3, 4, 0); // ordonne la liste initiale
+    
+    
+  }, [data]);
+
+  
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
@@ -79,6 +92,7 @@ function contactScreen() {
     </View>
   );
 
+
   // on retourne la flatliste
   return (
     <>
@@ -89,6 +103,25 @@ function contactScreen() {
          <ActivityIndicator size="large" color="#00ff00" />
 	      </View>) : (
 		<>
+
+    {/*Picker*/}
+    <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20}}>
+      <Picker
+          style={{height: 30, width: "50%", maxWidth: 190, alignSelf: "flex-end" }}
+          selectedValue={picker}
+          onValueChange={(itemValue, itemIndex) =>
+              {setPicker(itemValue);
+              traitement(itemValue, data, visibleData, setVisibleData, 1, 2, 3, 4, 0);}
+          }>
+
+          <Picker.Item label="nom" value="NOM" />
+          <Picker.Item label="prénom" value="PRENOM" />
+          <Picker.Item label="jour" value="JOUR" />
+          <Picker.Item label="site" value="SITE" />
+          <Picker.Item label="activité" value="ACTIVITE" />
+      </Picker>
+    </View>
+
 		{/*Header de la liste*/}
 		<View style = {styles.header}>
 			<View style={{width:'33%'}}>
@@ -102,7 +135,7 @@ function contactScreen() {
 			</View>
 		</View>
         <FlatList
-          data={ligne}
+          data={visibleData}
           renderItem={renderItem}
           keyExtractor={item => item}
         />

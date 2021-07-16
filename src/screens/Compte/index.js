@@ -5,6 +5,7 @@ import * as Crypto from 'expo-crypto';
 
 import {normalizeInputPhone} from '../../components/normalizeInputPhone';
 import {checkFetch} from '../../components/checkFetch';
+import {modeAffichage} from '../../components/modeAffichage';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
@@ -28,6 +29,12 @@ const compteScreen = () => {
   // On récupère l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
   const token = React.useContext(userContext).token
+
+  // Mode d'affichage
+  const [indexActif, setIndexActif] = useState(0); // index du split
+  const [indexHeader, setIndexHeader] = useState(0); // index réel du header actif
+  const [header, setHeader] = useState(["\u25B2", "", ""]);
+  const [visibleData, setVisibleData] = useState('');
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
@@ -62,11 +69,15 @@ const compteScreen = () => {
   }, [persoUpToDate]);
 
   // On traite ces informations
-  const ligneEngagementDefaut = dataEngagementDefaut.split(/\n/);
-  ligneEngagementDefaut.shift(); //enlève le premier élement (et le retourne)
-  ligneEngagementDefaut.pop();   //enlève le dernier élement (et le retourne)
-
   const lignePerso = dataPerso.split(/\n/);
+
+  // on met à jour la liste visible initiale
+  useEffect(() => {
+    const ligneEngagementDefaut = dataEngagementDefaut.split(/\n/);
+    ligneEngagementDefaut.shift(); //enlève le premier élement (et le retourne)
+    ligneEngagementDefaut.pop();   //enlève le dernier élement (et le retourne)
+    setVisibleData(ligneEngagementDefaut);
+  }, [dataEngagementDefaut]);
 
   // On crée le renderer pour la liste
   const renderItem = ({ item }) => (
@@ -103,7 +114,7 @@ const compteScreen = () => {
           {/* View des Activités */}
           <View>
             <FlatList
-              data={ligneEngagementDefaut}
+              data={visibleData}
               ListHeaderComponent={
                 <>
                   {/* View du Profil (info, contact, MdP) */}
@@ -199,22 +210,23 @@ const compteScreen = () => {
                       />
                       <View style={styles.ligne}/>
                     </View>
-					<View style = {styles.item}>
+					          <View style = {styles.item}>
                       <Text style={styles.title}>Mes Activités</Text>
-					</View>
+					          </View>
 					
-					{/*Header de la liste*/}
-				    <View style = {styles.header}>
-			          <View style={{width:'33%'}}>
-				        <Text style = {styles.headerTitle}>Jour</Text>
-					  </View>
-					  <View style={{width:'33%'}}>
-				        <Text style = {styles.headerTitle}>Activité</Text>
-			          </View>
-			          <View style={{width:'33%'}}>
-				        <Text style = {styles.headerTitle}>Site</Text>
-			          </View>
-		            </View>
+
+                    {/*Header de la liste*/}
+                    <View style = {styles.header}>
+                      <Pressable style={{width:'33%'}} onPress={() => modeAffichage(dataEngagementDefaut, visibleData, setVisibleData, setIndexActif, indexActif, 0, "JOUR", indexHeader, setIndexHeader, 0, header, setHeader)}>
+                        <Text style = {styles.headerTitle}>Jour {header[0]}</Text>
+                      </Pressable>
+                      <Pressable style={{width:'33%'}} onPress={() => modeAffichage(dataEngagementDefaut, visibleData, setVisibleData, setIndexActif, indexActif, 1, "ACTIVITE", indexHeader, setIndexHeader, 1, header, setHeader)}>
+                        <Text style = {styles.headerTitle}>Activité {header[1]}</Text>
+                      </Pressable>
+                      <Pressable style={{width:'33%'}} onPress={() => modeAffichage(dataEngagementDefaut, visibleData, setVisibleData, setIndexActif, indexActif, 2, "SITE", indexHeader, setIndexHeader, 2, header, setHeader)}>
+                        <Text style = {styles.headerTitle}>Site {header[2]}</Text>
+                      </Pressable>
+                    </View>
 					
                   </View>
                 </>
@@ -330,36 +342,6 @@ const compteScreen = () => {
 }
 
 
-/* // Phone only
-const normalizeInputPhone = (value) => {
-  // retourne rien si rien
-  if (!value) return value; 
-
-  // nombre et +
-  //const currentValue = value.replace(/[^\d+]|(?<=[\d+])\+/g, ''); //Ne fonctionne pas sur portable
-  const currentValue = value.slice(0,1).replace(/[^\d+]/g, '') + value.slice(1).replace(/[^\d]/g, '');
-  
-  var newValue = "";
-  for(let i = 0; i<currentValue.length; i++){
-    // on gère le +33
-    if( currentValue[0] == "+" ){
-      if( i == 3 ){
-        newValue += " "
-      }
-    }
-    // on met un espace tous les 2 nombres
-    if( (i != 0) && (i%2 == 0) && (( currentValue[0] != "+" ) || ( i>=3 )) ){
-      newValue += " "
-    }
-
-    // on écrit le nombre
-    newValue += currentValue[i];
-  }
-
-  return newValue;
-  
-};
- */
 
 // On exporte la fonction principale
 export default compteScreen;

@@ -6,6 +6,7 @@ import {Picker} from '@react-native-picker/picker';
 
 import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
+import {traitement} from '../../components/pickerActivite';
 import constantes from '../../constantes';
 import styles from '../../styles';
 import ViewStatus from '../../components/viewStatut';
@@ -29,8 +30,10 @@ function engagementScreen({navigation}) {
   const [infoComment, setInfoComment] = useState(['', '', '']);
 
   // Mode d'affichage
-  const [affichage, setAffichage] = useState("CHRONOLOGIQUE"); // ("CHRONOLOGIQUE", "PRESENT", "ABSENT", "NONDEFINI");
+  const [affichage, setAffichage] = useState("TOUT"); // ("TOUT", "PRESENT", "ABSENT", "NONDEFINI");
   const [visibleData, setVisibleData] = useState('');
+
+  const [picker, setPicker] = useState("date");
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -70,7 +73,7 @@ function engagementScreen({navigation}) {
     ligne.shift(); //enlève le premier élement (et le retourne)
     ligne.pop();   //enlève le dernier élement (et le retourne)
     console.log("debut affichage");
-    if(affichage == "CHRONOLOGIQUE"){
+    if(affichage == "TOUT"){
       setVisibleData( ligne );
     }
     else if(affichage == "PRESENT") {
@@ -245,14 +248,29 @@ function engagementScreen({navigation}) {
 
 			
               {/* Réordonnancement - Sélection */}
-              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20}}>
+              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-between"}}>
+
                 <Picker
-                  style={{height: 30, width: "50%", maxWidth: 190, alignSelf: "flex-end"}}
+                  style={{height: 30, width: "50%", maxWidth: 190}}
+                  selectedValue={picker}
+                  onValueChange={(itemValue, itemIndex) =>
+                      {setPicker(itemValue);
+                      traitement(itemValue, data, visibleData, setVisibleData, 1, 2, 3, 4, 0);}
+                  }>
+
+                        <Picker.Item label="date" value="DATE" />
+                        <Picker.Item label="activite" value="ACTIVITE" />
+                        <Picker.Item label="site" value="SITE" />
+                        <Picker.Item label="participant" value="PARTICIPANT" />
+                </Picker>
+
+                <Picker
+                  style={{height: 30, width: "50%", maxWidth: 190}}
                   selectedValue={affichage}
                   onValueChange={(itemValue, itemIndex) =>
                     setAffichage(itemValue)
                   }>
-                  <Picker.Item label="chronologique" value="CHRONOLOGIQUE" />
+                  <Picker.Item label="tout" value="TOUT" />
                   <Picker.Item label="présent" value="PRESENT" />
                   <Picker.Item label="absent" value="ABSENT" />
                   <Picker.Item label="non défini" value="NONDEFINI" />
