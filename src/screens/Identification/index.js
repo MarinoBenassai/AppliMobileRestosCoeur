@@ -42,7 +42,7 @@ export default function IdScreen({navigation}) {
 		method: 'POST',
 		body: body})
 		.then((response) => { const device = Device.getDeviceTypeAsync(); return Promise.all([response, device]) })
-		.then(([response, device]) => {
+		.then(async function ([response, device]){
 				if (response.ok) {
 					const a = response.json();
 					const b = registerForPushNotificationsAsync(device);
@@ -50,8 +50,8 @@ export default function IdScreen({navigation}) {
 					return Promise.all([a, b])
 				}
 				else {
-					const json = response.json();
-					throw new Error(json['error']);
+					const json = await response.json();
+					throw json['error'];
 				}
 			})
 			

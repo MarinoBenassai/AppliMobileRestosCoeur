@@ -271,12 +271,13 @@ const compteScreen = () => {
 		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_UPD_MOTDEPASSE', {
 		method: 'POST',
 		body: body})
-		.then((response) => {
+		.then(async function (response) {
 			if (response.ok) {
 				return response.json();
 			}
 			else {
-				throw new Error('Une erreur est survenue.');
+				const json = await response.json();
+				throw json['error'];
 			}
 		})
 		.then((json) => {
