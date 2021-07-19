@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import {Picker} from '@react-native-picker/picker';
 
 import {traitementSort} from '../../components/pickerActivite';
+import {traitementFilter} from '../../components/pickerActivite';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
@@ -112,21 +113,9 @@ function activiteScreen({route, navigation}) {
     ligne.shift(); //enlève le premier élement (et le retourne)
     ligne.pop();   //enlève le dernier élement (et le retourne)
     
-    if(affichage == "TOUT"){
-      setVisibleData( ligne );
-    }
-    else if(affichage == "PRESENT") {
-      setVisibleData( ligne.filter( (l) => ( l.split("\t")[6] == "Présent" ) ) );
-    }
-    else if(affichage == "ABSENT") {
-      setVisibleData( ligne.filter( (l) => ( l.split("\t")[6] == "Absent" ) ) );
-    }
-    else if (affichage == "NONDEFINI") {
-      setVisibleData( ligne.filter( (l) => ( l.split("\t")[6] == "Non défini" ) ) );
-    }
-    else{
-      console.log("ERREUR : Affichage inconnu dans useEffect");
-    }
+    const tr = traitementSort(picker.toUpperCase(), data, ligne, 0, 0, 4, 3, 0);
+
+    setVisibleData( traitementFilter(affichage, tr, 6) );
 
   }, [data, affichage]);
 

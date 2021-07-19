@@ -20,10 +20,7 @@ export const traitementSort = function(affichage, data, visibleData, activite, s
         cpyVisibleData.sort((a, b) => a.split(/\t/)[site] > b.split(/\t/)[site]);
         return( cpyVisibleData );
     }
-    else if( affichage === "JOUR" ){
-        return( ligneInit.filter( (l) => ( cpyVisibleData.indexOf(l) >= 0 ) ) );
-    }
-    else if( affichage === "DATE" ){
+    else if( affichage === "JOUR" || affichage === "DATE" ){
         return( ligneInit.filter( (l) => ( cpyVisibleData.indexOf(l) >= 0 ) ) );
     }
     else if( affichage === "NOM" ){
