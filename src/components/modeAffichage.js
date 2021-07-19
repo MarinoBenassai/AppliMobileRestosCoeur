@@ -76,7 +76,8 @@ export const modeAffichage = (data, visibleData, setVisibleData, setIndexActif, 
         }
         // Sinon, on trie
         else{
-            cpyVisibleData.sort((a, b) => a.split(/\t/)[indexChoisi] > b.split(/\t/)[indexChoisi]);
+            //cpyVisibleData.sort((a, b) => a.split(/\t/)[indexChoisi] > b.split(/\t/)[indexChoisi]);
+            cpyVisibleData.sort( (a,b) => a.split(/\t/)[indexChoisi].localeCompare(b.split(/\t/)[indexChoisi]) );
             setVisibleData( cpyVisibleData );
         }
 
