@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, Text, View, Pressable} from 'react-native'
 
 
 // on met à jour la liste visible
-export const  traitement = async function(affichage, data, visibleData, setVisibleData, activite, site, nom, prenom, participant) {
+export const traitementSort = function(affichage, data, visibleData, activite, site, nom, prenom, participant) {
     // On traite les données
     const ligne = data.split(/\n/);
     ligne.shift(); //enlève le premier élement (et le retourne)
@@ -14,32 +14,52 @@ export const  traitement = async function(affichage, data, visibleData, setVisib
 
     if( affichage === "ACTIVITE" ){
         cpyVisibleData.sort((a, b) => a.split(/\t/)[activite] > b.split(/\t/)[activite]);
-        setVisibleData( cpyVisibleData );
+        return( cpyVisibleData );
     }
     else if( affichage === "SITE" ){
         cpyVisibleData.sort((a, b) => a.split(/\t/)[site] > b.split(/\t/)[site]);
-        setVisibleData( cpyVisibleData );
+        return( cpyVisibleData );
     }
     else if( affichage === "JOUR" ){
-        setVisibleData( ligneInit );
+        return( ligneInit.filter( (l) => ( cpyVisibleData.indexOf(l) >= 0 ) ) );
     }
     else if( affichage === "DATE" ){
-        setVisibleData( ligneInit );
+        return( ligneInit.filter( (l) => ( cpyVisibleData.indexOf(l) >= 0 ) ) );
     }
     else if( affichage === "NOM" ){
         cpyVisibleData.sort((a, b) => a.split(/\t/)[nom] > b.split(/\t/)[nom]);
-        setVisibleData( cpyVisibleData );
+        return( cpyVisibleData );
     }
     else if( affichage === "PRENOM" ){
         cpyVisibleData.sort((a, b) => a.split(/\t/)[prenom] > b.split(/\t/)[prenom]);
-        setVisibleData( cpyVisibleData );
+        return( cpyVisibleData );
     }
     else if( affichage === "PARTICIPANT" ){
         cpyVisibleData.sort((a, b) => a.split(/\t/)[participant] > b.split(/\t/)[participant]);
-        setVisibleData( cpyVisibleData );
+        return( cpyVisibleData );
     }
     else{
       console.log("ERREUR : Affichage inconnu dans Picker");
     }
 
-  }
+}
+
+export const traitementFilter = function(affichage, visibleData, index) {
+
+    if(affichage == "TOUT"){
+        return( visibleData );
+      }
+      else if(affichage == "PRESENT") {
+        return( visibleData.filter( (l) => ( l.split("\t")[index] == "Présent" ) ) );
+      }
+      else if(affichage == "ABSENT") {
+        return( visibleData.filter( (l) => ( l.split("\t")[index] == "Absent" ) ) );
+      }
+      else if (affichage == "NONDEFINI") {
+        return( visibleData.filter( (l) => ( l.split("\t")[index] == "Non défini" ) ) );
+      }
+      else{
+        console.log("ERREUR : Affichage inconnu dans useEffect");
+      }
+
+}

@@ -4,6 +4,7 @@ import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, useFoc
 import Icon from 'react-native-vector-icons/Octicons';
 import {Picker} from '@react-native-picker/picker';
 
+import {traitementSort} from '../../components/pickerActivite';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
@@ -36,8 +37,9 @@ function activiteScreen({route, navigation}) {
   const [beneficiaireActivite, setBeneficiaireActivite] = useState('');
  
   // Mode d'affichage
-  const [affichage, setAffichage] = useState("ALPHABETIQUE"); // ("ALPHABETIQUE", "PRESENT", "ABSENT", "NONDEFINI");
+  const [affichage, setAffichage] = useState("TOUT"); // ("TOUT", "PRESENT", "ABSENT", "NONDEFINI");
   const [visibleData, setVisibleData] = useState('');
+  const [picker, setPicker] = useState("prenom");
 
   //Données pour le modal de contact
   const [mail, setMail] = useState('');
@@ -110,7 +112,7 @@ function activiteScreen({route, navigation}) {
     ligne.shift(); //enlève le premier élement (et le retourne)
     ligne.pop();   //enlève le dernier élement (et le retourne)
     
-    if(affichage == "ALPHABETIQUE"){
+    if(affichage == "TOUT"){
       setVisibleData( ligne );
     }
     else if(affichage == "PRESENT") {
@@ -413,14 +415,26 @@ function activiteScreen({route, navigation}) {
               </View>
 
               {/* Réordonnancement - Sélection */}
-              <View style={{alignSelf: "center", width: "100%", maxWidth: 550}}>
+              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-between"}}>
                 <Picker
-                  style={{height: 30, width: "45%", maxWidth: 180, alignSelf: "flex-end"}}
+                  style={{height: 30, width: "50%", maxWidth: 190}}
+                  selectedValue={picker}
+                  onValueChange={(itemValue, itemIndex) =>
+                      {setPicker(itemValue);
+                      setVisibleData( traitementSort(itemValue, data, visibleData, 0, 0, 4, 3, 0) );}
+                  }>
+
+                        <Picker.Item label="nom" value="NOM" />
+                        <Picker.Item label="prénom" value="PRENOM" />
+                </Picker>
+
+                <Picker
+                  style={{height: 30, width: "45%", maxWidth: 180}}
                   selectedValue={affichage}
                   onValueChange={(itemValue, itemIndex) =>
                     setAffichage(itemValue)
                   }>
-                  <Picker.Item label="alphabétique" value="ALPHABETIQUE" />
+                  <Picker.Item label="tout" value="TOUT" />
                   <Picker.Item label="présent" value="PRESENT" />
                   <Picker.Item label="absent" value="ABSENT" />
                   <Picker.Item label="non défini" value="NONDEFINI" />

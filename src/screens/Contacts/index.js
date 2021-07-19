@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 import {Picker} from '@react-native-picker/picker';
 
 import {checkFetch} from '../../components/checkFetch';
-import {traitement} from '../../components/pickerActivite';
+import {traitementSort} from '../../components/pickerActivite';
 import {userContext} from '../../contexts/userContext';
 import ModalContact from '../../components/modalContact';
 import constantes from '../../constantes';
@@ -50,7 +50,7 @@ function contactScreen() {
     ligne.shift(); //enlève le premier élement (et le retourne)
     ligne.pop();   //enlève le dernier élement (et le retourne)
     //setVisibleData(ligne);
-    traitement("NOM", data, ligne, setVisibleData, 1, 2, 3, 4, 0); // ordonne la liste initiale
+    setVisibleData( traitementSort("NOM", data, ligne, 1, 2, 3, 4, 0) ); // ordonne la liste initiale
     
     
   }, [data]);
@@ -111,7 +111,7 @@ function contactScreen() {
           selectedValue={picker}
           onValueChange={(itemValue, itemIndex) =>
               {setPicker(itemValue);
-              traitement(itemValue, data, visibleData, setVisibleData, 1, 2, 3, 4, 0);}
+              setVisibleData (traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 0) );}
           }>
 
           <Picker.Item label="nom" value="NOM" />

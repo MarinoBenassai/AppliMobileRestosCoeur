@@ -62,7 +62,7 @@ const compteScreen = () => {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {setDataPerso(texte); console.log("Infos Perosnelles : chargées")})
+          .then((texte) =>  {setDataPerso(texte); console.log("Infos Personelles : chargées")})
           .catch((error) => handleError (error))
           .finally(() => setLoading(false));;
 	  }

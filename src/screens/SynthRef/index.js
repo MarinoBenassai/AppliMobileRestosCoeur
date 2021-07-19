@@ -6,6 +6,7 @@ import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
+import {modeAffichage} from '../../components/modeAffichage';
 
 // Fonction Principale
 function referentScreen({navigation}) {
@@ -15,6 +16,12 @@ function referentScreen({navigation}) {
   // On importe l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
   const token = React.useContext(userContext).token
+
+  // Mode d'affichage
+  const [indexActif, setIndexActif] = useState(0); // index du split
+  const [indexHeader, setIndexHeader] = useState(2); // index visuel du header actif
+  const [header, setHeader] = useState(["", "", "\u25B2", ""]);
+  const [visibleData, setVisibleData] = useState('');
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
@@ -39,17 +46,18 @@ function referentScreen({navigation}) {
         .finally(() => setLoading(false));
   }, []);
 
-  // On tarite les données
-  const ligne = data.split(/\n/);
-  ligne.shift(); //enlève le premier élement (et le retourne)
-  ligne.pop();   //enlève le dernier élement (et le retourne)
+  // on met à jour la liste visible initiale
+  useEffect(() => {
+    const ligne = data.split(/\n/);
+    ligne.shift(); //enlève le premier élement (et le retourne)
+    ligne.pop();   //enlève le dernier élement (et le retourne)
+    setVisibleData(ligne);
+  }, [data]);
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
- 
-    
       
-      <View style={[styles.item, styles.REFERENT, {paddingVertical: 10}]}>
+    <View style={[styles.item, styles.REFERENT, {paddingVertical: 10}]}>
       <Pressable onPress={() => versActivite({navigation}, item)} style={{marginVertical: 5, alignSelf: "center", width: "100%", maxWidth: 600, padding: 0, justifyContent: "space-between",}}>
       {({ pressed }) => (
         <View style={{flexDirection: "row"}}>
@@ -76,29 +84,17 @@ function referentScreen({navigation}) {
             <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[3]}/{item.split(/\t/)[4]}</Text>
           </View>
 
-         {/*  {/* Conteneur 5eme colonne : nb Présent 
-          <View style={[styles.colomn, {width:'8%'}]}>
-            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[4]}/x</Text>
-          </View> */}
-
         </View>
       )}
 
-      
-
       </Pressable>
-      </View>
+
+    </View>
 
 
-    
-
-
-
-
-
-    
-   
   );
+
+
 
   // On retourne la flatliste
   return (
@@ -108,7 +104,9 @@ function referentScreen({navigation}) {
           <ActivityIndicator size="large" color="#00ff00" />
         </View>) : (
         <View>
-          <Synthese ligne={ligne} loading={isLoading} renderItem={renderItem}/>
+          <Synthese loading={isLoading} renderItem={renderItem} 
+          data={data} visibleData={visibleData} setVisibleData={setVisibleData} setIndexActif={setIndexActif} indexActif={indexActif}
+          indexHeader={indexHeader} setIndexHeader={setIndexHeader} header={header} setHeader={setHeader}/>
         </View>
       )}
     </SafeAreaView>
@@ -122,35 +120,44 @@ function Synthese(props) {
   const ligne = props.ligne;
   const isLoading = props.loading;
   const renderItem = props.renderItem;
-  if (ligne.length != 0){
+
+  const data = props.data;
+  const visibleData = props.visibleData;
+  const setVisibleData = props.setVisibleData;
+  const setIndexActif= props.setIndexActif;
+  const indexActif = props.indexActif;
+  const indexHeader = props.indexHeader;
+  const setIndexHeader = props.setIndexHeader;
+  const header = props.header;
+  const setHeader = props.setHeader;
+
+  if (visibleData.length != 0){
     return  <View>
 			  <>
 		      {/*Header de la liste*/}
-			  <View style = {styles.header}>
-			    <View style={{width:'25%', justifyContent: 'center'}}>
-				    <Text style = {styles.headerTitle}>Site</Text>
-			    </View>
-			    <View style={{width:'25%', justifyContent: 'center'}}>
-				    <Text style = {styles.headerTitle}>Activité</Text>
-			    </View>
-			    <View style={{width:'35%', justifyContent: 'center'}}>
-				    <Text style = {styles.headerTitle}>Date</Text>
-			    </View>
-				  <View style={{width:'15%', justifyContent: 'center'}}>
-				    <Text style = {styles.headerTitle}>Local/ Global</Text>
-			    </View>
-          {/* <View style={{width:'12%', justifyContent: 'center'}}>
-				    <Text style = {styles.headerTitle}>Nb total</Text>
-			    </View> */}
-			  </View>
+			    <View style = {styles.header}>
+            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 2, "SITE", indexHeader, setIndexHeader, 0, header, setHeader)}>
+              <Text style = {styles.headerTitle}>Site {header[0]}</Text>
+            </Pressable>
+            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 1, "ACTIVITE", indexHeader, setIndexHeader, 1, header, setHeader)}>
+              <Text style = {styles.headerTitle}>Activité {header[1]}</Text>
+            </Pressable>
+            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 0, "DATE", indexHeader, setIndexHeader, 2, header, setHeader)}>
+              <Text style = {styles.headerTitle}>Date {header[2]}</Text>
+            </Pressable>
+            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 3, "PARTICIPANT", indexHeader, setIndexHeader, 3, header, setHeader)}>
+              <Text style = {styles.headerTitle}>Local{header[3]} /Global</Text>
+            </Pressable>
 
-        <FlatList
-          data={ligne}
-          renderItem={renderItem}
-          keyExtractor={item => item}
-        />
+			    </View>
+
+          <FlatList
+            data={visibleData}
+            renderItem={renderItem}
+            keyExtractor={item => item}
+          />
 			  </>
-            </View>;
+      </View>;
       
   }
   else{

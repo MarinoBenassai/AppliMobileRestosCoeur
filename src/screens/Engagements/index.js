@@ -6,7 +6,8 @@ import {Picker} from '@react-native-picker/picker';
 
 import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
-import {traitement} from '../../components/pickerActivite';
+import {traitementSort} from '../../components/pickerActivite';
+import {traitementFilter} from '../../components/pickerActivite';
 import constantes from '../../constantes';
 import styles from '../../styles';
 import ViewStatus from '../../components/viewStatut';
@@ -73,21 +74,12 @@ function engagementScreen({navigation}) {
     ligne.shift(); //enlève le premier élement (et le retourne)
     ligne.pop();   //enlève le dernier élement (et le retourne)
     console.log("debut affichage");
-    if(affichage == "TOUT"){
-      setVisibleData( ligne );
-    }
-    else if(affichage == "PRESENT") {
-      setVisibleData( ligne.filter( (l) => ( l.split("\t")[4] == "Présent" ) ) );
-    }
-    else if(affichage == "ABSENT") {
-      setVisibleData( ligne.filter( (l) => ( l.split("\t")[4] == "Absent" ) ) );
-    }
-    else if (affichage == "NONDEFINI") {
-      setVisibleData( ligne.filter( (l) => ( l.split("\t")[4] == "Non défini" ) ) );
-    }
-    else{
-      console.log("ERREUR : Affichage inconnu dans useEffect");
-    }
+    
+    const tr = traitementSort(picker.toUpperCase(), data, ligne, 1, 2, 3, 4, 6);
+    
+
+    setVisibleData( traitementFilter(affichage, tr, 4) );
+
 
   }, [data, affichage]);
 
@@ -255,7 +247,7 @@ function engagementScreen({navigation}) {
                   selectedValue={picker}
                   onValueChange={(itemValue, itemIndex) =>
                       {setPicker(itemValue);
-                      traitement(itemValue, data, visibleData, setVisibleData, 1, 2, 3, 4, 0);}
+                      setVisibleData( traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 6) );}
                   }>
 
                         <Picker.Item label="date" value="DATE" />

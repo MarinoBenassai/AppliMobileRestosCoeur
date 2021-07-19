@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 
 // on met à jour la liste visible //mode : NOM, JOUR, AUTRE
-// ARGUMENT : RowData, visibleData, setterVisibleData, setterIndexDuSplit, indexDuSPlit, indexDuSPlitChoisi, mode, setterIndexReelDuHeader, indexReelHeader, headerArray, setterHeaderArray
+// ARGUMENT : RowData, visibleData, setterVisibleData, setterIndexDuSplit, indexDuSplit, indexDuSplitChoisi, mode, setterIndexViseulDuHeader, indexVisuelHeader, headerArray, setterHeaderArray
 export const modeAffichage = (data, visibleData, setVisibleData, setIndexActif, indexActif, indexChoisi, mode, indexAncienHeader, setIndexHeader, indexHeader, header, setHeader) => {
     // On traite les données
     const ligne = data.split(/\n/);
