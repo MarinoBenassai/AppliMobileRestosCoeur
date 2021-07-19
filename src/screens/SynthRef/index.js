@@ -132,7 +132,7 @@ function Synthese(props) {
   const setHeader = props.setHeader;
 
   if (visibleData.length != 0){
-    return  <View>
+    return  <View style={{flex: 1}}>
 			  <>
 		      {/*Header de la liste*/}
 			    <View style = {styles.header}>

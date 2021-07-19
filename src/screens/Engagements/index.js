@@ -165,7 +165,7 @@ function engagementScreen({navigation}) {
   return (
 
     <SafeAreaView style={styles.container}>
-      <View>
+      <View style={{flex: 1}}>
         <Modal
           animationType="slide"
           transparent={true}
@@ -243,7 +243,7 @@ function engagementScreen({navigation}) {
               <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-between"}}>
 
                 <Picker
-                  style={{height: 30, width: "50%", maxWidth: 190}}
+                  style={{height: 30, width: "45%", maxWidth: 190}}
                   selectedValue={picker}
                   onValueChange={(itemValue, itemIndex) =>
                       {setPicker(itemValue);
@@ -257,7 +257,7 @@ function engagementScreen({navigation}) {
                 </Picker>
 
                 <Picker
-                  style={{height: 30, width: "50%", maxWidth: 190}}
+                  style={{height: 30, width: "45%", maxWidth: 190, textAlign: "right"}}
                   selectedValue={affichage}
                   onValueChange={(itemValue, itemIndex) =>
                     setAffichage(itemValue)

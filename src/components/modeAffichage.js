@@ -1,8 +1,26 @@
 import React, { useEffect, useState } from 'react';
 
 
-// on met à jour la liste visible //mode : NOM, JOUR, AUTRE
-// ARGUMENT : RowData, visibleData, setterVisibleData, setterIndexDuSplit, indexDuSplit, indexDuSplitChoisi, mode, setterIndexViseulDuHeader, indexVisuelHeader, headerArray, setterHeaderArray
+/*
+*
+* data = Row Data, Data originelles afin de retrouver l'ordre pour les jours
+* visibleData = Data actuellement affichées, pour les inverser si necessaires
+* setVisibleData = Setter des visibleData, afin d'afficher les modifications éffectuées
+*
+* setIndexActif = Setter de l'index cliqué en mémoire (donc pseudo-précédement)
+* indexActif = Index du split effectué le plus recement jusqu'à mise à jour, afin de savoir si on a cliqué au même endroit
+* indexChoisi = Index de split sur lequel on vient de cliquer (d'appeler la fct)
+*
+* mode = Sert à détecter les cas particulier, où l'ordre de triage n'est pas trivial : NOM, JOUR, AUTRE
+*
+* indexAncienHeader = Index Visuel du dernier endroit sur lequel on a cliqué, permet de mettre à jour le header
+* setIndexHeader = Setter de l'index actuel et visuel du header cliqué
+* indexHeader = Index actuel et visuel du header cliqué, permet de mettre à jour le header
+*
+* header = Array contenant le header actuel, pour faire les changement directement dessus
+* setHeader = Setter du header
+*
+*/
 export const modeAffichage = (data, visibleData, setVisibleData, setIndexActif, indexActif, indexChoisi, mode, indexAncienHeader, setIndexHeader, indexHeader, header, setHeader) => {
     // On traite les données
     const ligne = data.split(/\n/);

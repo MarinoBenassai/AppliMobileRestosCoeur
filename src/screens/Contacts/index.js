@@ -97,49 +97,49 @@ function contactScreen() {
   return (
     <>
     <SafeAreaView style={styles.container}>
-	<ModalContact visible = {modalVisible} setVisible = {setModalVisible} mail = {mail} phone = {phone}/>
-    {isLoading ? (
-        <View style={styles.loading}>
-         <ActivityIndicator size="large" color="#00ff00" />
-	      </View>) : (
-		<>
+	    <ModalContact visible = {modalVisible} setVisible = {setModalVisible} mail = {mail} phone = {phone}/>
+      {isLoading ? (
+          <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#00ff00" />
+          </View>) : (
+      <>
 
-    {/*Picker*/}
-    <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20}}>
-      <Picker
-          style={{height: 30, width: "50%", maxWidth: 190, alignSelf: "flex-end" }}
-          selectedValue={picker}
-          onValueChange={(itemValue, itemIndex) =>
-              {setPicker(itemValue);
-              setVisibleData (traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 0) );}
-          }>
+      {/*Picker*/}
+      <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20}}>
+        <Picker
+            style={{height: 30, width: "50%", maxWidth: 190, alignSelf: "flex-end" }}
+            selectedValue={picker}
+            onValueChange={(itemValue, itemIndex) =>
+                {setPicker(itemValue);
+                setVisibleData (traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 0) );}
+            }>
 
-          <Picker.Item label="nom" value="NOM" />
-          <Picker.Item label="prénom" value="PRENOM" />
-          <Picker.Item label="jour" value="JOUR" />
-          <Picker.Item label="site" value="SITE" />
-          <Picker.Item label="activité" value="ACTIVITE" />
-      </Picker>
-    </View>
+            <Picker.Item label="nom" value="NOM" />
+            <Picker.Item label="prénom" value="PRENOM" />
+            <Picker.Item label="jour" value="JOUR" />
+            <Picker.Item label="site" value="SITE" />
+            <Picker.Item label="activité" value="ACTIVITE" />
+        </Picker>
+      </View>
 
-		{/*Header de la liste*/}
-		<View style = {styles.header}>
-			<View style={{width:'33%'}}>
-				<Text style = {styles.headerTitle}>Nom/Prénom</Text>
-			</View>
-			<View style={{width:'33%'}}>
-				<Text style = {styles.headerTitle}>Activité et jour</Text>
-			</View>
-			<View style={{width:'33%'}}>
-				<Text style = {styles.headerTitle}>Info contact</Text>
-			</View>
-		</View>
+      {/*Header de la liste*/}
+      <View style = {styles.header}>
+        <View style={{width:'33%'}}>
+          <Text style = {styles.headerTitle}>Nom/Prénom</Text>
+        </View>
+        <View style={{width:'33%'}}>
+          <Text style = {styles.headerTitle}>Activité et jour</Text>
+        </View>
+        <View style={{width:'33%'}}>
+          <Text style = {styles.headerTitle}>Info contact</Text>
+        </View>
+      </View>
         <FlatList
           data={visibleData}
           renderItem={renderItem}
           keyExtractor={item => item}
         />
-		</>
+      </>
       )}
     </SafeAreaView>
 	</>
