@@ -20,7 +20,7 @@ function oublieScreen({navigation}){
 		setLoading(true);
 		let body = new FormData();
 		body.append('email',textEmail);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_RST_MOTDEPASSE', {
+		fetch('http://' + constantes.BDD + '/AUT/AP_RST_MOTDEPASSE', {
 		method: 'POST',
 		body: body})	
 		  .then((response) => {

@@ -70,7 +70,7 @@ function activiteScreen({route, navigation}) {
 	  setLoading(true);
     let body = new FormData();
 	  body.append('token',token);
-	  fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
+	  fetch('http://' + constantes.BDD + '/APP/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
 	    method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
@@ -91,7 +91,7 @@ function activiteScreen({route, navigation}) {
     // Update la liste et les info Activité
     let body = new FormData();
 	  body.append('token',token);
-	  fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
+	  fetch('http://' + constantes.BDD + '/APP/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
 	    method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
@@ -164,7 +164,7 @@ function activiteScreen({route, navigation}) {
       console.log("Vous êtiez actuellement 'Absent'");
       let body = new FormData();
 	    body.append('token',token);
-	    fetch("http://" + bdd + "/Axoptim.php/APP/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site , {
+	    fetch("http://" + bdd + "/APP/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site , {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
@@ -190,7 +190,7 @@ function activiteScreen({route, navigation}) {
       console.log("Vous êtiez actuellement 'Non défini'");
       let body = new FormData();
       body.append('token',token);
-      fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role , {
+      fetch("http://" + constantes.BDD + "/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role , {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
@@ -241,7 +241,7 @@ function activiteScreen({route, navigation}) {
                                   if(infoActivite.length == 0){
                                     let body = new FormData();
                                     body.append('token',token);
-                                    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite , {
+                                    fetch('http://' + constantes.BDD + '/APP/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite , {
                                       method: 'POST',
                                       body: body})
                                         .then((response) => checkFetch(response))
@@ -253,7 +253,7 @@ function activiteScreen({route, navigation}) {
                                   else{
                                     let body = new FormData();
                                     body.append('token',token);
-                                    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite , {
+                                    fetch('http://' + constantes.BDD + '/APP/AP_UPD_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite , {
                                       method: 'POST',
                                       body: body})
                                         .then((response) => checkFetch(response))
@@ -295,7 +295,7 @@ function activiteScreen({route, navigation}) {
                 onPress={() => {setmodalVisibleAbsence(!modalVisibleAbsence);
                   let body = new FormData();
 				          body.append('token',token);
-				          fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
+				          fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
 				            method: 'POST',
 				            body: body})
                       .then((response) => checkFetch(response))
@@ -367,7 +367,7 @@ function activiteScreen({route, navigation}) {
                     <Pressable onPress={() =>  {
                         let body = new FormData();
                         body.append('token',token);
-                        fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
+                        fetch('http://' + constantes.BDD + '/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
                           method: 'POST',
                           body: body})
                             .then((response) => checkFetch(response))

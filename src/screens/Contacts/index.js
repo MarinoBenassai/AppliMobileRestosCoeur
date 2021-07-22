@@ -35,7 +35,7 @@ function contactScreen() {
   useEffect(() => {
     let body = new FormData();
     body.append('token',token);
-    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_CONTACT/P_IDBENEVOLE=' + userID , {
+    fetch('http://' + constantes.BDD + '/APP/AP_LST_CONTACT/P_IDBENEVOLE=' + userID , {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))

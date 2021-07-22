@@ -38,7 +38,7 @@ export default function IdScreen({navigation}) {
 		let body = new FormData();
 		body.append('email',textEmail);
 		body.append('motDePasse',textPassword);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_LOGIN', {
+		fetch('http://' + constantes.BDD + '/AUT/AP_LOGIN', {
 		method: 'POST',
 		body: body})
 		.then((response) => { const device = Device.getDeviceTypeAsync(); return Promise.all([response, device]) })
@@ -61,7 +61,7 @@ export default function IdScreen({navigation}) {
 				if (data.tokennotification != token && token != "-1"){
 					let body = new FormData();
 					body.append('token',data.token);
-					fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token , {
+					fetch('http://' + constantes.BDD + '/APP/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token , {
 					method: 'POST',
 					body: body});
 				}

@@ -43,7 +43,7 @@ const compteScreen = () => {
   useEffect(() => {
     let body = new FormData();
     body.append('token',token);
-    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID , {
+    fetch('http://' + constantes.BDD + '/APP/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID , {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
@@ -58,7 +58,7 @@ const compteScreen = () => {
       console.log("fait");
       let body = new FormData();
       body.append('token',token);
-      fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
+      fetch('http://' + constantes.BDD + '/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
@@ -280,7 +280,7 @@ const compteScreen = () => {
 		body.append('ancienMDP',oldP);
 		body.append('nouveauMDP',newP);
 		body.append('idBenevole',userID);
-		fetch('http://' + constantes.BDD + '/Axoptim.php/AUT/AP_UPD_MOTDEPASSE', {
+		fetch('http://' + constantes.BDD + '/AUT/AP_UPD_MOTDEPASSE', {
 		method: 'POST',
 		body: body})
 		.then(async function (response) {
@@ -314,7 +314,7 @@ const compteScreen = () => {
 	  if (phone != "" || mail != ""){
 	    let body = new FormData();
       body.append('token',token);
-      fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
+      fetch('http://' + constantes.BDD + '/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
         method: 'POST',
         body: body})
         .then((response) => checkFetch(response))
@@ -322,7 +322,7 @@ const compteScreen = () => {
         .then(() => {
           let body = new FormData();
           body.append('token',token);
-          return fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
+          return fetch('http://' + constantes.BDD + '/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
             method: 'POST',
             body: body})
         })

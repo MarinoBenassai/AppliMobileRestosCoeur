@@ -100,7 +100,7 @@ export default function App() {
 	const tokennotif = await registerForPushNotificationsAsync(device);
     let body = new FormData();
     body.append('token',token);
-	fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_LOGOUT/P_TOKEN=' + token +'/P_TOKENNOTIF=' + tokennotif, {
+	fetch('http://' + constantes.BDD + '/APP/AP_LOGOUT/P_TOKEN=' + token +'/P_TOKENNOTIF=' + tokennotif, {
 	    method: 'POST',
 	    body: body})
 	  .then((response) => {

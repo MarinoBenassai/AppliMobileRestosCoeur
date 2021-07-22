@@ -41,7 +41,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   useEffect(() => {
     let body = new FormData();
     body.append('token',token);
-    fetch('http://' + constantes.BDD + '/Axoptim.php/APP/AP_ALL_BENEVOLE' , {
+    fetch('http://' + constantes.BDD + '/APP/AP_ALL_BENEVOLE' , {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
@@ -69,7 +69,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
     console.log("Vous avez ajouter l'id : " + benevole + " " + IDJour + " " + IDActivite + " " + IDSite);
     let body = new FormData();
 	  body.append('token',token);
-    fetch("http://" + constantes.BDD + "/Axoptim.php/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + IDJour + "/P_IDACTIVITE=" + IDActivite + "/P_IDSITE=" + IDSite + "/P_IDROLE=1" , {
+    fetch("http://" + constantes.BDD + "/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + IDJour + "/P_IDACTIVITE=" + IDActivite + "/P_IDSITE=" + IDSite + "/P_IDROLE=1" , {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
