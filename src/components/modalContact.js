@@ -38,7 +38,7 @@ const ModalContact = (props) => {
           <View style={styles.modalContactButtonView}>
             <Pressable
               style={styles.buttonContactLeft}
-              onPress={() => {props.setVisible(!props.visible);console.log("OK  Contact Pressed");}}
+              onPress={() => {props.setVisible(!props.visible);console.info("OK  Contact Pressed");}}
             >
               {({ pressed }) => (
                 <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black"}]}>OK</Text>

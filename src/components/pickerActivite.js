@@ -41,7 +41,7 @@ export const traitementSort = function(affichage, data, visibleData, activite, s
         return( cpyVisibleData );
     }
     else{
-      console.log("ERREUR : Affichage inconnu dans Picker");
+      console.error("ERREUR : Affichage inconnu dans Picker");
     }
 
 }
@@ -61,7 +61,7 @@ export const traitementFilter = function(affichage, visibleData, index) {
         return( visibleData.filter( (l) => ( l.split("\t")[index] == "Non défini" ) ) );
       }
       else{
-        console.log("ERREUR : Affichage inconnu dans useEffect");
+        console.error("ERREUR : Affichage inconnu dans useEffect");
       }
 
 }

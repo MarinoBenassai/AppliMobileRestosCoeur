@@ -74,7 +74,7 @@ function activiteScreen({route, navigation}) {
 	    method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte);console.log("Infos bénévoles : chargées ")})
+        .then((texte) =>  {setData(texte);console.info("Infos bénévoles : chargées ")})
         .catch((error) => handleError (error))
         .finally(() => {setLoading(false); setUpToDate(true)});
     });
@@ -95,7 +95,7 @@ function activiteScreen({route, navigation}) {
 	    method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte);console.log("Infos bénévoles : chargées ")})
+        .then((texte) =>  {setData(texte);console.info("Infos bénévoles : chargées ")})
         .catch((error) => handleError (error))
         .finally(() => {setLoading(false); setUpToDate(true)});
 
@@ -161,21 +161,21 @@ function activiteScreen({route, navigation}) {
 
     // Si absent
     if(statut == "Absent"){
-      console.log("Vous êtiez actuellement 'Absent'");
+      console.info("Vous êtiez actuellement 'Absent'");
       let body = new FormData();
 	    body.append('token',token);
 	    fetch("http://" + bdd + "/APP/AP_DEL_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site , {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {console.log("changement status : non défini : "); console.log(texte)})
+          .then((texte) =>  {console.info("changement status : non défini : "); console.log(texte)})
           .catch((error) => handleError (error))
           .finally(() => setUpToDate(false));
     }
 
     // Si présent
     else if(statut == "Présent"){
-      console.log("Vous êtiez actuellement 'Présent'");
+      console.info("Vous êtiez actuellement 'Présent'");
 
       setInfoComment([ jour, activite, site, benevole ]);
       //On rend le modal visible
@@ -187,14 +187,14 @@ function activiteScreen({route, navigation}) {
 
     // Si non-défini
     else{
-      console.log("Vous êtiez actuellement 'Non défini'");
+      console.info("Vous êtiez actuellement 'Non défini'");
       let body = new FormData();
       body.append('token',token);
       fetch("http://" + constantes.BDD + "/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role , {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {console.log("changement statut : présent : "); console.log(texte)})
+          .then((texte) =>  {console.info("changement statut : présent : "); console.log(texte)})
           .catch((error) => handleError (error))
           .finally(() => setUpToDate(false));
     }
@@ -246,7 +246,7 @@ function activiteScreen({route, navigation}) {
                                       body: body})
                                         .then((response) => checkFetch(response))
                                         .then((texte) => console.log(texte))
-                                        .then(() => console.log("Nouvelle entrée : commentaire d'activité"))
+                                        .then(() => console.info("Nouvelle entrée : commentaire d'activité"))
                                         .catch((error) => handleError (error))
                                         .finally(() => setUpToDate(false));
                                   }
@@ -258,7 +258,7 @@ function activiteScreen({route, navigation}) {
                                       body: body})
                                         .then((response) => checkFetch(response))
                                         .then((texte) => console.log(texte))
-                                        .then(() => console.log("update entrée : commentaire d'activité "))
+                                        .then(() => console.info("update entrée : commentaire d'activité "))
                                         .catch((error) => handleError (error))
                                         .finally(() => setUpToDate(false));
                                   }
@@ -299,7 +299,7 @@ function activiteScreen({route, navigation}) {
 				            method: 'POST',
 				            body: body})
                       .then((response) => checkFetch(response))
-                      .then((texte) =>  {console.log("changement statut : absent :"); console.log(texte)})
+                      .then((texte) =>  {console.info("changement statut : absent :"); console.log(texte)})
                       .catch((error) => handleError (error))
                       .finally(() => {setUpToDate(false); setComment("");});
 
@@ -371,7 +371,7 @@ function activiteScreen({route, navigation}) {
                           method: 'POST',
                           body: body})
                             .then((response) => checkFetch(response))
-                            .then((texte) =>  {console.log(texte);setInfoActivite((texte.split("\n")[1])); console.log("Info commentaire d'activité : chargées");
+                            .then((texte) =>  {console.log(texte);setInfoActivite((texte.split("\n")[1])); console.info("Info commentaire d'activité : chargées");
                               setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
                             .catch((error) => handleError (error))
                             .finally(() => {setLoading(false); setUpToDate(true)});
@@ -460,8 +460,6 @@ const normalizeInputNumber = (value, previousValue) => {
   if (!value || value == 0) return '0';
   const currentValue = value.replace(/[^\d]/g, '');
 
-  console.log("previous : " + previousValue);
-  console.log("current : "  + currentValue)
   if(previousValue == 0 && currentValue.length>0){
     return currentValue.replace(/0/g, '')
   }

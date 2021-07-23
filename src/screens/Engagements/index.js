@@ -60,7 +60,7 @@ function engagementScreen({navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {setData(texte); console.log("Infos Engagement: chargées"); setUpToDate(true);})
+          .then((texte) =>  {setData(texte); console.info("Infos Engagement: chargées"); setUpToDate(true);})
           .catch((error) => handleError (error))
           .finally(() => setLoading(false));
     }
@@ -73,7 +73,6 @@ function engagementScreen({navigation}) {
     const ligne = data.split(/\n/);
     ligne.shift(); //enlève le premier élement (et le retourne)
     ligne.pop();   //enlève le dernier élement (et le retourne)
-    console.log("debut affichage");
     
     const tr = traitementSort(picker.toUpperCase(), data, ligne, 1, 2, 3, 4, 6);
     
@@ -117,7 +116,7 @@ function engagementScreen({navigation}) {
 
     // Si absent
     if(statut == "Absent"){
-      console.log("Vous ête actuellement 'Absent'");
+      console.info("Vous êtes actuellement 'Absent'");
 	    setLoading(true);
       let body = new FormData();
       body.append('token',token);
@@ -125,14 +124,14 @@ function engagementScreen({navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+          .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
           .catch((error) => handleError (error))
           .finally(() => {setUpToDate(false); setLoading(false);});
     }
 
     // Si présent
     else if(statut == "Présent"){
-      console.log("Vous ête actuellement 'Présent'");
+      console.info("Vous êtes actuellement 'Présent'");
 
       setInfoComment([ jour, activite, site ]);
       //On rend le modal visible
@@ -145,14 +144,14 @@ function engagementScreen({navigation}) {
       // Si non-défini
       else{
 		    setLoading(true);
-        console.log("Vous êtes actuellement 'Non défini'");
+        console.info("Vous êtes actuellement 'Non défini'");
         let body = new FormData();
         body.append('token',token);
         fetch("http://" + bdd + "/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + jour + "/P_IDACTIVITE=" + activite + "/P_IDSITE=" + site + "/P_IDROLE=" + role , {
           method: 'POST',
           body: body})
             .then((response) => checkFetch(response))
-            .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+            .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
             .catch((error) => handleError (error))
             .finally(() => {setUpToDate(false); setLoading(false);});
       }
@@ -193,7 +192,7 @@ function engagementScreen({navigation}) {
                                   method: 'POST',
                                   body: body})
                                     .then((response) => checkFetch(response))
-                                    .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+                                    .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
                                     .catch((error) => handleError (error))
                                     .finally(() => {setUpToDate(false); setComment(""); setLoading(false);})
 

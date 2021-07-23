@@ -45,7 +45,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte); console.log("Liste Utilisateurs : chargées")})
+        .then((texte) =>  {setData(texte); console.info("Liste Utilisateurs : chargées")})
         .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);
@@ -66,14 +66,14 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
   //Fonction d'ajout de bénévole
   const ajouterBenevole = (benevole) => {
-    console.log("Vous avez ajouter l'id : " + benevole + " " + IDJour + " " + IDActivite + " " + IDSite);
+    console.info("Vous avez ajouter l'id : " + benevole + " " + IDJour + " " + IDActivite + " " + IDSite);
     let body = new FormData();
 	  body.append('token',token);
     fetch("http://" + constantes.BDD + "/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + IDJour + "/P_IDACTIVITE=" + IDActivite + "/P_IDSITE=" + IDSite + "/P_IDROLE=1" , {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {console.log("changement statut !"); console.log(texte)})
+        .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
         .then( () => goBack() )
         .catch((error) => handleError (error));
   }

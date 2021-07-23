@@ -119,8 +119,7 @@ export default function App() {
 			  SecureStore.deleteItemAsync('token');
 		  }
 	  })
-	  .catch((error) => alert("Une erreur est survenue"))
-	  .finally(() => console.log("finally"));
+	  .catch((error) => alert("Une erreur est survenue"));
   }
   
   function handleError (erreur) {
@@ -132,7 +131,7 @@ export default function App() {
 	  }
 	  else {
 		alert(erreur);
-		console.log(erreur);
+		console.error(erreur);
 	  }
   }
   

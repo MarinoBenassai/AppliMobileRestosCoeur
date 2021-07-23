@@ -47,7 +47,7 @@ const compteScreen = () => {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setDataEngagementDefaut(texte); console.log("Infos Engagement Défaut : chargées")})
+        .then((texte) =>  {setDataEngagementDefaut(texte); console.info("Infos Engagement Défaut : chargées")})
         .catch((error) => handleError (error))
   }, []);
 
@@ -55,14 +55,13 @@ const compteScreen = () => {
   useEffect(() => {
     if (persoUpToDate === false) {
       setPersoUpToDate(true);
-      console.log("fait");
       let body = new FormData();
       body.append('token',token);
       fetch('http://' + constantes.BDD + '/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {setDataPerso(texte); console.log("Infos Personelles : chargées")})
+          .then((texte) =>  {setDataPerso(texte); console.info("Infos Personelles : chargées")})
           .catch((error) => handleError (error))
           .finally(() => setLoading(false));;
 	  }
@@ -249,7 +248,7 @@ const compteScreen = () => {
 		  "Champs vide",
 		  "\nAu moins un des champs est vide",
 		  [
-			{ text: "OK", onPress: () => console.log("Vide MdP Pressed") }
+			{ text: "OK", onPress: () => console.info("Vide MdP Pressed") }
 		  ]
 		);
 	  }
@@ -259,7 +258,7 @@ const compteScreen = () => {
 		  "Erreur Nouveau Mot de Passe",
 		  "\nLes champs correspondant au nouveau mot de passe ne sont pas identiques",
 		  [
-			{ text: "OK", onPress: () => console.log("verif failled MdP Pressed") }
+			{ text: "OK", onPress: () => console.info("verif failled MdP Pressed") }
 		  ]
 		);
 	  }
@@ -269,7 +268,7 @@ const compteScreen = () => {
 		  "Mot de passe trop court",
 		  "\nVotre mot de passe doit contenir au moins 8 caractères",
 		  [
-			{ text: "OK", onPress: () => console.log("test MdP Pressed") }
+			{ text: "OK", onPress: () => console.info("test MdP Pressed") }
 		  ]
 		);
 	  }
@@ -310,7 +309,7 @@ const compteScreen = () => {
 	function changeContact (phone, mail) {
     phone = phone.replace(/[^\d+]/g, '');
     phone = phone.replace(/\+/g, '%2B');
-    console.log(phone);
+
 	  if (phone != "" || mail != ""){
 	    let body = new FormData();
       body.append('token',token);
@@ -333,7 +332,7 @@ const compteScreen = () => {
 	    alert(
 		  "Vos informations ont bien été mises à jour.",
 		  [
-		    { text: "OK", onPress: () => console.log("OK ContactPerso Pressed") }
+		    { text: "OK", onPress: () => console.info("OK ContactPerso Pressed") }
 		  ]
 
 	    );

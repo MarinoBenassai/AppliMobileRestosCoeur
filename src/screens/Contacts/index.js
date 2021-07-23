@@ -39,7 +39,7 @@ function contactScreen() {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte); console.log("Infos Contact Référent : chargées");})
+        .then((texte) =>  {setData(texte); console.info("Infos Contact Référent : chargées");})
         .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);

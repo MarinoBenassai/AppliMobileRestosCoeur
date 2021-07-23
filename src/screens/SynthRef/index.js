@@ -41,7 +41,7 @@ function referentScreen({navigation}) {
     	method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte); console.log("Infos Synthèse Réferent : chargées")})
+        .then((texte) =>  {setData(texte); console.info("Infos Synthèse Référent : chargées")})
         .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);

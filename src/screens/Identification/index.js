@@ -68,8 +68,6 @@ export default function IdScreen({navigation}) {
 				login(data);
 			})
 
-			//.then((response) => response.text())
-			//.then(texte => console.log(texte))
 			.catch((error) => {handleError(error); setLoading(false)})
 		  
 
