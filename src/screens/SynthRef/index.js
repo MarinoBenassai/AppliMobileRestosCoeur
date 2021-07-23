@@ -52,6 +52,7 @@ function referentScreen({navigation}) {
     ligne.shift(); //enlève le premier élement (et le retourne)
     ligne.pop();   //enlève le dernier élement (et le retourne)
     setVisibleData(ligne);
+    console.log(ligne);
   }, [data]);
 
   // On crée le renderer pour la flatlist
@@ -103,72 +104,96 @@ function referentScreen({navigation}) {
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="#00ff00" />
         </View>) : (
-        <View>
-          <Synthese loading={isLoading} renderItem={renderItem} 
-          data={data} visibleData={visibleData} setVisibleData={setVisibleData} setIndexActif={setIndexActif} indexActif={indexActif}
-          indexHeader={indexHeader} setIndexHeader={setIndexHeader} header={header} setHeader={setHeader}/>
+        
+          <View style={{flex: 1}}>
+          <>
+            {/*Header de la liste*/}
+            <View style = {styles.header}>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => {console.log("clique");modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 2, "SITE", indexHeader, setIndexHeader, 0, header, setHeader)}}>
+                <Text style = {styles.headerTitle}>Site {header[0]}</Text>
+              </Pressable>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 1, "ACTIVITE", indexHeader, setIndexHeader, 1, header, setHeader)}>
+                <Text style = {styles.headerTitle}>Activité {header[1]}</Text>
+              </Pressable>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 0, "DATE", indexHeader, setIndexHeader, 2, header, setHeader)}>
+                <Text style = {styles.headerTitle}>Date {header[2]}</Text>
+              </Pressable>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 3, "PARTICIPANT", indexHeader, setIndexHeader, 3, header, setHeader)}>
+                <Text style = {styles.headerTitle}>Local{header[3]} /Global</Text>
+              </Pressable>
+            </View>
+
+            <FlatList
+              data={visibleData}
+              renderItem={renderItem}
+              keyExtractor={item => item}
+            />
+          </>
+        
         </View>
       )}
     </SafeAreaView>
   );
 
+  // Div Synthese //TODO: à débuger
+  function Synthese(props) {
+    /* const ligne = props.ligne;
+    const isLoading = props.loading;
+    const renderItem = props.renderItem;
+
+    const data = props.data;
+    const visibleData = props.visibleData;
+    const setVisibleData = props.setVisibleData;
+    const setIndexActif= props.setIndexActif;
+    const indexActif = props.indexActif;
+    const indexHeader = props.indexHeader;
+    const setIndexHeader = props.setIndexHeader;
+    const header = props.header;
+    const setHeader = props.setHeader; */
+
+    if (visibleData.length != 0){
+      return  <View style={{flex: 1}}>
+          <>
+            {/*Header de la liste*/}
+            <View style = {styles.header}>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => {console.log("clique");modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 2, "SITE", indexHeader, setIndexHeader, 0, header, setHeader)}}>
+                <Text style = {styles.headerTitle}>Site {header[0]}</Text>
+              </Pressable>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 1, "ACTIVITE", indexHeader, setIndexHeader, 1, header, setHeader)}>
+                <Text style = {styles.headerTitle}>Activité {header[1]}</Text>
+              </Pressable>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 0, "DATE", indexHeader, setIndexHeader, 2, header, setHeader)}>
+                <Text style = {styles.headerTitle}>Date {header[2]}</Text>
+              </Pressable>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 3, "PARTICIPANT", indexHeader, setIndexHeader, 3, header, setHeader)}>
+                <Text style = {styles.headerTitle}>Local{header[3]} /Global</Text>
+              </Pressable>
+
+            </View>
+
+            <FlatList
+              data={visibleData}
+              renderItem={renderItem}
+              keyExtractor={item => item}
+            />
+          </>
+        </View>;
+        
+    }
+    else{
+      return <View>
+                <Text style={styles.item}>
+                  Il semblerait que vous ne soyez référent d'aucune activité pour le moment.
+                </Text>
+              </View>;
+
+    }
+  }
+
 }
 
 
-// Div Synthese
-function Synthese(props) {
-  const ligne = props.ligne;
-  const isLoading = props.loading;
-  const renderItem = props.renderItem;
 
-  const data = props.data;
-  const visibleData = props.visibleData;
-  const setVisibleData = props.setVisibleData;
-  const setIndexActif= props.setIndexActif;
-  const indexActif = props.indexActif;
-  const indexHeader = props.indexHeader;
-  const setIndexHeader = props.setIndexHeader;
-  const header = props.header;
-  const setHeader = props.setHeader;
-
-  if (visibleData.length != 0){
-    return  <View style={{flex: 1}}>
-			  <>
-		      {/*Header de la liste*/}
-			    <View style = {styles.header}>
-            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 2, "SITE", indexHeader, setIndexHeader, 0, header, setHeader)}>
-              <Text style = {styles.headerTitle}>Site {header[0]}</Text>
-            </Pressable>
-            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 1, "ACTIVITE", indexHeader, setIndexHeader, 1, header, setHeader)}>
-              <Text style = {styles.headerTitle}>Activité {header[1]}</Text>
-            </Pressable>
-            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 0, "DATE", indexHeader, setIndexHeader, 2, header, setHeader)}>
-              <Text style = {styles.headerTitle}>Date {header[2]}</Text>
-            </Pressable>
-            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 3, "PARTICIPANT", indexHeader, setIndexHeader, 3, header, setHeader)}>
-              <Text style = {styles.headerTitle}>Local{header[3]} /Global</Text>
-            </Pressable>
-
-			    </View>
-
-          <FlatList
-            data={visibleData}
-            renderItem={renderItem}
-            keyExtractor={item => item}
-          />
-			  </>
-      </View>;
-      
-  }
-  else{
-    return <View>
-              <Text style={styles.item}>
-                Il semblerait que vous ne soyez référent d'aucune activité pour le moment.
-              </Text>
-            </View>;
-
-  }
-}
 
 // On exporte la fonction principale
 export default referentScreen;
