@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, useFocusEffect, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import {Picker} from '@react-native-picker/picker';
+import {Linking} from 'react-native';
 
 import {traitementSort} from '../../components/pickerActivite';
 import {traitementFilter} from '../../components/pickerActivite';
@@ -204,6 +205,22 @@ function activiteScreen({route, navigation}) {
     setBeneficiaireActivite( normalizeInputNumber(value, beneficiaireActivite) );
   };
 
+
+  const mailAll = (  ) => { 
+    // On traite les données
+    const ligne = data.split(/\n/);
+    ligne.shift(); //enlève le premier élement (et le retourne)
+    ligne.pop();   //enlève le dernier élement (et le retourne)
+
+    var mails = "";
+    for(let l of ligne){
+      mails += l.split(/\t/)[10];
+    }
+
+    Linking.openURL(`mailto:${mails}`);
+  };
+
+
   // On retourne la flatlist
   return (
     <>
@@ -377,7 +394,22 @@ function activiteScreen({route, navigation}) {
                           setmodalVisibleCommentaireActivite(true)}}>
                         {({ pressed }) => (
                           <Icon 
-                            name='repo' 
+                            name='comment-discussion' //repo
+                            size={30}
+                            color={pressed?'darkslategrey':'black'}
+                            style={{paddingLeft: 20}}
+                          />
+                        )}
+                      </Pressable>
+                    </View>
+
+                    {/* onPress={() => {props.setVisible(!props.visible);;}} */}
+                    <View style={[styles.item, {justifyContent:"flex-start", padding: 5}]}>
+                      <Text style={[styles.info, {fontWeight: "bold",}]}>Mail à tous : </Text>
+                      <Pressable onPress={() => mailAll()}>
+                        {({ pressed }) => (
+                          <Icon 
+                            name='megaphone' 
                             size={30}
                             color={pressed?'darkslategrey':'black'}
                             style={{paddingLeft: 20}}
