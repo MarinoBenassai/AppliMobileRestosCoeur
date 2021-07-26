@@ -7,7 +7,7 @@ import { StyleSheet, Button, Text, View, Image, TextInput, Pressable, ActivityIn
 export const  registerForPushNotificationsAsync = async function (device) {
 	let token = "-1";
 	if (Device.isDevice) {
-		if(device != "1" && device != "2"){
+		if (!Device.brand){//if(device != "1" && device != "2"){
 			console.log("on sort");
 			return token;
 		}
