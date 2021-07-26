@@ -126,7 +126,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 			<TextInput
 			  style={[, styles.input, styles.item, {backgroundColor: "#ebe0c3"}]}
 			  onChangeText={text => setAjout(text)}
-			  placeholder="Nom du bénévole à ajouter :"
+			  placeholder="Prénom du bénévole à ajouter :"
 			/>
 		  </View>
 		</>

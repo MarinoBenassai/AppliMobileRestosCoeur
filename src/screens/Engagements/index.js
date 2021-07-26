@@ -50,7 +50,28 @@ function engagementScreen({navigation}) {
   	});
   }
 
-  //Fonction pour chercher les données
+  // On va chercher les données
+  useEffect(() => {
+    // Lors du focus de la page
+    const unsubscribe = navigation.addListener('focus', () => {
+	  setLoading(true);
+    let body = new FormData();
+      body.append('token',token);
+      fetch('http://' + constantes.BDD + '/APP/AP_LST_PRE_BEN/P_IDBENEVOLE=' + userID  , {
+        method: 'POST',
+        body: body})
+          .then((response) => checkFetch(response))
+          .then((texte) =>  {setData(texte); console.info("Infos Engagement: chargées"); setUpToDate(true);})
+          .catch((error) => handleError (error))
+          .finally(() => setLoading(false));
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+    
+  }, [navigation]);
+
+  // Lors d'un changement
   useEffect(() => {
     if(upToDate == false){
       setLoading(true);

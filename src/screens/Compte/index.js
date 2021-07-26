@@ -144,7 +144,7 @@ const compteScreen = () => {
                       <View style={{ flexDirection: "row"}}>
                         <Text style={styles.data}>Email : </Text>
                         <TextInput
-                          style={styles.input}
+                          style={[styles.input, {width: "75%", maxWidth: 400, marginBottom: 5}]}
                           placeholder={lignePerso[1].split("\t")[2]}
                           autoCorrect={false}
                           textContentType='emailAddress'
@@ -192,7 +192,7 @@ const compteScreen = () => {
                       <View style={{ flexDirection: "row"}}>
                         <Text style={styles.data}>Confirmation mot de passe : </Text>
                         <TextInput
-                          style={styles.input}
+                          style={[styles.input, {marginBottom: 5}]}
                           placeholder="******"
                           autoCorrect={false}
                           secureTextEntry={true}

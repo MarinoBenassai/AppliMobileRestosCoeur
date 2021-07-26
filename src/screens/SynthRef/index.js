@@ -33,10 +33,31 @@ function referentScreen({navigation}) {
   	});
   }
 
-  // On récupère les données
+  // On va chercher les données
+  useEffect(() => {
+    // Lors du focus de la page
+    const unsubscribe = navigation.addListener('focus', () => {
+	  setLoading(true);
+    let body = new FormData();
+	  body.append('token',token);
+    fetch('http://' + constantes.BDD + '/APP/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID , {
+    	method: 'POST',
+	    body: body})
+        .then((response) => checkFetch(response))
+        .then((texte) =>  {setData(texte); console.info("Infos Synthèse Référent : chargées")})
+        .catch((error) => handleError (error))
+        .finally(() => setLoading(false));
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+    
+  }, [navigation]);
+
+  // Lors d'un changement
   useEffect(() => {
     let body = new FormData();
-	body.append('token',token);
+	  body.append('token',token);
     fetch('http://' + constantes.BDD + '/APP/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID , {
     	method: 'POST',
 	    body: body})
@@ -119,7 +140,7 @@ function referentScreen({navigation}) {
                 <Text style = {styles.headerTitle}>Date {header[2]}</Text>
               </Pressable>
               <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setIndexActif, indexActif, 3, "PARTICIPANT", indexHeader, setIndexHeader, 3, header, setHeader)}>
-                <Text style = {styles.headerTitle}>Local{header[3]} /Global</Text>
+                <Text style = {styles.headerTitle}>Site{header[3]} /Global</Text>
               </Pressable>
             </View>
 

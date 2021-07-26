@@ -101,11 +101,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   data: {
-    marginVertical: 4,
+    marginVertical: 10,
     marginHorizontal: 16,
   },
   input: {
-    padding: 10
+    padding: 7,
   },
   field: {
     marginVertical: 4,

@@ -84,11 +84,11 @@ function activiteScreen({route, navigation}) {
     
   }, [navigation]);
 
-  // On va chercher le commentaire d'activité
+  // Lors d'un changement
   useEffect(() => {
     if(!upToDate){
 	  setLoading(true);
-    // Update la liste et les info Activité
+    // Update la liste
     let body = new FormData();
 	  body.append('token',token);
 	  fetch('http://' + constantes.BDD + '/APP/AP_LST_PRE_EQU/P_IDBENEVOLE=' + userID + '/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
@@ -338,69 +338,78 @@ function activiteScreen({route, navigation}) {
           data={visibleData}
           ListHeaderComponent={
             <>
-              <View style={{marginVertical: 16,}}>
+              <View style={{marginTop: 16, }}>
                 {/* Info générales */}
-                <View style={[styles.item, {justifyContent:"flex-start",}]}>
+                <View style={[styles.item, {justifyContent:"flex-start", padding: 5}]}>
                   <Text style={[styles.info, {fontWeight: "bold",}]}>Activité : </Text>
                   <Text style={styles.info}>{NomActivite}</Text>
                 </View>
-                <View style={[styles.item, {justifyContent:"flex-start",}]}>
+                <View style={[styles.item, {justifyContent:"flex-start", padding: 5}]}>
                   <Text style={[styles.info, {fontWeight: "bold",}]}>Site : </Text>
                   <Text style={styles.info}>{NomSite}</Text>
                 </View>
-                <View style={[styles.item, {justifyContent:"flex-start",}]}>
+                <View style={[styles.item, {justifyContent:"flex-start", padding: 5}]}>
                   <Text style={[styles.info, {fontWeight: "bold",}]}>Jour : </Text>
                   <Text style={styles.info}>{IDJour.split(" ")[0].split("-")[2]}/
                                             {IDJour.split(" ")[0].split("-")[1]}/
                                             {IDJour.split(" ")[0].split("-")[0]}</Text>
                 </View>
-              </View>
 
-
-              {/* "header" de la flatlist */}
-              <View style={[styles.item, {flexDirection: "row", justifyContent: "space-between"}]}>
-                <Text style={[styles.info, {fontWeight: "bold"}]}>Liste des Engagés :</Text>
+                {/* Icone d'administraion si référent */}
                 {(idRole == "2") &&	
-                  <View style={{flexDirection: "row"}}>
+                  <View >
 
                     {/* Comentaire d'activité */}
-                    <Pressable onPress={() =>  {
-                        let body = new FormData();
-                        body.append('token',token);
-                        fetch('http://' + constantes.BDD + '/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
-                          method: 'POST',
-                          body: body})
-                            .then((response) => checkFetch(response))
-                            .then((texte) =>  {console.log(texte);setInfoActivite((texte.split("\n")[1])); console.info("Info commentaire d'activité : chargées");
-                              setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
-                            .catch((error) => handleError (error))
-                            .finally(() => {setLoading(false); setUpToDate(true)});
+                    <View style={[styles.item, {justifyContent:"flex-start", padding: 5, paddingTop: 40}]}>
+                      <Text style={[styles.info, {fontWeight: "bold",}]}>Commentaire d'Activité : </Text>
+                      <Pressable onPress={() =>  {
+                          let body = new FormData();
+                          body.append('token',token);
+                          fetch('http://' + constantes.BDD + '/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
+                            method: 'POST',
+                            body: body})
+                              .then((response) => checkFetch(response))
+                              .then((texte) =>  {console.log(texte);setInfoActivite((texte.split("\n")[1])); console.info("Info commentaire d'activité : chargées");
+                                setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
+                              .catch((error) => handleError (error))
+                              .finally(() => {setLoading(false); setUpToDate(true)});
 
-                        setmodalVisibleCommentaireActivite(true)}}>
-                      {({ pressed }) => (
-                        <Icon 
-                          name='repo' 
-                          size={30}
-                          color={pressed?'darkslategrey':'black'}
-                          style={{paddingRight: 20}}
-                        />
-                      )}
-                    </Pressable>
-                    
+                          setmodalVisibleCommentaireActivite(true)}}>
+                        {({ pressed }) => (
+                          <Icon 
+                            name='repo' 
+                            size={30}
+                            color={pressed?'darkslategrey':'black'}
+                            style={{paddingLeft: 20}}
+                          />
+                        )}
+                      </Pressable>
+                    </View>
+
                     {/* Ajout bénévole */}
-                    <Pressable onPress={() => versListe({navigation})}>
-                      {({ pressed }) => (
-                        <Icon 
-                          name='plus' 
-                          size={30}
-                          color={pressed?'darkslategrey':'black'}
-                          style={{paddingLeft: 20, paddingRight: 20}}
-                        />
-                      )}
-                    </Pressable>
+                    <View style={[styles.item, {justifyContent:"flex-start", padding: 5, paddingBottom: 40}]}>
+                      <Text style={[styles.info, {fontWeight: "bold",}]}>Ajout Bénévole : </Text>
+                      <Pressable onPress={() => versListe({navigation})}>
+                        {({ pressed }) => (
+                          <Icon 
+                            name='plus' 
+                            size={30}
+                            color={pressed?'darkslategrey':'black'}
+                            style={{paddingLeft: 20}}
+                          />
+                        )}
+                      </Pressable>
+                    </View>
                 
                   </View>
                 }
+
+              </View>
+              
+
+              {/* "header" de la flatlist */}
+              <View style={[ styles.item, {paddingBottom: 0, justifyContent: "flex-start", padding: 5}]}>
+                <Text style={[styles.info, {fontWeight: "bold"}]}>Liste des Engagés :</Text>
               </View>
 
               {/* Réordonnancement - Sélection */}

@@ -195,7 +195,7 @@ function engagement({navigation}) {
     <engagementStack.Navigator screenOptions = {screenOptionsBase}>
 	  <engagementStack.Screen name="Engagements" component={engagementScreen} options={screenOptionsFirstPage(nav, "Mes engagements")}/>
 	  <engagementStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
-    <engagementStack.Screen name="ListeUtilisateur" component={listeUtilisateurScreen} options={{title: "Liste des utilisateurs"}}/>
+    <engagementStack.Screen name="ListeUtilisateur" component={listeUtilisateurScreen} options={{title: "Ajout d’un bénévole"}}/>
     </engagementStack.Navigator>
   );
 }
