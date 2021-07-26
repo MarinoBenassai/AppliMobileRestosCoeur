@@ -14,7 +14,7 @@ import ModalContact from '../../components/modalContact';
 function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // on définit les états : data et loading
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState('');
+  const [data, setData] = useState([]);
 
   // Bénévole à chercher
   const [ajout, setAjout] = useState('');
@@ -45,20 +45,15 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte); console.info("Liste Utilisateurs : chargées")})
+        .then((json) =>  {setData(json); console.info("Liste Utilisateurs : chargées")})
         .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);
 
-  // On traite ces informations
-  const ligne = data.split(/\n/);
-  ligne.shift(); //enlève le premier élement (et le retourne)
-  ligne.pop();   //enlève le dernier élement (et le retourne)
-
   // on met à jour la liste visible
   useEffect(() => {
     
-    setVisibleData( ligne.filter( (nom) => ( nom.toLowerCase().startsWith(ajout.toLowerCase()) ) ) )
+    setVisibleData( data.filter( (d) => ( d.prenom.toLowerCase().startsWith(ajout.toLowerCase()) ) ) )
 
     //setVisibleData( ligne.map((nom) => (nom.toLowerCase().includes(ajout.toLowerCase()) ? nom : none)) );
   }, [ajout]);
@@ -73,7 +68,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
+        .then((json) =>  {console.info("changement statut !"); console.log(json)})
         .then( () => goBack() )
         .catch((error) => handleError (error));
   }
@@ -85,11 +80,11 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
     <View style={[styles.item, styles.BENEVOLE]}>
       {/* Conteneur 1ere colonne : info personne */}
 
-        <Pressable onPress={() => ajouterBenevole(item.split(/\t/)[4])} style={{width: "75%"}}>
+        <Pressable onPress={() => ajouterBenevole(item.idbenevole)} style={{width: "75%"}}>
         {({ pressed }) => (
           <View style={styles.colomn}>
-            <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.split(/\t/)[0]}</Text>
-            <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.split(/\t/)[1]}</Text>
+            <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.prenom}</Text>
+            <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.nom}</Text>
           </View>
         )}
         </Pressable>
@@ -97,7 +92,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
       {/* Conteneur 2eme colonne : info lieu */}
       <View style={{marginRight: 40, justifyContent: "center"}}>
-      <Pressable onPress={() => {setMail(item.split(/\t/)[2]); setPhone(item.split(/\t/)[3]); setmodalVisibleContact(!modalVisibleContact);}}>
+      <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setmodalVisibleContact(!modalVisibleContact);}}>
           {({ pressed }) => (
             <Icon 
               name='mail' 

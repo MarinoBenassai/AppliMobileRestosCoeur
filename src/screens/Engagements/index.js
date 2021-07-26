@@ -17,7 +17,7 @@ import ViewStatus from '../../components/viewStatut';
 function engagementScreen({navigation}) {
 
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState('');
+  const [data, setData] = useState([]);
 
   // Reload
   const [upToDate, setUpToDate] = useState(false);
@@ -46,7 +46,7 @@ function engagementScreen({navigation}) {
   // Focntion de chargement de l'activité
   function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
-  	  IDActivite: item.split(/\t/)[9], IDSite: item.split(/\t/)[10], IDJour: item.split(/\t/)[0].split(" ")[0], NomActivite: item.split(/\t/)[1], NomSite: item.split(/\t/)[2], idRole: (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2"
+  	  IDActivite: item.idactivite, IDSite: item.idsite, IDJour: item.jourpresence.split(" ")[0], NomActivite: item.nomactivite, NomSite: item.nomsite, idRole: (item.role == "BENEVOLE") ? "1" : "2"
   	});
   }
 
@@ -61,10 +61,11 @@ function engagementScreen({navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {setData(texte); console.info("Infos Engagement: chargées"); setUpToDate(true);})
+          .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true);})
           .catch((error) => handleError (error))
           .finally(() => setLoading(false));
     });
+
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
@@ -81,7 +82,7 @@ function engagementScreen({navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {setData(texte); console.info("Infos Engagement: chargées"); setUpToDate(true);})
+          .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true);})
           .catch((error) => handleError (error))
           .finally(() => setLoading(false));
     }
@@ -90,15 +91,13 @@ function engagementScreen({navigation}) {
 
   // on met à jour la liste visible
   useEffect(() => {
-    // On traite les données
-    const ligne = data.split(/\n/);
-    ligne.shift(); //enlève le premier élement (et le retourne)
-    ligne.pop();   //enlève le dernier élement (et le retourne)
     
-    const tr = traitementSort(picker.toUpperCase(), data, ligne, 1, 2, 3, 4, 6);
+    console.log("data : " + data);
+
+    const tr = traitementSort(picker.toUpperCase(), data, data, 1, 2, 3, 4, 6);
     
 
-    setVisibleData( traitementFilter(affichage, tr, 4) );
+    setVisibleData( traitementFilter(affichage, tr) );
 
 
   }, [data, affichage]);
@@ -106,27 +105,27 @@ function engagementScreen({navigation}) {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal de chaque item
-    <View style={[styles.item, styles[item.split(/\t/)[3]]]}>
+    <View style={[styles.item, styles[item.nomrole]]}>
       
       {/* Conteneur 1ere colonne */}
       <Pressable onPress={() => versActivite({navigation}, item)} style={{width: "75%"}} >
       {({ pressed }) => (
         <View style={{flexDirection: "column",}}>
-          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.split(/\t/)[2]}</Text>
-          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.split(/\t/)[1]}</Text> 
+          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.nomsite}</Text>
+          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.nomactivite}</Text> 
           <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>
-            {item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
-            {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
-            {item.split(/\t/)[0].split(" ")[0].split("-")[0]}
+            {item.jourpresence.split(" ")[0].split("-")[2]}/
+            {item.jourpresence.split(" ")[0].split("-")[1]}/
+            {item.jourpresence.split(" ")[0].split("-")[0]}
           </Text>
-          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>Participants : {item.split(/\t/)[6]}</Text>
+          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>Participants : {item.nombre_present}</Text>
         </View> )}
       </Pressable>
 
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
-      <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[4], userID, item.split(/\t/)[0], item.split(/\t/)[9], item.split(/\t/)[10], (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
-                  fctCommentaire={() => {setModalVisibleGet(true); setComment(item.split(/\t/)[5])}}
-                  status={item.split(/\t/)[4]} role="2" align="column-reverse"/>
+      <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, userID, item.jourpresence, item.idactivite, item.idsite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
+                  fctCommentaire={() => {setModalVisibleGet(true); setComment(item.commentaire)}}
+                  status={item.etat} role="2" align="column-reverse"/>
       
     </View>
   );
@@ -254,7 +253,7 @@ function engagementScreen({navigation}) {
         <FlatList
           data={visibleData}
           renderItem={renderItem}
-          keyExtractor={item => item}
+          keyExtractor={(item, index) => index}
           ListHeaderComponent={
             <>
 

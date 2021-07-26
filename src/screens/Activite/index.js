@@ -18,7 +18,7 @@ import {checkFetch} from '../../components/checkFetch';
 function activiteScreen({route, navigation}) {
 
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState('');
+  const [data, setData] = useState([]);
 
   // Reload
   const [upToDate, setUpToDate] = useState(true);
@@ -36,7 +36,7 @@ function activiteScreen({route, navigation}) {
   // Commentaire d'activité
   const [infoActivite, setInfoActivite] = useState('');
   const [commentActivite, setCommentActivite] = useState('');
-  const [beneficiaireActivite, setBeneficiaireActivite] = useState('');
+  const [beneficiaireActivite, setBeneficiaireActivite] = useState("0");
  
   // Mode d'affichage
   const [affichage, setAffichage] = useState("TOUT"); // ("TOUT", "PRESENT", "ABSENT", "NONDEFINI");
@@ -75,7 +75,7 @@ function activiteScreen({route, navigation}) {
 	    method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte);console.info("Infos bénévoles : chargées ")})
+        .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées ")})
         .catch((error) => handleError (error))
         .finally(() => {setLoading(false); setUpToDate(true)});
     });
@@ -96,7 +96,7 @@ function activiteScreen({route, navigation}) {
 	    method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte);console.info("Infos bénévoles : chargées ")})
+        .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées ")})
         .catch((error) => handleError (error))
         .finally(() => {setLoading(false); setUpToDate(true)});
 
@@ -109,12 +109,8 @@ function activiteScreen({route, navigation}) {
 
   // on met à jour la liste visible
   useEffect(() => {
-    // On traite les données
-    const ligne = data.split(/\n/);
-    ligne.shift(); //enlève le premier élement (et le retourne)
-    ligne.pop();   //enlève le dernier élement (et le retourne)
     
-    const tr = traitementSort(picker.toUpperCase(), data, ligne, 0, 0, 4, 3, 0);
+    const tr = traitementSort(picker.toUpperCase(), data, data, 0, 0, 4, 3, 0);
 
     setVisibleData( traitementFilter(affichage, tr, 6) );
 
@@ -123,24 +119,24 @@ function activiteScreen({route, navigation}) {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal de chaque item
-    <View style={[styles.item, styles[item.split(/\t/)[5]] ]}>
+    <View style={[styles.item, styles[item.nomrole]]}>
 
       {/* Conteneur 1ere colonne */}
       <View style={{ justifyContent:"space-evenly", flexDirection: "column", marginLeft: 10, paddingLeft: "5%"}}>
-        <Text>{item.split(/\t/)[4]}</Text>
-        <Text>{item.split(/\t/)[3]}</Text>
+        <Text>{item.nom}</Text>
+        <Text>{item.prenom}</Text>
       </View>
       
       <View style={{flexDirection: "row", paddingRight: "1%", justifyContent: "flex-end"}}>
         {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
-        <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.split(/\t/)[6], item.split(/\t/)[9], IDJour, IDActivite, IDSite, (item.split(/\t/)[3] == "BENEVOLE") ? "1" : "2")}
-                    fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.split(/\t/)[7])}}
-                    status={item.split(/\t/)[6]} role={idRole} align="row"/>
+        <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, item.idbenevole, IDJour, IDActivite, IDSite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
+                    fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.commentaire)}}
+                    status={item.etat} role={idRole} align="row"/>
 
         {/* Conteneur 3eme colonne */}
 
         <View style={{justifyContent: "space-evenly", marginRight: 0}}>
-          <Pressable onPress={() => {setMail(item.split(/\t/)[10]); setPhone(item.split(/\t/)[11]); setmodalVisibleContact(!modalVisibleContact)} }>
+          <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setmodalVisibleContact(!modalVisibleContact)} }>
             {({ pressed }) => (
               <Icon 
                 name='mail' 
@@ -207,14 +203,10 @@ function activiteScreen({route, navigation}) {
 
 
   const mailAll = (  ) => { 
-    // On traite les données
-    const ligne = data.split(/\n/);
-    ligne.shift(); //enlève le premier élement (et le retourne)
-    ligne.pop();   //enlève le dernier élement (et le retourne)
 
     var mails = "";
-    for(let l of ligne){
-      mails += l.split(/\t/)[10];
+    for(let d of data){
+      mails += d.email;
     }
 
     Linking.openURL(`mailto:${mails}`);
@@ -240,7 +232,6 @@ function activiteScreen({route, navigation}) {
                   style={styles.idInput}
                   onChangeText={handleChangeNumber}
                   value={beneficiaireActivite}
-                  defaultValue={'0'}
                   keyboardType="numeric"
                   maxLength={10}
                 />
@@ -255,14 +246,14 @@ function activiteScreen({route, navigation}) {
                   style={styles.button}
                   // écrire et envoyer le commentaire
                   onPress={() => {setmodalVisibleCommentaireActivite(false)
-                                  if(infoActivite.length == 0){
+                                  if(infoActivite == 0){
                                     let body = new FormData();
                                     body.append('token',token);
                                     fetch('http://' + constantes.BDD + '/APP/AP_INS_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour + '/P_NOMBREBENEFICIAIRE=' + beneficiaireActivite + '/P_COMMENTAIRE=' + commentActivite , {
                                       method: 'POST',
                                       body: body})
                                         .then((response) => checkFetch(response))
-                                        .then((texte) => console.log(texte))
+                                        .then((json) => console.log(json))
                                         .then(() => console.info("Nouvelle entrée : commentaire d'activité"))
                                         .catch((error) => handleError (error))
                                         .finally(() => setUpToDate(false));
@@ -385,11 +376,16 @@ function activiteScreen({route, navigation}) {
                           fetch('http://' + constantes.BDD + '/APP/AP_LST_SUIVI_ACTIVITE/P_IDACTIVITE=' + IDActivite + '/P_IDSITE=' + IDSite + '/P_JOUR=' + IDJour , {
                             method: 'POST',
                             body: body})
-                              .then((response) => checkFetch(response))
-                              .then((texte) =>  {console.log(texte);setInfoActivite((texte.split("\n")[1])); console.info("Info commentaire d'activité : chargées");
-                                setCommentActivite(texte.split("\n")[1].split("\t")[1]); setBeneficiaireActivite(texte.split("\n")[1].split("\t")[0])})
-                              .catch((error) => handleError (error))
-                              .finally(() => {setLoading(false); setUpToDate(true)});
+                          .then((response) => checkFetch(response))
+                          .then((json) =>  {if( json.length != 0 ){
+                            setInfoActivite(1); console.info("Info commentaire d'activité : chargées");
+                            setCommentActivite(json[0].commentaire); setBeneficiaireActivite(json[0].nombre_beneficiaire || "0")}
+                            else{
+                              setInfoActivite(0); console.info("Info commentaire d'activité : chargées");
+                              setCommentActivite(""); setBeneficiaireActivite("0");
+                            }})
+                          .catch((error) => handleError (error))
+                          .finally(() => {setLoading(false); setUpToDate(true)});
 
                           setmodalVisibleCommentaireActivite(true)}}>
                         {({ pressed }) => (
@@ -482,7 +478,7 @@ function activiteScreen({route, navigation}) {
             </>
           }
           renderItem={renderItem}
-          keyExtractor={item => item}
+          keyExtractor={(item, index) => index}
         />
       </View>
 	  {isLoading &&
@@ -498,11 +494,12 @@ function activiteScreen({route, navigation}) {
 
 // Number only
 const normalizeInputNumber = (value, previousValue) => {
-  if (!value || value == 0) return '0';
+  console.log("value : " + value);
+  if (!value || value == 0 || value == "0") return '0';
   const currentValue = value.replace(/[^\d]/g, '');
 
-  if(previousValue == 0 && currentValue.length>0){
-    return currentValue.replace(/0/g, '')
+  if((previousValue == 0 || previousValue == "0") && currentValue.length>0){
+    return currentValue.replace(/0/g, '');
   }
   else if (!previousValue || value.length > previousValue.length) {
     return currentValue;

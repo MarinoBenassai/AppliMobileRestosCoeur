@@ -6,7 +6,8 @@ export const  checkFetch = async function(response) {
 	const json = await response.json();
 	
     if(response.ok){
-        return json;
+        
+        return Object.values(json.data);
     }
     else{
 		throw json.error;
