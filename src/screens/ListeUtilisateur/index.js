@@ -35,7 +35,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   const handleError = React.useContext(userContext).handleError;
 
   // On récupère les informations données en paramètres
-  const { IDActivite, IDSite, IDJour } = route.params;
+  const { IDActivite, IDSite, IDJour, liste } = route.params;
 
   // on va chercher les informations sur la BDD
   useEffect(() => {
@@ -53,7 +53,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // on met à jour la liste visible
   useEffect(() => {
     
-    setVisibleData( data.filter( (d) => ( d.prenom.toLowerCase().startsWith(ajout.toLowerCase()) ) ) )
+    setVisibleData( data.filter( (d) => ( d.prenom.toLowerCase().startsWith(ajout.toLowerCase()) && !(liste.map(l => l.prenom).includes(d.prenom) && liste.map(l => l.nom).includes(d.nom)) ) ) )
 
     //setVisibleData( ligne.map((nom) => (nom.toLowerCase().includes(ajout.toLowerCase()) ? nom : none)) );
   }, [ajout]);

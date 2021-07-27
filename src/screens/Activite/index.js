@@ -58,9 +58,9 @@ function activiteScreen({route, navigation}) {
   const handleError = React.useContext(userContext).handleError;
 
   // Fonction de sélection de l'activité
-  function versListe({navigation}) {
+  function versListe({navigation}, liste) {
   	navigation.navigate('ListeUtilisateur', {
-  	  IDActivite: IDActivite, IDSite: IDSite, IDJour: IDJour
+  	  IDActivite: IDActivite, IDSite: IDSite, IDJour: IDJour, liste: liste
   	});
   }
 
@@ -417,7 +417,7 @@ function activiteScreen({route, navigation}) {
                     {/* Ajout bénévole */}
                     <View style={[styles.item, {justifyContent:"flex-start", padding: 5, paddingBottom: 40}]}>
                       <Text style={[styles.info, {fontWeight: "bold",}]}>Ajout Bénévole : </Text>
-                      <Pressable onPress={() => versListe({navigation})}>
+                      <Pressable onPress={() => versListe({navigation}, data)}>
                         {({ pressed }) => (
                           <Icon 
                             name='plus' 
@@ -494,12 +494,19 @@ function activiteScreen({route, navigation}) {
 
 // Number only
 const normalizeInputNumber = (value, previousValue) => {
-  console.log("value : " + value);
-  if (!value || value == 0 || value == "0") return '0';
+  
+  if (!value || value == 0 ) return '0';
   const currentValue = value.replace(/[^\d]/g, '');
 
-  if((previousValue == 0 || previousValue == "0") && currentValue.length>0){
+  console.log("value : " + value);
+  console.log("current : " + currentValue);
+  console.log("prev : " + previousValue);
+
+  if(previousValue == 0  && currentValue.length>1){
     return currentValue.replace(/0/g, '');
+  }
+  else if( currentValue.length === 0 ){
+    return '0';
   }
   else if (!previousValue || value.length > previousValue.length) {
     return currentValue;

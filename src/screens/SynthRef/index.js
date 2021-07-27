@@ -18,8 +18,12 @@ function referentScreen({navigation}) {
   const token = React.useContext(userContext).token
 
   // Mode d'affichage
-  const [indexAncienHeader, setIndexAncienHeader] = useState(2); // index visuel du header actif
-  const [header, setHeader] = useState(["", "", "\u25B2", ""]);
+  const [header, setHeader] = useState({
+                                        "nomsite": "",
+                                        "nomactivite": "",
+                                        "jourpresence": "\u25B2",
+                                        "nombre_present": "",
+                                      });
   const [visibleData, setVisibleData] = useState('');
   const [ancienMode, setAncienMode] = useState("jourpresence");
   
@@ -127,17 +131,17 @@ function referentScreen({navigation}) {
           <>
             {/*Header de la liste*/}
             <View style = {styles.header}>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomsite", indexAncienHeader, setIndexAncienHeader, 0, header, setHeader)}>
-                <Text style = {styles.headerTitle}>Site {header[0]}</Text>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomsite", header, setHeader)}>
+                <Text style = {styles.headerTitle}>Site {header.nomsite}</Text>
               </Pressable>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomactivite", indexAncienHeader, setIndexAncienHeader, 1, header, setHeader)}>
-                <Text style = {styles.headerTitle}>Activité {header[1]}</Text>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomactivite", header, setHeader)}>
+                <Text style = {styles.headerTitle}>Activité {header.nomactivite}</Text>
               </Pressable>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "jourpresence", indexAncienHeader, setIndexAncienHeader, 2, header, setHeader)}>
-                <Text style = {styles.headerTitle}>Date {header[2]}</Text>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "jourpresence", header, setHeader)}>
+                <Text style = {styles.headerTitle}>Date {header.jourpresence}</Text>
               </Pressable>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nombre_present", indexAncienHeader, setIndexAncienHeader, 3, header, setHeader)}>
-                <Text style = {styles.headerTitle}>Site{header[3]} /Global</Text>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nombre_present", header, setHeader)}>
+                <Text style = {styles.headerTitle}>Site{header.nombre_present} /Global</Text>
               </Pressable>
             </View>
 
@@ -174,16 +178,16 @@ function referentScreen({navigation}) {
           <>
             {/*Header de la liste*/}
             <View style = {styles.header}>
-            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomsite", indexAncienHeader, setIndexAncienHeader, 0, header, setHeader)}>
+            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomsite", header, setHeader)}>
                 <Text style = {styles.headerTitle}>Site {header[0]}</Text>
               </Pressable>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomactivite", indexAncienHeader, setIndexAncienHeader, 1, header, setHeader)}>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomactivite", header, setHeader)}>
                 <Text style = {styles.headerTitle}>Activité {header[1]}</Text>
               </Pressable>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "jourpresence", indexAncienHeader, setIndexAncienHeader, 2, header, setHeader)}>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "jourpresence", header, setHeader)}>
                 <Text style = {styles.headerTitle}>Date {header[2]}</Text>
               </Pressable>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nombre_present", indexAncienHeader, setIndexAncienHeader, 3, header, setHeader)}>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nombre_present", header, setHeader)}>
                 <Text style = {styles.headerTitle}>Site{header[3]} /Global</Text>
               </Pressable>
 
