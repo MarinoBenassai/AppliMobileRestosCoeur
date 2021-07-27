@@ -22,18 +22,14 @@ import React, { useEffect, useState } from 'react';
 *
 */
 export const modeAffichage = (data, visibleData, setVisibleData, setIndexActif, indexActif, indexChoisi, mode, indexAncienHeader, setIndexHeader, indexHeader, header, setHeader) => {
-    // On traite les données
-    const ligne = data.split(/\n/);
-    ligne.shift(); //enlève le premier élement (et le retourne)
-    ligne.pop();   //enlève le dernier élement (et le retourne)
 
     // On garde en mémoire 
-    const ligneInit = ligne;
+    const cpyData = [...data];
     const cpyVisibleData = [...visibleData]; // cpy of array
+    const cpyHeader = [...header];
 
 
     // On met à jour le header
-    const cpyHeader = [...header];
     if( indexActif === indexChoisi ){
         cpyHeader[indexHeader] = "\u25BC";
     }
@@ -54,7 +50,7 @@ export const modeAffichage = (data, visibleData, setVisibleData, setIndexActif, 
         }
         else{
             // Première fois
-            setVisibleData( ligneInit );
+            setVisibleData( cpyData );
 
             setIndexActif( indexChoisi );
         }
@@ -72,7 +68,7 @@ export const modeAffichage = (data, visibleData, setVisibleData, setIndexActif, 
     else{
         // Si s'est un jour, on laisse l'ordre de base
         if( mode === "JOUR" ){
-            setVisibleData( ligneInit );
+            setVisibleData( cpyData );
         }
         // Sinon, on trie
         else{

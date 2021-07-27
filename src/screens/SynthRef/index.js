@@ -29,7 +29,7 @@ function referentScreen({navigation}) {
   // Fonction de sélection de l'activité
   function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
-  	  IDActivite: item.split(/\t/)[5], IDSite: item.split(/\t/)[6], IDJour: item.split(/\t/)[0].split(" ")[0], NomActivite: item.split(/\t/)[1], NomSite: item.split(/\t/)[2], idRole: '2'
+  	  IDActivite: item.idactivite, IDSite: item.idsite, IDJour: item.jourpresence.split(" ")[0], NomActivite: item.nomactivite, NomSite: item.nomsite, idRole: '2'
   	});
   }
 
@@ -44,7 +44,7 @@ function referentScreen({navigation}) {
     	method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte); console.info("Infos Synthèse Référent : chargées")})
+        .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées")})
         .catch((error) => handleError (error))
         .finally(() => setLoading(false));
     });
@@ -62,18 +62,14 @@ function referentScreen({navigation}) {
     	method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte); console.info("Infos Synthèse Référent : chargées")})
+        .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées")})
         .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);
 
   // on met à jour la liste visible initiale
   useEffect(() => {
-    const ligne = data.split(/\n/);
-    ligne.shift(); //enlève le premier élement (et le retourne)
-    ligne.pop();   //enlève le dernier élement (et le retourne)
-    setVisibleData(ligne);
-    console.log(ligne);
+    setVisibleData(data);
   }, [data]);
 
   // On crée le renderer pour la flatlist
@@ -84,26 +80,27 @@ function referentScreen({navigation}) {
       {({ pressed }) => (
         <View style={{flexDirection: "row"}}>
 
-          {/* Conteneur 1ere colonne : info personne */}
+          {/* Conteneur 1ere colonne : site */}
           <View style={[styles.colomn, {width:'25%'}]}>
-            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[2]}</Text>
+            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.nomsite}</Text>
           </View>
 
-          {/* Conteneur 2eme colonne : info lieu */}
+          {/* Conteneur 2eme colonne : activite */}
           <View style={[styles.colomn, {width:'25%'}]}>
-            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
+            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.nomactivite}</Text>
           </View>
 
-          {/* Conteneur 3eme colonne : contacter */}
+          {/* Conteneur 3eme colonne : date */}
           <View style={[styles.colomn, {width:'35%'}]}>
-          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
-            {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
-            {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
+          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>
+            {item.jourpresence.split(" ")[0].split("-")[2]}/
+            {item.jourpresence.split(" ")[0].split("-")[1]}/
+            {item.jourpresence.split(" ")[0].split("-")[0]}</Text>
           </View>
 
           {/* Conteneur 4eme colonne : nb Présent */}
           <View style={[styles.colomn, {width:'15%'}]}>
-            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.split(/\t/)[3]}/{item.split(/\t/)[4]}</Text>
+            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.nombre_present}/{item.Tous_sites}</Text>
           </View>
 
         </View>
@@ -147,7 +144,7 @@ function referentScreen({navigation}) {
             <FlatList
               data={visibleData}
               renderItem={renderItem}
-              keyExtractor={item => item}
+              keyExtractor={(item, index) => index}
             />
           </>
         

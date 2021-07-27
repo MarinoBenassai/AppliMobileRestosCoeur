@@ -139,7 +139,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
         <FlatList
           data={visibleData}
           renderItem={renderItem}
-          keyExtractor={item => item}
+          keyExtractor={(item, index) => index}
         />
 		</>
       )}

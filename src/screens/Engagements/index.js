@@ -91,14 +91,10 @@ function engagementScreen({navigation}) {
 
   // on met à jour la liste visible
   useEffect(() => {
-    
-    console.log("data : " + data);
 
     const tr = traitementSort(picker.toUpperCase(), data, data, 1, 2, 3, 4, 6);
-    
 
     setVisibleData( traitementFilter(affichage, tr) );
-
 
   }, [data, affichage]);
 

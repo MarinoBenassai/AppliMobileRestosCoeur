@@ -17,7 +17,7 @@ function contactScreen() {
   // on définit les états : data et loading
   const [isLoading, setLoading] = useState(true);
   const [visibleData, setVisibleData] = useState("");
-  const [data, setData] = useState('');
+  const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [mail, setMail] = useState("");
   const [phone, setPhone] = useState("");
@@ -39,20 +39,14 @@ function contactScreen() {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setData(texte); console.info("Infos Contact Référent : chargées");})
+        .then((json) =>  {setData(json); console.info("Infos Contact Référent : chargées");})
         .catch((error) => handleError (error))
         .finally(() => setLoading(false));
   }, []);
 
   // on met à jour la liste visible initiale
   useEffect(() => {
-    const ligne = data.split(/\n/);
-    ligne.shift(); //enlève le premier élement (et le retourne)
-    ligne.pop();   //enlève le dernier élement (et le retourne)
-    //setVisibleData(ligne);
-    setVisibleData( traitementSort("NOM", data, ligne, 1, 2, 3, 4, 0) ); // ordonne la liste initiale
-    
-    
+    setVisibleData( traitementSort("NOM", data, data, 1, 2, 3, 4, 0) ); // ordonne la liste initiale
   }, [data]);
 
   
@@ -64,20 +58,20 @@ function contactScreen() {
 
       {/* Conteneur 1ere colonne : info personne */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[3]}</Text>
-        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[4]}</Text>
+        <Text style = {{textAlign: "center"}}>{item.nom}</Text>
+        <Text style = {{textAlign: "center"}}>{item.prenom}</Text>
       </View>
 
       {/* Conteneur 2eme colonne : info lieu */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[0]}</Text>
-        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[2]}</Text>
-        <Text style = {{textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
+        <Text style = {{textAlign: "center"}}>{item.jourdefaut}</Text>
+        <Text style = {{textAlign: "center"}}>{item.nomsite}</Text>
+        <Text style = {{textAlign: "center"}}>{item.nomactivite}</Text>
       </View>
 
       {/* Conteneur 3eme colonne : contacter */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Pressable onPress={() => {setMail(item.split(/\t/)[7]);setPhone(item.split(/\t/)[6]);setModalVisible(!modalVisible)}}>
+        <Pressable onPress={() => {setMail(item.email);setPhone(item.telephone);setModalVisible(!modalVisible)}}>
           {({ pressed }) => (
             <Icon 
               style = {{alignSelf: "center"}}
@@ -137,7 +131,7 @@ function contactScreen() {
         <FlatList
           data={visibleData}
           renderItem={renderItem}
-          keyExtractor={item => item}
+          keyExtractor={(item, index) => index}
         />
       </>
       )}

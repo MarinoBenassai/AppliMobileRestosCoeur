@@ -15,8 +15,8 @@ const compteScreen = () => {
   const [isLoading, setLoading] = useState(true);
 
   // Info perso et Info Engagement
-  const [dataEngagementDefaut, setDataEngagementDefaut] = useState('');
-  const [dataPerso, setDataPerso] = useState('');
+  const [dataEngagementDefaut, setDataEngagementDefaut] = useState([]);
+  const [dataPerso, setDataPerso] = useState([]);
 
   // Champs remplissable
   const [phone, setPhone] = useState('');
@@ -47,7 +47,7 @@ const compteScreen = () => {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((texte) =>  {setDataEngagementDefaut(texte); console.info("Infos Engagement Défaut : chargées")})
+        .then((json) =>  {setDataEngagementDefaut(json); console.info("Infos Engagement Défaut : chargées")})
         .catch((error) => handleError (error))
   }, []);
 
@@ -61,34 +61,29 @@ const compteScreen = () => {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {setDataPerso(texte); console.info("Infos Personelles : chargées")})
+          .then((json) =>  {setDataPerso(json[0]); console.info("Infos Personelles : chargées")})
           .catch((error) => handleError (error))
           .finally(() => setLoading(false));;
 	  }
   }, [persoUpToDate]);
 
-  // On traite ces informations
-  const lignePerso = dataPerso.split(/\n/);
 
   // on met à jour la liste visible initiale
   useEffect(() => {
-    const ligneEngagementDefaut = dataEngagementDefaut.split(/\n/);
-    ligneEngagementDefaut.shift(); //enlève le premier élement (et le retourne)
-    ligneEngagementDefaut.pop();   //enlève le dernier élement (et le retourne)
-    setVisibleData(ligneEngagementDefaut);
+    setVisibleData(dataEngagementDefaut);
   }, [dataEngagementDefaut]);
 
-  // On crée le renderer pour la liste
+  // On crée le renderer pour la liste des engagements par défaut
   const renderItem = ({ item }) => (
-    <View style={[styles.item, styles[item.split(/\t/)[3]] ]}>
+    <View style={[styles.item, styles[item.nomrole] ]}>
       <View style={{width:'33%'}}>
-        <Text style= {{textAlign: "center"}}>{item.split(/\t/)[0]}</Text>
+        <Text style= {{textAlign: "center"}}>{item.jourdefaut}</Text>
       </View>
       <View style={{width:'33%'}}>
-        <Text style= {{textAlign: "center"}}>{item.split(/\t/)[1]}</Text>
+        <Text style= {{textAlign: "center"}}>{item.nomactivite}</Text>
       </View>
       <View style={{width:'33%'}}>
-        <Text style= {{textAlign: "center"}}>{item.split(/\t/)[2]}</Text>
+        <Text style= {{textAlign: "center"}}>{item.nomsite}</Text>
       </View>
     </View>
   );
@@ -121,8 +116,8 @@ const compteScreen = () => {
                     {/* View des information de profil */}
                     <View style={styles.browser}>
                       <Text style={styles.title}>Profil de :</Text>
-                      <Text style={styles.data}>Nom : {lignePerso[1].split("\t")[0]}</Text>
-                      <Text style={styles.data}>Prenom : {lignePerso[1].split("\t")[1]}</Text>
+                      <Text style={styles.data}>Nom : {dataPerso.nom}</Text>
+                      <Text style={styles.data}>Prenom : {dataPerso.prenom}</Text>
                       <View style={styles.ligne}/>
                     </View>
 
@@ -133,7 +128,7 @@ const compteScreen = () => {
                         <Text style={styles.data}>Téléphone : </Text>
                         <TextInput
                           style={styles.input}
-                          placeholder={normalizeInputPhone(lignePerso[1].split("\t")[3])}
+                          placeholder={normalizeInputPhone(dataPerso.telephone)}
                           autoCorrect={false}
                           textContentType='telephoneNumber'
                           keyboardType='phone-pad'
@@ -145,7 +140,7 @@ const compteScreen = () => {
                         <Text style={styles.data}>Email : </Text>
                         <TextInput
                           style={[styles.input, {width: "75%", maxWidth: 400, marginBottom: 5}]}
-                          placeholder={lignePerso[1].split("\t")[2]}
+                          placeholder={dataPerso.email}
                           autoCorrect={false}
                           textContentType='emailAddress'
                           keyboardType='email-address'
@@ -231,7 +226,7 @@ const compteScreen = () => {
                 </>
               }
               renderItem={renderItem}
-              keyExtractor={item => item}
+              keyExtractor={(item, index) => index}
             />
           </View>
         </View>
@@ -310,25 +305,27 @@ const compteScreen = () => {
     phone = phone.replace(/[^\d+]/g, '');
     phone = phone.replace(/\+/g, '%2B');
 
-	  if (phone != "" || mail != ""){
-	    let body = new FormData();
+	  if( (phone != "" && phone != dataPerso.telephone) || (mail != "" && mail != dataPerso.email) ){
+	    
+      if( phone == "" ){
+        phone = dataPerso.telephone;
+      }
+      if( mail == "" ){
+        mail = dataPerso.email;
+      }
+
+      let body = new FormData();
       body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
+      fetch('http://' + constantes.BDD + '/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
         method: 'POST',
         body: body})
-        .then((response) => checkFetch(response))
-        .then((texte) => {console.log(texte);if (phone === "") {phone = getPhoneFromData(texte)} if (mail === "") {mail = getEmailFromData(texte)}})
-        .then(() => {
-          let body = new FormData();
-          body.append('token',token);
-          return fetch('http://' + constantes.BDD + '/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
-            method: 'POST',
-            body: body})
-        })
-	      .then((response) => checkFetch(response))
-	      .then((texte) => {if (texte != "1\n") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
-		    .catch((error) => handleError (error))
-        .finally(() => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)});
+      
+      .then((response) => checkFetch(response))
+      .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
+      .catch((error) => handleError (error))
+      .finally(() => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)});
+
+
 	    alert(
 		  "Vos informations ont bien été mises à jour.",
 		  [
@@ -337,35 +334,13 @@ const compteScreen = () => {
 
 	    );
 	  }
+
+    setPhone("");
+    setMail("");
+
 	}
 
 }
-
-  function getEmailFromData(data) {
-	const lignes = data.split(/\n/);
-	var i;
-	var Email = null;
-	for (i = 1; i<lignes.length; i++){
-		if (lignes[i] != ""){
-			const valeurs = lignes[i].split(/\t/);
-			Email = valeurs[2];
-		}
-	}
-	return Email;
-  }
-
-    function getPhoneFromData(data) {
-	const lignes = data.split(/\n/);
-	var i;
-	var phone = null;
-	for (i = 1; i<lignes.length; i++){
-		if (lignes[i] != ""){
-			const valeurs = lignes[i].split(/\t/);
-			phone = valeurs[3];
-		}
-	}
-	return phone;
-  }
 
 
 // On exporte la fonction principale
