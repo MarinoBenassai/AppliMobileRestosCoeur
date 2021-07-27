@@ -21,7 +21,7 @@ import React, { useEffect, useState } from 'react';
 * setHeader = Setter du header
 *
 */
-export const modeAffichage = (data, visibleData, setVisibleData, setIndexActif, indexActif, indexChoisi, mode, indexAncienHeader, setIndexHeader, indexHeader, header, setHeader) => {
+export const modeAffichage = (data, visibleData, setVisibleData, setAncienMode, ancienMode, modeChoisi, indexAncienHeader, setIndexAncienHeader, indexHeader, header, setHeader) => {
 
     // On garde en mémoire 
     const cpyData = [...data];
@@ -30,7 +30,7 @@ export const modeAffichage = (data, visibleData, setVisibleData, setIndexActif, 
 
 
     // On met à jour le header
-    if( indexActif === indexChoisi ){
+    if( ancienMode === modeChoisi ){
         cpyHeader[indexHeader] = "\u25BC";
     }
     else{
@@ -38,46 +38,46 @@ export const modeAffichage = (data, visibleData, setVisibleData, setIndexActif, 
         cpyHeader[indexHeader] = "\u25B2";
     }
     setHeader( cpyHeader );
-    setIndexHeader( indexHeader );
+    setIndexAncienHeader( indexHeader );
 
 
     // On met à jour la vue
     // Si on clique sur le nom
-    if( mode === "NOM"){
+    if( modeChoisi === "nom"){
         // Si on re-clique sur le nom
-        if( indexActif === indexChoisi ){
+        if( ancienMode === modeChoisi ){
             // TODO : sysytème complet full rotation (non juste 3 puis null)
         }
         else{
             // Première fois
             setVisibleData( cpyData );
 
-            setIndexActif( indexChoisi );
+            setAncienMode( modeChoisi );
         }
     }
     // Si on re-clique autrepart que le nom
-    else if( indexActif === indexChoisi ){
+    else if( ancienMode === modeChoisi ){
         // On inverse la liste visible actuelle
         setVisibleData( cpyVisibleData.reverse() )
 
-        // On met l'index actif à null afin d'afficher le prochain élément dnas le bon ordre, quoi qu'il arrive
-        setIndexActif( null );
+        // On met l'index actif à null afin d'afficher le prochain élément dnas l'ordre normal, peu importe où l'on clique
+        setAncienMode( null );
     }
 
     // Si on clique pour la 1ere fois (modulo 2) autre part que le nom
     else{
         // Si s'est un jour, on laisse l'ordre de base
-        if( mode === "JOUR" ){
+        if( modeChoisi === "jourdefaut" ){
             setVisibleData( cpyData );
         }
         // Sinon, on trie
         else{
             //cpyVisibleData.sort((a, b) => a.split(/\t/)[indexChoisi] > b.split(/\t/)[indexChoisi]);
-            cpyVisibleData.sort( (a,b) => a.split(/\t/)[indexChoisi].localeCompare(b.split(/\t/)[indexChoisi]) );
+            cpyVisibleData.sort( (a,b) => a[modeChoisi].localeCompare(b[modeChoisi]) );
             setVisibleData( cpyVisibleData );
         }
 
-        setIndexActif( indexChoisi );
+        setAncienMode( modeChoisi );
         
     }
 

@@ -31,10 +31,10 @@ const compteScreen = () => {
   const token = React.useContext(userContext).token
 
   // Mode d'affichage
-  const [indexActif, setIndexActif] = useState(0); // index du split
-  const [indexHeader, setIndexHeader] = useState(0); // index réel du header actif
+  const [indexAncienHeader, setIndexAncienHeader] = useState(0); // index réel du header actif
   const [header, setHeader] = useState(["\u25B2", "", ""]);
   const [visibleData, setVisibleData] = useState('');
+  const [ancienMode, setAncienMode] = useState("jourdefaut");
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
@@ -211,13 +211,13 @@ const compteScreen = () => {
 
                     {/*Header de la liste*/}
                     <View style = {styles.header}>
-                      <Pressable style={{width:'33%'}} onPress={() => modeAffichage(dataEngagementDefaut, visibleData, setVisibleData, setIndexActif, indexActif, 0, "JOUR", indexHeader, setIndexHeader, 0, header, setHeader)}>
+                      <Pressable style={{width:'33%'}} onPress={() => modeAffichage(dataEngagementDefaut, visibleData, setVisibleData, setAncienMode, ancienMode, "jourdefaut", indexAncienHeader, setIndexAncienHeader, 0, header, setHeader)}>
                         <Text style = {styles.headerTitle}>Jour {header[0]}</Text>
                       </Pressable>
-                      <Pressable style={{width:'33%'}} onPress={() => modeAffichage(dataEngagementDefaut, visibleData, setVisibleData, setIndexActif, indexActif, 1, "ACTIVITE", indexHeader, setIndexHeader, 1, header, setHeader)}>
+                      <Pressable style={{width:'33%'}} onPress={() => modeAffichage(dataEngagementDefaut, visibleData, setVisibleData, setAncienMode, ancienMode, "nomactivite", indexAncienHeader, setIndexAncienHeader, 0, header, setHeader)}>
                         <Text style = {styles.headerTitle}>Activité {header[1]}</Text>
                       </Pressable>
-                      <Pressable style={{width:'33%'}} onPress={() => modeAffichage(dataEngagementDefaut, visibleData, setVisibleData, setIndexActif, indexActif, 2, "SITE", indexHeader, setIndexHeader, 2, header, setHeader)}>
+                      <Pressable style={{width:'33%'}} onPress={() => modeAffichage(dataEngagementDefaut, visibleData, setVisibleData, setAncienMode, ancienMode, "nomsite", indexAncienHeader, setIndexAncienHeader, 0, header, setHeader)}>
                         <Text style = {styles.headerTitle}>Site {header[2]}</Text>
                       </Pressable>
                     </View>
