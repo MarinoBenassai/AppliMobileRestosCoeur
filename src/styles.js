@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   buttonContactRight: {
     alignItems: "flex-start",
-	flex: 1,
+	  flex: 1,
     padding: 10,
     elevation: 2,
 	  alignSelf: "flex-end"

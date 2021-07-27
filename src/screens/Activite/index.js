@@ -24,7 +24,6 @@ function activiteScreen({route, navigation}) {
   const [upToDate, setUpToDate] = useState(true);
   
   // Pour le pop up de commentaire
-  const [modalVisibleAbsence, setmodalVisibleAbsence] = useState(false);
   const [modalVisibleCommentaireAbsence, setModalVisibleCommentaireAbsence] = useState(false);
   const [modalVisibleCommentaireActivite, setmodalVisibleCommentaireActivite] = useState(false);
   const [modalVisibleContact, setmodalVisibleContact] = useState(false);
@@ -176,7 +175,7 @@ function activiteScreen({route, navigation}) {
 
       setInfoComment([ jour, activite, site, benevole ]);
       //On rend le modal visible
-      setmodalVisibleAbsence(true);
+      setModalVisibleCommentaireAbsence(true);
       
       // Le traitement se fait sur le modal afin d'éviter les désynchronisations
 
@@ -219,6 +218,7 @@ function activiteScreen({route, navigation}) {
       <SafeAreaView style={styles.container}>	  
         <View>
 	        <ModalContact visible = {modalVisibleContact} setVisible = {setmodalVisibleContact} mail = {mail} phone = {phone}/>
+          
           <Modal
             animationType="slide"
             transparent={true}
@@ -284,60 +284,56 @@ function activiteScreen({route, navigation}) {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalVisibleAbsence}
-          onRequestClose={() => {setmodalVisibleAbsence(false)}}
+          visible={modalVisibleCommentaireAbsence}
+          onRequestClose={() => {setModalVisibleCommentaireAbsence(false); setComment("")}}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Commentaire d'Absence :</Text>
               <TextInput
-                style={styles.input}
+                multiline
+                numberOfLines={3}
+                defaultValue={comment}
+                style={[styles.input, {borderWidth: 1}]}
                 onChangeText={setComment}
                 placeholder="Raison de votre absence"
                 autoCompleteType="off"
                 maxLength={99}
               />
-              <Pressable
-                style={styles.button}
-                // écrire et envoyer le commentaire
-                onPress={() => {setmodalVisibleAbsence(!modalVisibleAbsence);
-                  let body = new FormData();
-				          body.append('token',token);
-				          fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
-				            method: 'POST',
-				            body: body})
-                      .then((response) => checkFetch(response))
-                      .then((texte) =>  {console.info("changement statut : absent :"); console.log(texte)})
-                      .catch((error) => handleError (error))
-                      .finally(() => {setUpToDate(false); setComment("");});
+              
+              <View style={styles.modalContactButtonView}>
+                <Pressable
+                  style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-end"}}
+                  // écrire et envoyer le commentaire
+                  onPress={() => {setModalVisibleCommentaireAbsence(!modalVisibleCommentaireAbsence);
+                                  let body = new FormData();
+                                  body.append('token',token);
+                                  fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + infoComment[3] + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
+                                    method: 'POST',
+                                    body: body})
+                                      .then((response) => checkFetch(response))
+                                      .then((texte) =>  {console.info("changement statut : absent :"); console.log(texte)})
+                                      .catch((error) => handleError (error))
+                                      .finally(() => {setUpToDate(false); setComment("");console.log(comment)});
 
-                }}
-              >
-                <Text style={styles.textStyle}>Valider</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
+                                }}
+                >
+                  {({ pressed }) => (
+                    <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", textAlign: "center"}]}>Valider</Text>
+                  )}
+                </Pressable>
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisibleCommentaireAbsence}
-          onRequestClose={() => {setModalVisibleCommentaireAbsence(false); setComment("")}}
-        >
-            
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={[styles.modalText, {fontWeight: "bold"}]}>Commentaire d'absence</Text>
-              <Text style={styles.modalText}>{comment}</Text>
-              <Pressable
-                  style={styles.button}
-                  onPress={() => {setModalVisibleCommentaireAbsence(false)}}
-              >
-                {({ pressed }) => (
-                  <Text style={{color:pressed?'darkslategrey':'black', textAlign: "center"}}>fermer</Text>
-                )}
-              </Pressable>
+                <Pressable
+                  style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-start"}}
+                  onPress={() => {setModalVisibleCommentaireAbsence(!modalVisibleCommentaireAbsence);
+                                  setComment("");}}
+                >
+                  {({ pressed }) => (
+                    <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", textAlign: "center"}]}>Annuler</Text>
+                  )}
+                </Pressable>
+              </View>
+
             </View>
           </View>
         </Modal>

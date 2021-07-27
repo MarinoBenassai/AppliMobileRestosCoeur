@@ -24,7 +24,6 @@ function engagementScreen({navigation}) {
   
   // Pour le pop up de commentaire
   const [modalVisibleSet, setModalVisibleSet] = useState(false);
-  const [modalVisibleGet, setModalVisibleGet] = useState(false);
 
   // Pour le commentaire
   const [comment, setComment] = useState('');
@@ -46,7 +45,7 @@ function engagementScreen({navigation}) {
   // Focntion de chargement de l'activité
   function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
-  	  IDActivite: item.idactivite, IDSite: item.idsite, IDJour: item.jourpresence.split(" ")[0], NomActivite: item.nomactivite, NomSite: item.nomsite, idRole: (item.role == "BENEVOLE") ? "1" : "2"
+  	  IDActivite: item.idactivite, IDSite: item.idsite, IDJour: item.jourpresence.split(" ")[0], NomActivite: item.nomactivite, NomSite: item.nomsite, idRole: (item.nomrole == "BENEVOLE") ? "1" : "2"
   	});
   }
 
@@ -120,7 +119,7 @@ function engagementScreen({navigation}) {
 
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, userID, item.jourpresence, item.idactivite, item.idsite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
-                  fctCommentaire={() => {setModalVisibleGet(true); setComment(item.commentaire)}}
+                  fctCommentaire={() => {setModalVisibleSet(true); setComment(item.commentaire)}} //TODO get ??
                   status={item.etat} role="2" align="column-reverse"/>
       
     </View>
@@ -185,66 +184,60 @@ function engagementScreen({navigation}) {
           animationType="slide"
           transparent={true}
           visible={modalVisibleSet}
-          onRequestClose={() => {setModalVisibleSet(!modalVisibleSet)}}
+          onRequestClose={() => {setModalVisibleSet(!modalVisibleSet); setComment("")}}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Commentaire d'Absence :</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, {borderWidth: 1}]}
+                multiline
+                numberOfLines={3}
                 onChangeText={setComment}
+                defaultValue={comment}
                 placeholder="Raison de votre absence"
                 autoCompleteType="off"
                 maxLength={99}
               />
-              <Pressable
-                style={styles.button}
-                // TODO : envoyer le commentaire (fait?)
-                onPress={() => {setModalVisibleSet(!modalVisibleSet);
-                                setLoading(true);
-                                let body = new FormData();
-                                body.append('token',token);
-                                fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
-                                  method: 'POST',
-                                  body: body})
-                                    .then((response) => checkFetch(response))
-                                    .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
-                                    .catch((error) => handleError (error))
-                                    .finally(() => {setUpToDate(false); setComment(""); setLoading(false);})
 
-                                  // On raffraichi et reset le commentaire pour la prochaine fois (au dessus - finally)
-                  
-                }}
-              >
-                <Text style={styles.textStyle}>Valider</Text>
-              </Pressable>
+              <View style={styles.modalContactButtonView}>
+                <Pressable
+                  style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-end"}}
+                  onPress={() => {setModalVisibleSet(!modalVisibleSet);
+                                  setLoading(true);
+                                  let body = new FormData();
+                                  body.append('token',token);
+                                  fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/P_IDBENEVOLE=" + userID + "/P_JOURPRESENCE=" + infoComment[0] + "/P_IDACTIVITE=" + infoComment[1] + "/P_IDSITE=" + infoComment[2] + "/P_COMMENTAIRE=" + comment , {
+                                    method: 'POST',
+                                    body: body})
+                                      .then((response) => checkFetch(response))
+                                      .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
+                                      .catch((error) => handleError (error))
+                                      .finally(() => {setUpToDate(false); setComment(""); setLoading(false);})
+
+                                    // On raffraichi et reset le commentaire pour la prochaine fois (au dessus - finally)
+                    
+                  }}
+                >
+                  {({ pressed }) => (
+                    <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black"}]}>Valider</Text>
+                  )}
+                </Pressable>
+
+                <Pressable
+                  style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-start"}}
+                  onPress={() => {setModalVisibleSet(!modalVisibleSet);
+                                  setComment("");}}
+                >
+                  {({ pressed }) => (
+                    <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black"}]}>Annuler</Text>
+                  )}
+                </Pressable>
+              </View>
             </View>
           </View>
         </Modal>
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisibleGet}
-          onRequestClose={() => {setModalVisibleGet(false); setComment("")}}
-        >
-            
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={[styles.modalText, {fontWeight: "bold"}]}>Commentaire d'absence</Text>
-              <Text style={styles.modalText}>{comment}</Text>
-              <Pressable
-                  style={[styles.button, {justifyContent: "center", alignItems: "center"}]}
-                  onPress={() => {setModalVisibleGet(false)}}
-              >
-                {({ pressed }) => (
-                  <Text style={{color:pressed?'darkslategrey':'black', textAlign: "center"}}>fermer</Text>
-                )}
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-        
+      
 		
         <FlatList
           data={visibleData}
