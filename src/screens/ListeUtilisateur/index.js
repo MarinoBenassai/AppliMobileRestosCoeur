@@ -37,6 +37,9 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // On récupère les informations données en paramètres
   const { IDActivite, IDSite, IDJour, liste } = route.params;
 
+  //Paramètres des fetch
+  var params = {}
+
   // on va chercher les informations sur la BDD
   useEffect(() => {
     let body = new FormData();
@@ -63,8 +66,10 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   const ajouterBenevole = (benevole) => {
     console.info("Vous avez ajouter l'id : " + benevole + " " + IDJour + " " + IDActivite + " " + IDSite);
     let body = new FormData();
+	  params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":IDJour, "P_IDACTIVITE":IDActivite, "P_IDSITE":IDSite, "P_IDROLE":1 };
+	  body.append('params',JSON.stringify(params));
 	  body.append('token',token);
-    fetch("http://" + constantes.BDD + "/APP/AP_INS_PRESENCE/P_IDBENEVOLE=" + benevole + "/P_JOURPRESENCE=" + IDJour + "/P_IDACTIVITE=" + IDActivite + "/P_IDSITE=" + IDSite + "/P_IDROLE=1" , {
+    fetch("http://" + constantes.BDD + "/APP/AP_INS_PRESENCE/", {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))

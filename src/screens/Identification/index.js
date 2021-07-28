@@ -26,6 +26,9 @@ export default function IdScreen({navigation}) {
 	const changeToken = React.useContext(userContext).changeToken;
     const handleError = React.useContext(userContext).handleError;
 
+	//Paramètres des fetch
+    var params = {}
+	
 	// On va chercher le token de notification
 /* 	useEffect(() => {
 		registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -60,8 +63,10 @@ export default function IdScreen({navigation}) {
 				//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
 				if (data.tokennotification != token && token != "-1"){
 					let body = new FormData();
+					params = {'P_IDBENEVOLE':data.id, '/P_TOKENNOTIF=':token};
+					body.append('params',JSON.stringify(params));
 					body.append('token',data.token);
-					fetch('http://' + constantes.BDD + '/APP/AP_UPD_NOTIF/P_IDBENEVOLE=' + data.id + '/P_TOKENNOTIF=' + token , {
+					fetch('http://' + constantes.BDD + '/APP/AP_UPD_NOTIF/', {
 					method: 'POST',
 					body: body});
 				}

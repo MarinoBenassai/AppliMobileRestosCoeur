@@ -30,6 +30,9 @@ function referentScreen({navigation}) {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
 
+  //Paramètres des fetch
+  var params = {}
+
   // Fonction de sélection de l'activité
   function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
@@ -42,9 +45,11 @@ function referentScreen({navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-    let body = new FormData();
+      let body = new FormData();
+	  params = {'P_IDBENEVOLE':userID};
+	  body.append('params',JSON.stringify(params));
 	  body.append('token',token);
-    fetch('http://' + constantes.BDD + '/APP/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID , {
+    fetch('http://' + constantes.BDD + '/APP/AP_LST_SYN_REF/', {
     	method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
@@ -61,8 +66,10 @@ function referentScreen({navigation}) {
   // Lors d'un changement
   useEffect(() => {
     let body = new FormData();
+	  params = {'P_IDBENEVOLE':userID};
+	  body.append('params',JSON.stringify(params));
 	  body.append('token',token);
-    fetch('http://' + constantes.BDD + '/APP/AP_LST_SYN_REF/P_IDBENEVOLE=' + userID , {
+    fetch('http://' + constantes.BDD + '/APP/AP_LST_SYN_REF/', {
     	method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))

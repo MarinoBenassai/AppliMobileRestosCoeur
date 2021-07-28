@@ -99,8 +99,10 @@ export default function App() {
 	const device = await Device.getDeviceTypeAsync();
 	const tokennotif = await registerForPushNotificationsAsync(device);
     let body = new FormData();
+	var params = {'P_TOKEN':token,'P_TOKENNOTIF':tokennotif};
+	body.append('params',JSON.stringify(params));
     body.append('token',token);
-	fetch('http://' + constantes.BDD + '/APP/AP_LOGOUT/P_TOKEN=' + token +'/P_TOKENNOTIF=' + tokennotif, {
+	fetch('http://' + constantes.BDD + '/APP/AP_LOGOUT/', {
 	    method: 'POST',
 	    body: body})
 	  .then((response) => {
