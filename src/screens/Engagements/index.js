@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, ActionSheetIOS} from 'react-native';
 import { Dimensions } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 
@@ -11,6 +11,8 @@ import {traitementFilter} from '../../components/pickerActivite';
 import constantes from '../../constantes';
 import styles from '../../styles';
 import ViewStatus from '../../components/viewStatut';
+
+import RNPickerSelect from 'react-native-picker-select';
 
 
 // Fonction Principale
@@ -242,15 +244,31 @@ function engagementScreen({navigation}) {
         <FlatList
           data={visibleData}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
           ListHeaderComponent={
             <>
 
-			
               {/* Réordonnancement - Sélection */}
-              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-between"}}>
+              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-evenly"}}>
 
-                <Picker
+
+                <RNPickerSelect
+                    placeholder={{}}
+                    useNativeAndroidPickerStyle={false}
+                    onValueChange={(itemValue, itemIndex) =>
+                      {setPicker(itemValue);
+                      setVisibleData( traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 6) );}}
+                    selectedValue={picker}
+                    items={[
+                        { label: 'date', value: 'DATE' },
+                        { label: 'activite', value: 'ACTIVITE' },
+                        { label: 'site', value: 'SITE' },
+                        { label: 'participant', value: 'PARTICIPANT' },
+                    ]}
+                    style={styles.inputAndroid}
+                />
+
+                {/* <Picker
                   style={{height: 30, width: "45%", maxWidth: 190}}
                   selectedValue={picker}
                   onValueChange={(itemValue, itemIndex) =>
@@ -262,7 +280,7 @@ function engagementScreen({navigation}) {
                         <Picker.Item label="activite" value="ACTIVITE" />
                         <Picker.Item label="site" value="SITE" />
                         <Picker.Item label="participant" value="PARTICIPANT" />
-                </Picker>
+                </Picker> */}
 
                 <Picker
                   style={{height: 30, width: "45%", maxWidth: 190, textAlign: "right"}}
