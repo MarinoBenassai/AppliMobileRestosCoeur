@@ -277,6 +277,7 @@ function engagementScreen({navigation}) {
                       { label: 'participant', value: 'PARTICIPANT' },
                   ]}
                   style={pickerSelectStyles}
+                  InputAccessoryView={() => null}
                 />
 
                 <RNPickerSelect
@@ -293,6 +294,7 @@ function engagementScreen({navigation}) {
                       { label: 'non défini', value: 'NONDEFINI' },
                   ]}
                   style={pickerSelectStyles}
+                  InputAccessoryView={() => null}
                 />
                   
               </View>

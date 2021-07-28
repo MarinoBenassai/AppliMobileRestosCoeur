@@ -155,7 +155,7 @@ function referentScreen({navigation}) {
             <FlatList
               data={visibleData}
               renderItem={renderItem}
-              keyExtractor={(item, index) => index}
+              keyExtractor={(item, index) => index.toString()}
             />
           </>
         

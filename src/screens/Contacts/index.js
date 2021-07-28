@@ -121,6 +121,7 @@ function contactScreen() {
               { label: 'activité', value: 'ACTIVITE' },
           ]}
           style={pickerSelectStyles}
+          InputAccessoryView={() => null}
         />
 
       </View>
@@ -140,7 +141,7 @@ function contactScreen() {
         <FlatList
           data={visibleData}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
         />
       </>
       )}

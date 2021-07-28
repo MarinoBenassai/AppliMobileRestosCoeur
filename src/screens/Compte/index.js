@@ -236,7 +236,7 @@ const compteScreen = () => {
                 </>
               }
               renderItem={renderItem}
-              keyExtractor={(item, index) => index}
+              keyExtractor={(item, index) => index.toString()}
             />
           </View>
         </View>

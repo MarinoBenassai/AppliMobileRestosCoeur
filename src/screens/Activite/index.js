@@ -471,6 +471,7 @@ function activiteScreen({route, navigation}) {
                       { label: 'nom', value: 'NOM' },
                   ]}
                   style={pickerSelectStyles}
+                  InputAccessoryView={() => null}
                 />
 
                 <RNPickerSelect
@@ -487,6 +488,7 @@ function activiteScreen({route, navigation}) {
                       { label: 'non défini', value: 'NONDEFINI' },
                   ]}
                   style={pickerSelectStyles}
+                  InputAccessoryView={() => null}
                 />
 
                 
@@ -503,7 +505,7 @@ function activiteScreen({route, navigation}) {
             </>
           }
           renderItem={renderItem}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
 	  {isLoading &&
