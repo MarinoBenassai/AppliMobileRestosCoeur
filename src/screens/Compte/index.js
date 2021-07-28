@@ -42,11 +42,16 @@ const compteScreen = () => {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
   
+  //Paramètres des fetch
+  var params = {}
+  
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
     let body = new FormData();
+    params = {'P_IDBENEVOLE':userID};
+    body.append('params',JSON.stringify(params));
     body.append('token',token);
-    fetch('http://' + constantes.BDD + '/APP/AP_LST_ENG_BEN/P_IDBENEVOLE=' + userID , {
+    fetch('http://' + constantes.BDD + '/APP/AP_LST_ENG_BEN/', {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
@@ -59,8 +64,10 @@ const compteScreen = () => {
     if (persoUpToDate === false) {
       setPersoUpToDate(true);
       let body = new FormData();
+	  params = {'P_IDBENEVOLE':userID};
+	  body.append('params',JSON.stringify(params));
       body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_MON_COMPTE/P_IDBENEVOLE=' + userID , {
+      fetch('http://' + constantes.BDD + '/APP/AP_MON_COMPTE/', {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
@@ -318,8 +325,10 @@ const compteScreen = () => {
       }
 
       let body = new FormData();
+	  params = {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone};
+      body.append('params',JSON.stringify(params));
       body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_UPD_INFO_BENEVOLE/P_IDBENEVOLE=' + userID + '/P_EMAIL=' + mail + '/P_TELEPHONE=' + phone , {
+      fetch('http://' + constantes.BDD + '/APP/AP_UPD_INFO_BENEVOLE/', {
         method: 'POST',
         body: body})
       

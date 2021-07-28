@@ -15,6 +15,9 @@ function oublieScreen({navigation}){
   
   const handleError = React.useContext(userContext).handleError;
   
+  //Paramètres des fetch
+  var params = {}
+  
   function resetPassword() {
 	if (textEmail != '') {
 		setLoading(true);

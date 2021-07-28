@@ -31,11 +31,16 @@ function contactScreen() {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
   
+  //Paramètres des fetch
+  var params = {}
+  
   // on va chercher les informations sur la BDD
   useEffect(() => {
     let body = new FormData();
+	params = {'P_IDBENEVOLE':userID}
+	body.append('params',JSON.stringify(params))
     body.append('token',token);
-    fetch('http://' + constantes.BDD + '/APP/AP_LST_CONTACT/P_IDBENEVOLE=' + userID , {
+    fetch('http://' + constantes.BDD + '/APP/AP_LST_CONTACT/', {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
