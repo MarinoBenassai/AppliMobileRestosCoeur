@@ -207,8 +207,10 @@ const styles = StyleSheet.create({
   statusIcon: {
     paddingRight: 10,
     paddingLeft: 10
-  }
+  },
+  
 });
+
 
 
 

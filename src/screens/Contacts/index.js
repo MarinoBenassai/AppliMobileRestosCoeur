@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput} from 'react-native';
 import {Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-import {Picker} from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 import {checkFetch} from '../../components/checkFetch';
 import {traitementSort} from '../../components/pickerActivite';
@@ -105,20 +105,25 @@ function contactScreen() {
 
       {/*Picker*/}
       <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20}}>
-        <Picker
-            style={{height: 30, width: "50%", maxWidth: 190, alignSelf: "flex-end" }}
-            selectedValue={picker}
-            onValueChange={(itemValue, itemIndex) =>
-                {setPicker(itemValue);
-                setVisibleData (traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 0) );}
-            }>
+        <RNPickerSelect
+          placeholder={{}}
+          useNativeAndroidPickerStyle={true}
+          onValueChange={(itemValue, itemIndex) =>
+            {setPicker(itemValue);
+            setVisibleData (traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 0) );}
+        }
+          selectedValue={picker}
+          items={[
+              { label: 'nom', value: 'NOM' },
+              { label: 'prénom', value: 'PRENOM' },
+              { label: 'jour', value: 'JOUR' },
+              { label: 'site', value: 'SITE' },
+              { label: 'activité', value: 'ACTIVITE' },
+          ]}
+          style={pickerSelectStyles}
+          InputAccessoryView={() => null}
+        />
 
-            <Picker.Item label="nom" value="NOM" />
-            <Picker.Item label="prénom" value="PRENOM" />
-            <Picker.Item label="jour" value="JOUR" />
-            <Picker.Item label="site" value="SITE" />
-            <Picker.Item label="activité" value="ACTIVITE" />
-        </Picker>
       </View>
 
       {/*Header de la liste*/}
@@ -136,7 +141,7 @@ function contactScreen() {
         <FlatList
           data={visibleData}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
         />
       </>
       )}
@@ -148,3 +153,45 @@ function contactScreen() {
 
 // On exporte la fonction principale
 export default contactScreen;
+
+
+// Style
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    margin: 20,
+    fontSize: 16,
+    width: 200,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black',
+  },
+
+  inputAndroid: {
+    margin: 20,
+    fontSize: 16,
+    width: 200,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black',
+  },
+  inputWeb: {
+    margin: 20,
+    fontSize: 16,
+    width: 160,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black',
+  }
+});

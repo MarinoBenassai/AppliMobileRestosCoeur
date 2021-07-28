@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, useFocusEffect, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-import {Picker} from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
 import {Linking} from 'react-native';
 
 import {traitementSort} from '../../components/pickerActivite';
@@ -457,29 +457,41 @@ function activiteScreen({route, navigation}) {
 
               {/* Réordonnancement - Sélection */}
               <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-between"}}>
-                <Picker
-                  style={{height: 30, width: "50%", maxWidth: 190}}
-                  selectedValue={picker}
+                
+                <RNPickerSelect
+                  placeholder={{}}
+                  useNativeAndroidPickerStyle={true}
                   onValueChange={(itemValue, itemIndex) =>
-                      {setPicker(itemValue);
-                      setVisibleData( traitementSort(itemValue, data, visibleData, 0, 0, 4, 3, 0) );}
-                  }>
+                    {setPicker(itemValue);
+                    setVisibleData( traitementSort(itemValue, data, visibleData, 0, 0, 4, 3, 0) );}
+                  }
+                  selectedValue={picker}
+                  items={[
+                      { label: 'prénom', value: 'PRENOM' },
+                      { label: 'nom', value: 'NOM' },
+                  ]}
+                  style={pickerSelectStyles}
+                  InputAccessoryView={() => null}
+                />
 
-                        <Picker.Item label="nom" value="NOM" />
-                        <Picker.Item label="prénom" value="PRENOM" />
-                </Picker>
-
-                <Picker
-                  style={{height: 30, width: "45%", maxWidth: 180}}
-                  selectedValue={affichage}
+                <RNPickerSelect
+                  placeholder={{}}
+                  useNativeAndroidPickerStyle={true}
                   onValueChange={(itemValue, itemIndex) =>
                     setAffichage(itemValue)
-                  }>
-                  <Picker.Item label="tout" value="TOUT" />
-                  <Picker.Item label="présent" value="PRESENT" />
-                  <Picker.Item label="absent" value="ABSENT" />
-                  <Picker.Item label="non défini" value="NONDEFINI" />
-                </Picker>
+                  }
+                  selectedValue={affichage}
+                  items={[
+                      { label: 'tout', value: 'TOUT' },
+                      { label: 'présent', value: 'PRESENT' },
+                      { label: 'absent', value: 'ABSENT' },
+                      { label: 'non défini', value: 'NONDEFINI' },
+                  ]}
+                  style={pickerSelectStyles}
+                  InputAccessoryView={() => null}
+                />
+
+                
               </View>
               {/*Header de la flatlist*/}
               <View style = {[styles.header,{paddingRight: 5}]}>
@@ -493,7 +505,7 @@ function activiteScreen({route, navigation}) {
             </>
           }
           renderItem={renderItem}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
 	  {isLoading &&
@@ -531,3 +543,45 @@ const normalizeInputNumber = (value, previousValue) => {
 
 // On exporte la fonction principale
 export default activiteScreen;
+
+
+// Style
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    margin: 20,
+    fontSize: 16,
+    width: 160,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black',
+  },
+
+  inputAndroid: {
+    margin: 20,
+    fontSize: 16,
+    width: 160,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black',
+  },
+  inputWeb: {
+    margin: 20,
+    fontSize: 16,
+    width: 160,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black',
+  }
+});
