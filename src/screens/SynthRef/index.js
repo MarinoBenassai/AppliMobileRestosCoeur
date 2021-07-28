@@ -135,29 +135,9 @@ function referentScreen({navigation}) {
         </View>) : (
         
           <View style={{flex: 1}}>
-          <>
-            {/*Header de la liste*/}
-            <View style = {styles.header}>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomsite", header, setHeader)}>
-                <Text style = {styles.headerTitle}>Site {header.nomsite}</Text>
-              </Pressable>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomactivite", header, setHeader)}>
-                <Text style = {styles.headerTitle}>Activité {header.nomactivite}</Text>
-              </Pressable>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "jourpresence", header, setHeader)}>
-                <Text style = {styles.headerTitle}>Date {header.jourpresence}</Text>
-              </Pressable>
-              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nombre_present", header, setHeader)}>
-                <Text style = {styles.headerTitle}>Site{header.nombre_present} /Global</Text>
-              </Pressable>
-            </View>
-
-            <FlatList
-              data={visibleData}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          </>
+          
+            <Synthese />
+          
         
         </View>
       )}
@@ -166,19 +146,6 @@ function referentScreen({navigation}) {
 
   // Div Synthese //TODO: à débuger
   function Synthese(props) {
-    /* const ligne = props.ligne;
-    const isLoading = props.loading;
-    const renderItem = props.renderItem;
-
-    const data = props.data;
-    const visibleData = props.visibleData;
-    const setVisibleData = props.setVisibleData;
-    const setIndexActif= props.setIndexActif;
-    const indexActif = props.indexActif;
-    const indexHeader = props.indexHeader;
-    const setIndexHeader = props.setIndexHeader;
-    const header = props.header;
-    const setHeader = props.setHeader; */
 
     if (visibleData.length != 0){
       return  <View style={{flex: 1}}>
@@ -203,7 +170,7 @@ function referentScreen({navigation}) {
             <FlatList
               data={visibleData}
               renderItem={renderItem}
-              keyExtractor={item => item}
+              keyExtractor={(item, index) => index.toString()}
             />
           </>
         </View>;
@@ -226,21 +193,3 @@ function referentScreen({navigation}) {
 
 // On exporte la fonction principale
 export default referentScreen;
-
-
-{/* <Pressable onPress={() => versActivite({navigation}, item)} style={{marginVertical: 5, alignSelf: "center", width: "100%", maxWidth: 600, padding: 0, justifyContent: "space-between",}} >
-      {({ pressed }) => (
-        <View style={[styles.item, styles.REFERENT]}>
-          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center", width: '25%'}}>{item.split(/\t/)[2]}</Text>
-    
-          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center", width: '25%'}}>{item.split(/\t/)[1]}</Text>
-
-          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center", width: '35%'}}>{item.split(/\t/)[0].split(" ")[0].split("-")[2]}/
-            {item.split(/\t/)[0].split(" ")[0].split("-")[1]}/
-            {item.split(/\t/)[0].split(" ")[0].split("-")[0]}</Text>
-
-          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center", width: '15%'}}>{item.split(/\t/)[3]}/x</Text>
-
-        </View>
-        )}
-      </Pressable> */}
