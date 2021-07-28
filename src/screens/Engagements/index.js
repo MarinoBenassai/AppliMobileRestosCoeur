@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, ActionSheetIOS} from 'react-native';
 import { Dimensions } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 
 import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
@@ -262,61 +261,51 @@ function engagementScreen({navigation}) {
             <>
 
               {/* Réordonnancement - Sélection */}
-              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-evenly"}}>
-
+              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-between"}}>
 
                 <RNPickerSelect
-                    placeholder={{}}
-                    useNativeAndroidPickerStyle={false}
-                    onValueChange={(itemValue, itemIndex) =>
-                      {setPicker(itemValue);
-                      setVisibleData( traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 6) );}}
-                    selectedValue={picker}
-                    items={[
-                        { label: 'date', value: 'DATE' },
-                        { label: 'activite', value: 'ACTIVITE' },
-                        { label: 'site', value: 'SITE' },
-                        { label: 'participant', value: 'PARTICIPANT' },
-                    ]}
-                    style={styles.inputAndroid}
+                  placeholder={{}}
+                  useNativeAndroidPickerStyle={true}
+                  onValueChange={(itemValue, itemIndex) =>
+                    {setPicker(itemValue);
+                    setVisibleData( traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 6) );}}
+                  selectedValue={picker}
+                  items={[
+                      { label: 'date', value: 'DATE' },
+                      { label: 'activite', value: 'ACTIVITE' },
+                      { label: 'site', value: 'SITE' },
+                      { label: 'participant', value: 'PARTICIPANT' },
+                  ]}
+                  style={pickerSelectStyles}
                 />
 
-                {/* <Picker
-                  style={{height: 30, width: "45%", maxWidth: 190}}
-                  selectedValue={picker}
-                  onValueChange={(itemValue, itemIndex) =>
-                      {setPicker(itemValue);
-                      setVisibleData( traitementSort(itemValue, data, visibleData, 1, 2, 3, 4, 6) );}
-                  }>
-
-                        <Picker.Item label="date" value="DATE" />
-                        <Picker.Item label="activite" value="ACTIVITE" />
-                        <Picker.Item label="site" value="SITE" />
-                        <Picker.Item label="participant" value="PARTICIPANT" />
-                </Picker> */}
-
-                <Picker
-                  style={{height: 30, width: "45%", maxWidth: 190, textAlign: "right"}}
-                  selectedValue={affichage}
+                <RNPickerSelect
+                  placeholder={{}}
+                  useNativeAndroidPickerStyle={true}
                   onValueChange={(itemValue, itemIndex) =>
                     setAffichage(itemValue)
-                  }>
-                  <Picker.Item label="tout" value="TOUT" />
-                  <Picker.Item label="présent" value="PRESENT" />
-                  <Picker.Item label="absent" value="ABSENT" />
-                  <Picker.Item label="non défini" value="NONDEFINI" />
-                </Picker>
+                  }
+                  selectedValue={affichage}
+                  items={[
+                      { label: 'tout', value: 'TOUT' },
+                      { label: 'présent', value: 'PRESENT' },
+                      { label: 'absent', value: 'ABSENT' },
+                      { label: 'non défini', value: 'NONDEFINI' },
+                  ]}
+                  style={pickerSelectStyles}
+                />
+                  
               </View>
 			  
-			  {/*Header de la flatlist*/}
-			  <View style = {styles.header}>
-			  	<View style={{width:'50%'}}>
-			      <Text style = {[styles.headerTitle, {textAlign: "left",  marginLeft: 40}]}>Activité</Text>
-				</View>
-				<View style={{width:'50%'}}>
-				  <Text style = {[styles.headerTitle, {textAlign: "right",  marginRight: 20}]}>Présence</Text>
-			    </View>
-  			  </View>
+              {/*Header de la flatlist*/}
+              <View style = {styles.header}>
+                <View style={{width:'50%'}}>
+                  <Text style = {[styles.headerTitle, {textAlign: "left",  marginLeft: 40}]}>Activité</Text>
+                </View>
+                <View style={{width:'50%'}}>
+                  <Text style = {[styles.headerTitle, {textAlign: "right",  marginRight: 20}]}>Présence</Text>
+                </View>
+              </View>
             </>
           }
         />
@@ -339,3 +328,44 @@ function engagementScreen({navigation}) {
 // On exporte la fonction principale
 export default engagementScreen;
 
+
+// Style
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    margin: 20,
+    fontSize: 16,
+    width: 160,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black',
+  },
+
+  inputAndroid: {
+    margin: 20,
+    fontSize: 16,
+    width: 160,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black',
+  },
+  inputWeb: {
+    margin: 20,
+    fontSize: 16,
+    width: 160,
+    height: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black',
+  }
+});
