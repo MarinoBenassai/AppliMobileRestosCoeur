@@ -3,8 +3,15 @@ import {Alert} from 'react-native';
 
 export const  checkFetch = async function(response) {
     // console.info("response : " + response + "\n" + response.ok + "\n" + response.status);
+
+    const type = response.headers.get('Content-Type');
+
+    if( type == "text/plain" ){
+        var texte = await response.text();
+        throw texte;
+    }
+
 	const json = await response.json();
-	
     if(response.ok){
         
         return Object.values(json.data);
