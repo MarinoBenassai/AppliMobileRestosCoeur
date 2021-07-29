@@ -6,20 +6,23 @@ export const  checkFetch = async function(response) {
 
     const type = response.headers.get('Content-Type');
 
-    if( type == "text/plain" ){
-        var texte = await response.text();
-        throw texte;
+    if( type == "application/json" ){
+        const json = await response.json();
+        
+        if(response.ok){
+            
+            return Object.values(json.data);
+        }
+        else{
+            throw json.error;
+            /*alert("Il y a eu un problème lors de la connexion à la page. Veuillez rééssayer.");
+            console.error("Erreur Fetch : " + response.text());
+            return "-1";*/
+        }
+        
     }
 
-	const json = await response.json();
-    if(response.ok){
-        
-        return Object.values(json.data);
-    }
-    else{
-		throw json.error;
-        /*alert("Il y a eu un problème lors de la connexion à la page. Veuillez rééssayer.");
-        console.error("Erreur Fetch : " + response.text());
-        return "-1";*/
-    }
+    var texte = await response.text();
+    throw texte;
+	
 }
