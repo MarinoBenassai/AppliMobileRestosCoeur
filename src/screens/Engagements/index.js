@@ -21,7 +21,7 @@ function engagementScreen({navigation}) {
   const [data, setData] = useState([]);
 
   // Reload
-  const [upToDate, setUpToDate] = useState(false);
+  const [upToDate, setUpToDate] = useState(true);
   
   // Pour le pop up de commentaire
   const [modalVisibleSet, setModalVisibleSet] = useState(false);
@@ -66,8 +66,8 @@ function engagementScreen({navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
-          .catch((error) => {setLoading(false); handleError (error)});
+          .then((json) =>  {console.log("ici"); setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
+          .catch((error) => {setLoading(false);handleError (error)});
     });
 
 
