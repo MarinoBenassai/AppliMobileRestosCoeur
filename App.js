@@ -35,6 +35,8 @@ const identificationStack = createStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
+var params = {};
+
 // handler de notification
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -69,18 +71,29 @@ export default function App() {
   }, []);
   
   useEffect(() => {
-	  autoConnect();
+	  autoConnect()
+	  .catch((error) => handleError(error));
   }, []);
   
   async function autoConnect() {
 	  
 	  if (Device.brand){
+		const device = await Device.getDeviceTypeAsync();
 		await SplashScreen.preventAutoHideAsync();
 		const token = await SecureStore.getItemAsync('token');
 		const id = await SecureStore.getItemAsync('id');
 		if (token !== null && id !== null){
 			setToken(token);
 			setUserID(id);
+			const tokennotif = await registerForPushNotificationsAsync(device);
+			let body = new FormData();
+			params = {'P_IDBENEVOLE':id, 'P_TOKENNOTIF':tokennotif};
+			body.append('params',JSON.stringify(params));
+			body.append('token',token);
+			fetch('http://' + constantes.BDD + '/APP/AP_UPD_NOTIF/', {
+			method: 'POST',
+			body: body});
+			//TODO Vérifier la valeur de retour
 		}
 		await SplashScreen.hideAsync();
 	  }
@@ -99,7 +112,7 @@ export default function App() {
 	const device = await Device.getDeviceTypeAsync();
 	const tokennotif = await registerForPushNotificationsAsync(device);
     let body = new FormData();
-	var params = {'P_TOKEN':token,'P_TOKENNOTIF':tokennotif};
+	params = {'P_TOKEN':token,'P_TOKENNOTIF':tokennotif};
 	body.append('params',JSON.stringify(params));
     body.append('token',token);
 	fetch('http://' + constantes.BDD + '/APP/AP_LOGOUT/', {

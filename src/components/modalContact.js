@@ -3,7 +3,7 @@ import {Linking} from 'react-native';
 import {Pressable, Modal} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import styles from '../styles';
-import Clipboard from 'expo-clipboard';
+import * as Clipboard from 'expo-clipboard';;
 
 import {normalizeInputPhone} from './normalizeInputPhone';
 

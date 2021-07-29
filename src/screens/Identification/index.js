@@ -63,7 +63,7 @@ export default function IdScreen({navigation}) {
 				//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
 				if (data.tokennotification != token && token != "-1"){
 					let body = new FormData();
-					params = {'P_IDBENEVOLE':data.id, '/P_TOKENNOTIF=':token};
+					params = {'P_IDBENEVOLE':data.id, 'P_TOKENNOTIF':token};
 					body.append('params',JSON.stringify(params));
 					body.append('token',data.token);
 					fetch('http://' + constantes.BDD + '/APP/AP_UPD_NOTIF/', {
