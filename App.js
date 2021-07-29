@@ -20,7 +20,7 @@ import referentScreen from './src/screens/SynthRef';
 import activiteScreen from './src/screens/Activite';
 import oublieScreen from './src/screens/MdpOublie';
 import listeUtilisateurScreen from './src/screens/ListeUtilisateur';
-
+import {checkFetch} from './src/components/checkFetch';
 import {userContext} from './src/contexts/userContext';
 
 import constantes from './src/constantes';
@@ -92,7 +92,9 @@ export default function App() {
 			body.append('token',token);
 			fetch('http://' + constantes.BDD + '/APP/AP_UPD_NOTIF/', {
 			method: 'POST',
-			body: body});
+			body: body})
+			.then((response) => checkFetch(response))
+			.catch((error) => handleError (error));
 			//TODO Vérifier la valeur de retour
 		}
 		await SplashScreen.hideAsync();
@@ -143,6 +145,10 @@ export default function App() {
 		alert("Votre session a expiré, veuillez vous reconnecter");
 		setUserID("");
 		setToken("");
+		if (Device.brand){
+			SecureStore.deleteItemAsync('id');
+			SecureStore.deleteItemAsync('token');
+		}
 	  }
 	  else {
 		alert(erreur);
