@@ -79,9 +79,8 @@ function activiteScreen({route, navigation}) {
 	    method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées ")})
-        .catch((error) => handleError (error))
-        .finally(() => {setLoading(false); setUpToDate(true)});
+        .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées "); setLoading(false); setUpToDate(true)})
+        .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -102,9 +101,8 @@ function activiteScreen({route, navigation}) {
 	    method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées ")})
-        .catch((error) => handleError (error))
-        .finally(() => {setLoading(false); setUpToDate(true)});
+        .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées "); setLoading(false); setUpToDate(true)})
+        .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
 
       // Update commentaire d'activité (dans le fetch au dessus)
     }
@@ -173,9 +171,8 @@ function activiteScreen({route, navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {console.info("changement status : non défini : "); console.log(texte)})
-          .catch((error) => handleError (error))
-          .finally(() => setUpToDate(false));
+          .then((texte) =>  {console.info("changement status : non défini : "); console.log(texte); setUpToDate(false)})
+          .catch((error) => {setUpToDate(false); handleError (error)});
     }
 
     // Si présent
@@ -201,9 +198,8 @@ function activiteScreen({route, navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {console.info("changement statut : présent : "); console.log(texte)})
-          .catch((error) => handleError (error))
-          .finally(() => setUpToDate(false));
+          .then((texte) =>  {console.info("changement statut : présent : "); console.log(texte); setUpToDate(false)})
+          .catch((error) => {setUpToDate(false); handleError (error)});
     }
   }
 
@@ -267,9 +263,8 @@ function activiteScreen({route, navigation}) {
                                       body: body})
                                         .then((response) => checkFetch(response))
                                         .then((json) => console.log(json))
-                                        .then(() => console.info("Nouvelle entrée : commentaire d'activité"))
-                                        .catch((error) => handleError (error))
-                                        .finally(() => setUpToDate(false));
+                                        .then(() => {console.info("Nouvelle entrée : commentaire d'activité"); setUpToDate(false)})
+                                        .catch((error) => {setUpToDate(false); handleError (error)});
                                   }
                                   else{
                                     let body = new FormData();
@@ -281,9 +276,8 @@ function activiteScreen({route, navigation}) {
                                       body: body})
                                         .then((response) => checkFetch(response))
                                         .then((texte) => console.log(texte))
-                                        .then(() => console.info("update entrée : commentaire d'activité "))
-                                        .catch((error) => handleError (error))
-                                        .finally(() => setUpToDate(false));
+                                        .then(() => {console.info("update entrée : commentaire d'activité "); setUpToDate(false)})
+                                        .catch((error) => {setUpToDate(false); handleError (error)});
                                   }
                           }}
                 >
@@ -329,9 +323,8 @@ function activiteScreen({route, navigation}) {
                                     method: 'POST',
                                     body: body})
                                       .then((response) => checkFetch(response))
-                                      .then((texte) =>  {console.info("changement statut : absent :"); console.log(texte)})
-                                      .catch((error) => handleError (error))
-                                      .finally(() => {setUpToDate(false); setComment("");console.log(comment)});
+                                      .then((texte) =>  {console.info("changement statut : absent :"); console.log(texte); setUpToDate(false); setComment("")})
+                                      .catch((error) => {setUpToDate(false); setComment(""); handleError (error)});
 
                                 }}
                 >
@@ -394,13 +387,14 @@ function activiteScreen({route, navigation}) {
                           .then((response) => checkFetch(response))
                           .then((json) =>  {if( json.length != 0 ){
                             setInfoActivite(1); console.info("Info commentaire d'activité : chargées");
-                            setCommentActivite(json[0].commentaire); setBeneficiaireActivite(json[0].nombre_beneficiaire || "0")}
+                            setCommentActivite(json[0].commentaire); setBeneficiaireActivite(json[0].nombre_beneficiaire || "0");
+                            setLoading(false); setUpToDate(true);}
                             else{
                               setInfoActivite(0); console.info("Info commentaire d'activité : chargées");
                               setCommentActivite(""); setBeneficiaireActivite("0");
+                              setLoading(false); setUpToDate(true);
                             }})
-                          .catch((error) => handleError (error))
-                          .finally(() => {setLoading(false); setUpToDate(true)});
+                          .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
 
                           setmodalVisibleCommentaireActivite(true)}}>
                         {({ pressed }) => (

@@ -48,9 +48,8 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
       method: 'POST',
       body: body})
         .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json); console.info("Liste Utilisateurs : chargées")})
-        .catch((error) => handleError (error))
-        .finally(() => setLoading(false));
+        .then((json) =>  {setData(json); console.info("Liste Utilisateurs : chargées"); setLoading(false)})
+        .catch((error) => {setLoading(false); handleError (error)});
   }, []);
 
   // on met à jour la liste visible

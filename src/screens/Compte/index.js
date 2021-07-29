@@ -71,9 +71,8 @@ const compteScreen = () => {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((json) =>  {setDataPerso(json[0]); console.info("Infos Personelles : chargées")})
-          .catch((error) => handleError (error))
-          .finally(() => setLoading(false));;
+          .then((json) =>  {setDataPerso(json[0]); console.info("Infos Personelles : chargées"); setLoading(false)})
+          .catch((error) => {setLoading(false); handleError (error)});
 	  }
   }, [persoUpToDate]);
 
@@ -298,9 +297,9 @@ const compteScreen = () => {
 		})
 		.then((json) => {
 			alert("Votre mot de passe a bien été modifié.");
+      setLoading(false);
 		})
-		.catch((error) => handleError (error))
-    .finally(() => setLoading(false));
+		.catch((error) => {setLoading(false); handleError (error)});
 
 	  }
 	  setOldP("");
@@ -333,9 +332,8 @@ const compteScreen = () => {
         body: body})
       
       .then((response) => checkFetch(response))
-      .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");}})
-      .catch((error) => handleError (error))
-      .finally(() => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)});
+      .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
+      .catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
 
 
 	    alert(

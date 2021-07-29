@@ -53,9 +53,8 @@ function referentScreen({navigation}) {
     	method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées")})
-        .catch((error) => handleError (error))
-        .finally(() => setLoading(false));
+        .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées"); setLoading(false)})
+        .catch((error) => {setLoading(false); handleError (error)});
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -73,9 +72,8 @@ function referentScreen({navigation}) {
     	method: 'POST',
 	    body: body})
         .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées")})
-        .catch((error) => handleError (error))
-        .finally(() => setLoading(false));
+        .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées"); setLoading(false)})
+        .catch((error) => {setLoading(false); handleError (error)});
   }, []);
 
   // on met à jour la liste visible initiale

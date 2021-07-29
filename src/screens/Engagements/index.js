@@ -66,9 +66,8 @@ function engagementScreen({navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true);})
-          .catch((error) => handleError (error))
-          .finally(() => setLoading(false));
+          .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
+          .catch((error) => {setLoading(false); handleError (error)});
     });
 
 
@@ -89,9 +88,8 @@ function engagementScreen({navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true);})
-          .catch((error) => handleError (error))
-          .finally(() => setLoading(false));
+          .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
+          .catch((error) => {setLoading(false); handleError (error)});
     }
   }, [upToDate]);
 
@@ -149,9 +147,8 @@ function engagementScreen({navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
-          .catch((error) => handleError (error))
-          .finally(() => {setUpToDate(false); setLoading(false);});
+          .then((texte) =>  {console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+          .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
     }
 
     // Si présent
@@ -178,9 +175,8 @@ function engagementScreen({navigation}) {
           method: 'POST',
           body: body})
             .then((response) => checkFetch(response))
-            .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
-            .catch((error) => handleError (error))
-            .finally(() => {setUpToDate(false); setLoading(false);});
+            .then((texte) =>  {console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+            .catch((error) => {setUpToDate(false); setLoading(false);; handleError (error)});
       }
       
       // On raffraichie les composants quoi qu'il arrive
@@ -225,11 +221,10 @@ function engagementScreen({navigation}) {
                                     method: 'POST',
                                     body: body})
                                       .then((response) => checkFetch(response))
-                                      .then((texte) =>  {console.info("changement statut !"); console.log(texte)})
-                                      .catch((error) => handleError (error))
-                                      .finally(() => {setUpToDate(false); setComment(""); setLoading(false);})
+                                      .then((texte) =>  {console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
+                                      .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
 
-                                    // On raffraichi et reset le commentaire pour la prochaine fois (au dessus - finally)
+                                    // On raffraichi et reset le commentaire pour la prochaine fois (au dessus)
                     
                   }}
                 >
