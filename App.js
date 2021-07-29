@@ -27,6 +27,8 @@ import constantes from './src/constantes';
 
 import {registerForPushNotificationsAsync} from "./src/components/registerForPushNotificationsAsync.js";
 
+import { ToastProvider } from 'react-native-toast-notifications'
+
 const engagementStack = createStackNavigator();
 const synthRefStack = createStackNavigator();
 const compteStack = createStackNavigator();
@@ -157,29 +159,31 @@ export default function App() {
   }
   
   return (
-    <userContext.Provider value = {{
-      userID: userID,
-	  token: token,
-      logoutUser: logout,
-	  changeID: changeID,
-	  changeToken: changeToken,
-	  handleError: handleError
-    }}>
-    <NavigationContainer>
-      <Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
-	  {userID === "" ? (
-	      <Drawer.Screen name="Identification" component = {identification}/>		
-	  ) : (
-		<>
-		  <Drawer.Screen name="Engagements" component={engagement} options={{ title: "Mes engagements" }} />
-		  <Drawer.Screen name="SynthRef" component={referent} options={{ title: "Ma synthèse référent" }} />
-		  <Drawer.Screen name="Compte" component={compte} options={{ title: "Mon compte" }} />
-		  <Drawer.Screen name="Contacts" component={contact} options={{ title: "Mes contacts" }} />
-		</>
-	  )}
-	  </Drawer.Navigator>
-    </NavigationContainer>
-	</userContext.Provider>
+	<ToastProvider>
+		<userContext.Provider value = {{
+		userID: userID,
+		token: token,
+		logoutUser: logout,
+		changeID: changeID,
+		changeToken: changeToken,
+		handleError: handleError
+		}}>
+		<NavigationContainer>
+			<Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
+				{userID === "" ? (
+					<Drawer.Screen name="Identification" component = {identification}/>		
+				) : (
+					<>
+					<Drawer.Screen name="Engagements" component={engagement} options={{ title: "Mes engagements" }} />
+					<Drawer.Screen name="SynthRef" component={referent} options={{ title: "Ma synthèse référent" }} />
+					<Drawer.Screen name="Compte" component={compte} options={{ title: "Mon compte" }} />
+					<Drawer.Screen name="Contacts" component={contact} options={{ title: "Mes contacts" }} />
+					</>
+				)}
+				</Drawer.Navigator>
+			</NavigationContainer>
+		</userContext.Provider>
+	</ToastProvider>
   );
 }
 

@@ -89,7 +89,7 @@ export default function IdScreen({navigation}) {
 	  changeToken(data.token);
 	  changeID(data.id);
     }
-  
+
   return (
     <>
     <View style={[styles.container,{alignItems: "center"}]}>

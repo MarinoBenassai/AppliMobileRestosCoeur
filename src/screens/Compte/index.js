@@ -10,9 +10,14 @@ import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
 
+import { useToast } from "react-native-toast-notifications";
+
 // Fonction Principale
 const compteScreen = () => {
   const [isLoading, setLoading] = useState(true);
+
+  // Toast
+  const toast = useToast();
 
   // Info perso et Info Engagement
   const [dataEngagementDefaut, setDataEngagementDefaut] = useState([]);
@@ -101,6 +106,19 @@ const compteScreen = () => {
   const handleChangePhone = ( value ) => { 
     setPhone( normalizeInputPhone(value) );
   };
+
+  // Affiche le toast
+  const toastComponent = () => {
+        
+    toast.show("Au moins un des champs est vide", {
+        type: "normal",
+        position: "bottom",
+        duration: 2000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+  };
+
 
   // On retourne la flatliste
   return (
@@ -248,13 +266,14 @@ const compteScreen = () => {
 	function changeMdP (oldP, newP, verifP){
 	  // Champs vide
 	  if(oldP == "" || newP == "" || verifP == ""){
-		alert(
+		/* alert(
 		  "Champs vide",
 		  "\nAu moins un des champs est vide",
 		  [
 			{ text: "OK", onPress: () => console.info("Vide MdP Pressed") }
 		  ]
-		);
+		); */
+    toastComponent();
 	  }
 	  // vérif failled
 	  else if(newP != verifP){
