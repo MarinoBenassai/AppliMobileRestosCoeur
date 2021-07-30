@@ -11,6 +11,7 @@ import constantes from '../../constantes';
 import styles from '../../styles';
 
 import { useToast } from "react-native-toast-notifications";
+import * as Device from 'expo-device';
 
 // Fonction Principale
 const compteScreen = () => {
@@ -108,10 +109,10 @@ const compteScreen = () => {
   };
 
   // Affiche le toast
-  const toastComponent = () => {
+  const toastComponent = (texte, type) => {
         
-    toast.show("Au moins un des champs est vide", {
-        type: "normal",
+    toast.show(texte, {
+        type: type,
         position: "bottom",
         duration: 2000,
         offset: 30,
@@ -266,34 +267,37 @@ const compteScreen = () => {
 	function changeMdP (oldP, newP, verifP){
 	  // Champs vide
 	  if(oldP == "" || newP == "" || verifP == ""){
-		/* alert(
-		  "Champs vide",
-		  "\nAu moins un des champs est vide",
-		  [
-			{ text: "OK", onPress: () => console.info("Vide MdP Pressed") }
-		  ]
-		); */
-    toastComponent();
+    
+      Device.brand ? toastComponent("Au moins un des champs est vide", "warning") : alert(
+        "Champs vide",
+        "\nAu moins un des champs est vide",
+        [
+        { text: "OK", onPress: () => console.info("Vide MdP Pressed") }
+        ]
+      );
+
 	  }
 	  // vérif failled
 	  else if(newP != verifP){
-		alert(
-		  "Erreur Nouveau Mot de Passe",
-		  "\nLes champs correspondant au nouveau mot de passe ne sont pas identiques",
-		  [
-			{ text: "OK", onPress: () => console.info("verif failled MdP Pressed") }
-		  ]
-		);
+      Device.brand ? toastComponent("Les champs correspondant au nouveau mot de passe ne sont pas identiques", "danger") : alert(
+        "Erreur Nouveau Mot de Passe",
+        "\nLes champs correspondant au nouveau mot de passe ne sont pas identiques",
+        [
+        { text: "OK", onPress: () => console.info("verif failled MdP Pressed") }
+        ]
+      );
+		
 	  }
 	  // Condition (court)
 	  else if(newP.length < 8){
-		alert(
-		  "Mot de passe trop court",
-		  "\nVotre mot de passe doit contenir au moins 8 caractères",
-		  [
-			{ text: "OK", onPress: () => console.info("test MdP Pressed") }
-		  ]
-		);
+      Device.brand ? toastComponent("Votre mot de passe doit contenir au moins 8 caractères", "danger") : alert(
+        "Mot de passe trop court",
+        "\nVotre mot de passe doit contenir au moins 8 caractères",
+        [
+        { text: "OK", onPress: () => console.info("test MdP Pressed") }
+        ]
+      );
+
 	  }
 	  // tout est bon
 	  else {
@@ -315,7 +319,7 @@ const compteScreen = () => {
 			}
 		})
 		.then((json) => {
-			alert("Votre mot de passe a bien été modifié.");
+			Device.brand ? toastComponent("Votre mot de passe a bien été modifié.", "success") : alert("Votre mot de passe a bien été modifié.");;
       setLoading(false);
 		})
 		.catch((error) => {setLoading(false); handleError (error)});
@@ -354,14 +358,13 @@ const compteScreen = () => {
       .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
       .catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
 
-
-	    alert(
-		  "Vos informations ont bien été mises à jour.",
-		  [
-		    { text: "OK", onPress: () => console.info("OK ContactPerso Pressed") }
-		  ]
-
-	    );
+	    Device.brand ? toastComponent("Vos informations ont bien été mises à jour.", "success") : alert(
+        "Vos informations ont bien été mises à jour.",
+        [
+          { text: "OK", onPress: () => console.info("OK ContactPerso Pressed") }
+        ]
+  
+        );
 	  }
 
     setPhone("");

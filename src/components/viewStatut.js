@@ -8,6 +8,9 @@ function ViewStatus(props) {
     const status = props.status;
     const role = props.role;
 
+    const id1=props.id1;
+    const id2=props.id2;
+
     const align = props.align;
 
     const size = 32;
@@ -18,7 +21,7 @@ function ViewStatus(props) {
 
     if(status == "Présent"){
         return (<View style={{justifyContent: "center"}}>
-            <Pressable onPress={role=="2" ? fctStatut : ()=>{}}>
+            <Pressable onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
                 {({ pressed }) => (
                     <Icon 
                         name='check' 
@@ -30,7 +33,7 @@ function ViewStatus(props) {
             </Pressable>
         </View>);
     }
-    else if( (status == "Absent") && (role == "2") ) {
+    else if( (status == "Absent") && ((role == "2") || id1 == id2) ) {
         return(<View style={{ justifyContent:"center", flexDirection: align, alignSelf: "center"}}>
             <Pressable onPress={fctCommentaire}>
                 {({ pressed }) => (
@@ -68,7 +71,7 @@ function ViewStatus(props) {
     }
     else{
         return(<View style={{justifyContent: "center"}}>
-            <Pressable onPress={role=="2" ? fctStatut : ()=>{}}>
+            <Pressable onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
                 {({ pressed }) => (
                     <Icon 
                         name='unverified' 

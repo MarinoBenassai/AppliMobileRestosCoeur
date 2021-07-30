@@ -14,9 +14,16 @@ import ModalContact from '../../components/modalContact';
 import ViewStatus from '../../components/viewStatut';
 import {checkFetch} from '../../components/checkFetch';
 
+import { useToast } from "react-native-toast-notifications";
+import * as Device from 'expo-device';
+
 // Fonction Principale
 function activiteScreen({route, navigation}) {
 
+  // Toast
+  const toast = useToast();
+
+  // basic
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
@@ -135,7 +142,7 @@ function activiteScreen({route, navigation}) {
         {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
         <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, item.idbenevole, IDJour, IDActivite, IDSite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
                     fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.commentaire)}}
-                    status={item.etat} role={idRole} align="row"/>
+                    status={item.etat} role={idRole} align="row" id1={userID} id2={item.idbenevole}/>
 
         {/* Conteneur 3eme colonne */}
 
@@ -171,7 +178,7 @@ function activiteScreen({route, navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {console.info("changement status : non défini : "); console.log(texte); setUpToDate(false)})
+          .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement status : non défini : "); console.log(texte); setUpToDate(false)})
           .catch((error) => {setUpToDate(false); handleError (error)});
     }
 
@@ -198,7 +205,7 @@ function activiteScreen({route, navigation}) {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {console.info("changement statut : présent : "); console.log(texte); setUpToDate(false)})
+          .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut : présent : "); console.log(texte); setUpToDate(false)})
           .catch((error) => {setUpToDate(false); handleError (error)});
     }
   }
@@ -216,6 +223,18 @@ function activiteScreen({route, navigation}) {
     }
 
     Linking.openURL(`mailto:${mails}`);
+  };
+
+  // Affiche le toast
+  const toastComponent = (texte, type) => {
+        
+    toast.show(texte, {
+        type: type,
+        position: "bottom",
+        duration: 2000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
   };
 
 
@@ -255,8 +274,8 @@ function activiteScreen({route, navigation}) {
                   onPress={() => {setmodalVisibleCommentaireActivite(false)
                                   if(infoActivite == 0){
                                     let body = new FormData();
-								    params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
-									body.append('params',JSON.stringify(params));
+                                    params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
+                                    body.append('params',JSON.stringify(params));
                                     body.append('token',token);
                                     fetch('http://' + constantes.BDD + '/APP/AP_INS_SUIVI_ACTIVITE/', {
                                       method: 'POST',
@@ -268,8 +287,8 @@ function activiteScreen({route, navigation}) {
                                   }
                                   else{
                                     let body = new FormData();
-									params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
-									body.append('params',JSON.stringify(params));
+                                    params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
+                                    body.append('params',JSON.stringify(params));
                                     body.append('token',token);
                                     fetch('http://' + constantes.BDD + '/APP/AP_UPD_SUIVI_ACTIVITE/', {
                                       method: 'POST',
@@ -316,14 +335,14 @@ function activiteScreen({route, navigation}) {
                   // écrire et envoyer le commentaire
                   onPress={() => {setModalVisibleCommentaireAbsence(!modalVisibleCommentaireAbsence);
                                   let body = new FormData();
-								  params = {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
-								  body.append('params',JSON.stringify(params));
+                                  params = {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
+                                  body.append('params',JSON.stringify(params));
                                   body.append('token',token);
                                   fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/", {
                                     method: 'POST',
                                     body: body})
                                       .then((response) => checkFetch(response))
-                                      .then((texte) =>  {console.info("changement statut : absent :"); console.log(texte); setUpToDate(false); setComment("")})
+                                      .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut : absent :"); console.log(texte); setUpToDate(false); setComment("")})
                                       .catch((error) => {setUpToDate(false); setComment(""); handleError (error)});
 
                                 }}
@@ -378,8 +397,8 @@ function activiteScreen({route, navigation}) {
                       <Text style={[styles.info, {fontWeight: "bold",}]}>Commentaire d'Activité : </Text>
                       <Pressable onPress={() =>  {
                           let body = new FormData();
-						  params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour};
-						  body.append('params',JSON.stringify(params));
+                          params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour};
+                          body.append('params',JSON.stringify(params));
                           body.append('token',token);
                           fetch('http://' + constantes.BDD + '/APP/AP_LST_SUIVI_ACTIVITE/', {
                             method: 'POST',

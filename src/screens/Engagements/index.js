@@ -12,11 +12,17 @@ import styles from '../../styles';
 import ViewStatus from '../../components/viewStatut';
 
 import RNPickerSelect from 'react-native-picker-select';
+import { useToast } from "react-native-toast-notifications";
+import * as Device from 'expo-device';
 
 
 // Fonction Principale
 function engagementScreen({navigation}) {
 
+  // Toast
+  const toast = useToast();
+
+  // basic
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
@@ -126,7 +132,7 @@ function engagementScreen({navigation}) {
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, userID, item.jourpresence, item.idactivite, item.idsite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
                   fctCommentaire={() => {setModalVisibleSet(true); setComment(item.commentaire)}} //TODO get ??
-                  status={item.etat} role="2" align="column-reverse"/>
+                  status={item.etat} role="2" align="column-reverse" id1={userID} id2={userID}/>
       
     </View>
   );
@@ -137,17 +143,17 @@ function engagementScreen({navigation}) {
 
     // Si absent
     if(statut == "Absent"){
-      console.info("Vous êtes actuellement 'Absent'");
+      console.info("Vous êtiez actuellement : 'Absent'");
 	    setLoading(true);
       let body = new FormData();
-	  params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site};
-	  body.append('params',JSON.stringify(params));
+      params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site};
+      body.append('params',JSON.stringify(params));
       body.append('token',token);
       fetch("http://" + bdd + "/APP/AP_DEL_PRESENCE/", {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
-          .then((texte) =>  {console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+          .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
           .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
     }
 
@@ -166,7 +172,7 @@ function engagementScreen({navigation}) {
       // Si non-défini
       else{
 		    setLoading(true);
-        console.info("Vous êtes actuellement 'Non défini'");
+        console.info("Vous étiez actuellement 'Non défini'");
         let body = new FormData();
 	    params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role };
 		body.append('params',JSON.stringify(params));
@@ -175,13 +181,25 @@ function engagementScreen({navigation}) {
           method: 'POST',
           body: body})
             .then((response) => checkFetch(response))
-            .then((texte) =>  {console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+            .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
             .catch((error) => {setUpToDate(false); setLoading(false);; handleError (error)});
       }
       
       // On raffraichie les composants quoi qu'il arrive
       
   }
+
+  // Affiche le toast
+  const toastComponent = (texte, type) => {
+        
+    toast.show(texte, {
+        type: type,
+        position: "bottom",
+        duration: 2000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+  };
 
   // On retourne la flatliste
   return (
@@ -214,14 +232,14 @@ function engagementScreen({navigation}) {
                   onPress={() => {setModalVisibleSet(!modalVisibleSet);
                                   setLoading(true);
                                   let body = new FormData();
-								  params = {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
-								  body.append('params',JSON.stringify(params));
+                                  params = {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
+                                  body.append('params',JSON.stringify(params));
                                   body.append('token',token);
                                   fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/", {
                                     method: 'POST',
                                     body: body})
                                       .then((response) => checkFetch(response))
-                                      .then((texte) =>  {console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
+                                      .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
                                       .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
 
                                     // On raffraichi et reset le commentaire pour la prochaine fois (au dessus)

@@ -3,13 +3,18 @@ import {Linking} from 'react-native';
 import {Pressable, Modal} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import styles from '../styles';
-import * as Clipboard from 'expo-clipboard';;
+import * as Clipboard from 'expo-clipboard';
+import * as Device from 'expo-device';
+import { useToast } from "react-native-toast-notifications";
 
 import {normalizeInputPhone} from './normalizeInputPhone';
 
 const ModalContact = (props) => {
 	
   const [toClipboard, setToClipboard] = useState("");
+
+  // Toast
+  const toast = useToast();
 	  
 	  
   useEffect(() => {
@@ -18,6 +23,19 @@ const ModalContact = (props) => {
 	}
 	setToClipboard("");
   }, [toClipboard]);
+
+
+  // Affiche le toast
+  const toastComponent = (texte) => {
+        
+    toast.show(texte, {
+        type: "normal",
+        position: "bottom",
+        duration: 2000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+  };
 	
 	return(
 	<Modal
@@ -32,8 +50,8 @@ const ModalContact = (props) => {
         <View style={styles.modalContactView}>
 		      <Text style={styles.modalContactTitle}>Informations de contact</Text>
 		      <View style={styles.modalContactContentView}>
-            <Text style={styles.modalText} onPress={() => {setToClipboard(props.mail);alert('Copié dans le presse-papier');}}>{"Mail : " + props.mail}</Text>
-		        <Text style={styles.modalText} onPress={() => {setToClipboard(props.phone);alert('Copié dans le presse-papier');}}>{"Tel : " + normalizeInputPhone(props.phone)}</Text>
+            <Text style={styles.modalText} onPress={() => {setToClipboard(props.mail); Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{"Mail : " + props.mail}</Text>
+		        <Text style={styles.modalText} onPress={() => {setToClipboard(props.phone);Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{"Tel : " + normalizeInputPhone(props.phone)}</Text>
 		      </View>
           <View style={styles.modalContactButtonView}>
             <Pressable

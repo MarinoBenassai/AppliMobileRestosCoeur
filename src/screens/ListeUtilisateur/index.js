@@ -10,11 +10,16 @@ import styles from '../../styles';
 
 import ModalContact from '../../components/modalContact';
 
+import { useToast } from "react-native-toast-notifications";
+
 // Fonction Principale
 function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // on définit les états : data et loading
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+
+  // Toast
+  const toast = useToast();
 
   // Bénévole à chercher
   const [ajout, setAjout] = useState('');
@@ -62,10 +67,10 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
 
   //Fonction d'ajout de bénévole
-  const ajouterBenevole = (benevole) => {
-    console.info("Vous avez ajouter l'id : " + benevole + " " + IDJour + " " + IDActivite + " " + IDSite);
+  const ajouterBenevole = (id, nom, prenom) => {
+    console.info("Vous avez ajouter l'id : " + id + " " + IDJour + " " + IDActivite + " " + IDSite);
     let body = new FormData();
-	  params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":IDJour, "P_IDACTIVITE":IDActivite, "P_IDSITE":IDSite, "P_IDROLE":1 };
+	  params = {"P_IDBENEVOLE":id, "P_JOURPRESENCE":IDJour, "P_IDACTIVITE":IDActivite, "P_IDSITE":IDSite, "P_IDROLE":1 };
 	  body.append('params',JSON.stringify(params));
 	  body.append('token',token);
     fetch("http://" + constantes.BDD + "/APP/AP_INS_PRESENCE/", {
@@ -73,7 +78,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
       body: body})
         .then((response) => checkFetch(response))
         .then((json) =>  {console.info("changement statut !"); console.log(json)})
-        .then( () => goBack() )
+        .then( () => {toastComponent("Ajout : " + prenom + " " + nom); goBack()})
         .catch((error) => handleError (error));
   }
   
@@ -84,7 +89,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
     <View style={[styles.item, styles.BENEVOLE]}>
       {/* Conteneur 1ere colonne : info personne */}
 
-        <Pressable onPress={() => ajouterBenevole(item.idbenevole)} style={{width: "75%"}}>
+        <Pressable onPress={() => ajouterBenevole(item.idbenevole, item.nom, item.prenom)} style={{width: "75%"}}>
         {({ pressed }) => (
           <View style={styles.colomn}>
             <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.prenom}</Text>
@@ -108,6 +113,19 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
       </View>
     </View>
   );
+
+
+  // Affiche le toast
+  const toastComponent = (texte) => {
+        
+    toast.show(texte, {
+        type: "success",
+        position: "bottom",
+        duration: 2000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+  };
 
   // on retourne la flatliste
   return (
