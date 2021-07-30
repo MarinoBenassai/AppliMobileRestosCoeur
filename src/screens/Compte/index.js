@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput, Alert} from 'react-native';
 import * as Crypto from 'expo-crypto';
@@ -19,6 +19,10 @@ const compteScreen = () => {
 
   // Toast
   const toast = useToast();
+
+  const refEmail = useRef(null);
+  const refNewP = useRef(null);
+  const refVerifP = useRef(null);
 
   // Info perso et Info Engagement
   const [dataEngagementDefaut, setDataEngagementDefaut] = useState([]);
@@ -161,12 +165,15 @@ const compteScreen = () => {
                           textContentType='telephoneNumber'
                           keyboardType='phone-pad'
                           onChangeText={handleChangePhone}
+                          blurOnSubmit={false}
+                          onSubmitEditing={() => refEmail.current.focus()}
 						              value = {phone}
                         />
                       </View>
                       <View style={{ flexDirection: "row"}}>
                         <Text style={styles.data}>Email : </Text>
                         <TextInput
+                          ref={refEmail}
                           style={[styles.input, {width: "75%", maxWidth: 400, marginBottom: 5}]}
                           placeholder={dataPerso.email}
                           autoCorrect={false}
@@ -174,6 +181,7 @@ const compteScreen = () => {
                           keyboardType='email-address'
                           onChangeText={text => setMail(text)}
 						              value = {mail}
+                          onKeyPress={(keyPress) => keyPress.keyCode == 13 && changeContact(phone, mail)}
                         />
                       </View>
                       <Button
@@ -198,11 +206,13 @@ const compteScreen = () => {
                           textContentType='password'
                           onChangeText={text => setOldP(text)}
 						              value = {oldP}
+                          onSubmitEditing={() => refNewP.current.focus()}
                         />
                       </View>
                       <View style={{ flexDirection: "row"}}>
                         <Text style={styles.data}>Nouveau mot de passe : </Text>
                         <TextInput
+                          ref={refNewP}
                           style={styles.input}
                           placeholder="******"
                           autoCorrect={false}
@@ -210,11 +220,13 @@ const compteScreen = () => {
                           textContentType='newPassword'
                           onChangeText={text => setNewP(text)}
 						              value = {newP}
+                          onSubmitEditing={() => refVerifP.current.focus()}
                         />
                       </View>
                       <View style={{ flexDirection: "row"}}>
                         <Text style={styles.data}>Confirmation mot de passe : </Text>
                         <TextInput
+                          ref={refVerifP}
                           style={[styles.input, {marginBottom: 5}]}
                           placeholder="******"
                           autoCorrect={false}
@@ -222,6 +234,7 @@ const compteScreen = () => {
                           textContentType='newPassword'
                           onChangeText={text => setVerifP(text)}
 						              value = {verifP}
+                          onKeyPress={(keyPress) => keyPress.keyCode == 13 && changeMdP(oldP, newP, verifP)}
                         />
                       </View>
                       <Button

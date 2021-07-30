@@ -22,6 +22,9 @@ function engagementScreen({navigation}) {
   // Toast
   const toast = useToast();
 
+  const [myCtrl, setMyCtrl] = useState(false);
+  const [myCarret, setMyCarret] = useState(0);
+
   // basic
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -131,7 +134,7 @@ function engagementScreen({navigation}) {
 
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, userID, item.jourpresence, item.idactivite, item.idsite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
-                  fctCommentaire={() => {setModalVisibleSet(true); setComment(item.commentaire)}} //TODO get ??
+                  fctCommentaire={() => {setModalVisibleSet(true); setComment(item.commentaire); setInfoComment([ item.jourpresence, item.idactivite, item.idsite ])}} //TODO get ??
                   status={item.etat} role="2" align="column-reverse" id1={userID} id2={userID}/>
       
     </View>
@@ -201,6 +204,24 @@ function engagementScreen({navigation}) {
       });
   };
 
+  // Met le commentaire d'absence
+  const fctCommentaireAbsence = () => {
+    setModalVisibleSet(!modalVisibleSet);
+    setLoading(true);
+    let body = new FormData();
+    params = {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
+    body.append('params',JSON.stringify(params));
+    body.append('token',token);
+    fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/", {
+      method: 'POST',
+      body: body})
+        .then((response) => checkFetch(response))
+        .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
+        .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
+
+      // On raffraichi et reset le commentaire pour la prochaine fois (au dessus)
+  }
+
   // On retourne la flatliste
   return (
 
@@ -220,31 +241,21 @@ function engagementScreen({navigation}) {
                 multiline
                 numberOfLines={3}
                 onChangeText={setComment}
-                defaultValue={comment}
+                value={comment}
                 placeholder="Raison de votre absence"
                 autoCompleteType="off"
+                onSelectionChange={(event) => setMyCarret(event.nativeEvent.selection.end)}
+                onKeyUp={(keyUp) => keyUp.keyCode == 17 && setMyCtrl(false)}
+                onKeyPress={(keyPress) => { (!myCtrl && keyPress.keyCode == 13) && fctCommentaireAbsence();
+                                            (keyPress.keyCode == 13) && setComment(comment.slice(0, myCarret) + "\n" + comment.slice(myCarret));
+                                            keyPress.keyCode == 17 && setMyCtrl(true)} }
                 maxLength={99}
               />
 
               <View style={styles.modalContactButtonView}>
                 <Pressable
                   style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-end"}}
-                  onPress={() => {setModalVisibleSet(!modalVisibleSet);
-                                  setLoading(true);
-                                  let body = new FormData();
-                                  params = {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
-                                  body.append('params',JSON.stringify(params));
-                                  body.append('token',token);
-                                  fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/", {
-                                    method: 'POST',
-                                    body: body})
-                                      .then((response) => checkFetch(response))
-                                      .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
-                                      .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
-
-                                    // On raffraichi et reset le commentaire pour la prochaine fois (au dessus)
-                    
-                  }}
+                  onPress={() =>  fctCommentaireAbsence()}
                 >
                   {({ pressed }) => (
                     <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black"}]}>Valider</Text>
@@ -269,7 +280,7 @@ function engagementScreen({navigation}) {
         <FlatList
           data={visibleData}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => (index.toString())}
           ListHeaderComponent={
             <>
 

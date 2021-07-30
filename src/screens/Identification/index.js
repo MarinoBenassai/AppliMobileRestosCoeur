@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
 import * as Crypto from 'expo-crypto';
 import * as Notifications from 'expo-notifications';
@@ -14,6 +14,8 @@ import logo from '../../../assets/logoRdC.png';
 import {registerForPushNotificationsAsync} from "../../components/registerForPushNotificationsAsync.js";
 
 export default function IdScreen({navigation}) {
+
+	const refMdp = useRef(null);
 
 	const [textEmail, onChangeTextEmail] = React.useState('');
 	const [textPassword, onChangeTextPassword] = React.useState('');
@@ -106,15 +108,18 @@ export default function IdScreen({navigation}) {
 		textContentType = "emailAddress"
 		autoCompleteType = "email"
 		autoCorrect = {false}
+		onSubmitEditing={() => refMdp.current.focus()}
 	  />
 	  <Text style={styles.idTexte}>Mot de passe</Text>
 	  <TextInput
+	  	ref={refMdp}
 		style={styles.idInput}
 		placeholder="********"
 		secureTextEntry = {true}
         onChangeText={onChangeTextPassword}
 		value={textPassword}
 		textContentType = "password"
+		onKeyPress={(keyPress) => keyPress.keyCode == 13 && checkPassword()}
 
 	  />
 	  <Button

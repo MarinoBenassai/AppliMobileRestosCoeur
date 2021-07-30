@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, useFocusEffect, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
@@ -22,6 +22,11 @@ function activiteScreen({route, navigation}) {
 
   // Toast
   const toast = useToast();
+
+  const refBenef = useRef(null);
+
+  const [myCtrl, setMyCtrl] = useState(false);
+  const [myCarret, setMyCarret] = useState(0);
 
   // basic
   const [isLoading, setLoading] = useState(true);
@@ -141,7 +146,7 @@ function activiteScreen({route, navigation}) {
       <View style={{flexDirection: "row", paddingRight: "1%", justifyContent: "flex-end"}}>
         {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
         <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, item.idbenevole, IDJour, IDActivite, IDSite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
-                    fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.commentaire)}}
+                    fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.commentaire);  setInfoComment([ IDJour, IDActivite, IDSite, item.idbenevole ])}}
                     status={item.etat} role={idRole} align="row" id1={userID} id2={item.idbenevole}/>
 
         {/* Conteneur 3eme colonne */}
@@ -171,10 +176,10 @@ function activiteScreen({route, navigation}) {
     if(statut == "Absent"){
       console.info("Vous êtiez actuellement 'Absent'");
       let body = new FormData();
-	  params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site};
-	  body.append('params',JSON.stringify(params));
-	  body.append('token',token);
-	  fetch("http://" + bdd + "/APP/AP_DEL_PRESENCE/", {
+      params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site};
+      body.append('params',JSON.stringify(params));
+      body.append('token',token);
+      fetch("http://" + bdd + "/APP/AP_DEL_PRESENCE/", {
         method: 'POST',
         body: body})
           .then((response) => checkFetch(response))
@@ -237,6 +242,50 @@ function activiteScreen({route, navigation}) {
       });
   };
 
+  const fctCommentaireActivite = () => {
+    setmodalVisibleCommentaireActivite(false)
+    if(infoActivite == 0){
+      let body = new FormData();
+      params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
+      body.append('params',JSON.stringify(params));
+      body.append('token',token);
+      fetch('http://' + constantes.BDD + '/APP/AP_INS_SUIVI_ACTIVITE/', {
+        method: 'POST',
+        body: body})
+          .then((response) => checkFetch(response))
+          .then((json) => console.log(json))
+          .then(() => {console.info("Nouvelle entrée : commentaire d'activité"); setUpToDate(false)})
+          .catch((error) => {setUpToDate(false); handleError (error)});
+    }
+    else{
+      let body = new FormData();
+      params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
+      body.append('params',JSON.stringify(params));
+      body.append('token',token);
+      fetch('http://' + constantes.BDD + '/APP/AP_UPD_SUIVI_ACTIVITE/', {
+        method: 'POST',
+        body: body})
+          .then((response) => checkFetch(response))
+          .then((texte) => console.log(texte))
+          .then(() => {console.info("update entrée : commentaire d'activité "); setUpToDate(false)})
+          .catch((error) => {setUpToDate(false); handleError (error)});
+    }
+  }
+
+  const fctCommentaireAbsence = () => {
+    setModalVisibleCommentaireAbsence(!modalVisibleCommentaireAbsence);
+    let body = new FormData();
+    params = {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
+    body.append('params',JSON.stringify(params));
+    body.append('token',token);
+    fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/", {
+      method: 'POST',
+      body: body})
+        .then((response) => checkFetch(response))
+        .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut : absent :"); console.log(texte); setUpToDate(false); setComment("")})
+        .catch((error) => {setUpToDate(false); setComment(""); handleError (error)});
+
+  }
 
   // On retourne la flatlist
   return (
@@ -260,45 +309,26 @@ function activiteScreen({route, navigation}) {
                   value={beneficiaireActivite}
                   keyboardType="numeric"
                   maxLength={10}
+                  onSubmitEditing={() => refBenef.current.focus()}
                 />
                 <Text style={styles.modalText}>Commentaire d'activité :</Text>
                 <TextInput
+                  ref={refBenef}
+                  multiline
+                  numberOfLines={3}
                   style={styles.idInput}
                   onChangeText={setCommentActivite}
                   value={commentActivite}
-                  maxLength={99}
+                  onKeyUp={(keyUp) => keyUp.keyCode == 17 && setMyCtrl(false)}
+                  onKeyPress={(keyPress) => { (!myCtrl && keyPress.keyCode == 13) && fctCommentaireActivite();
+                                              (keyPress.keyCode == 13) && setCommentActivite(commentActivite + "\n");
+                                              keyPress.keyCode == 17 && setMyCtrl(true)} }
+                  maxLength={299}
                 />
                 <Pressable
                   style={styles.button}
                   // écrire et envoyer le commentaire
-                  onPress={() => {setmodalVisibleCommentaireActivite(false)
-                                  if(infoActivite == 0){
-                                    let body = new FormData();
-                                    params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
-                                    body.append('params',JSON.stringify(params));
-                                    body.append('token',token);
-                                    fetch('http://' + constantes.BDD + '/APP/AP_INS_SUIVI_ACTIVITE/', {
-                                      method: 'POST',
-                                      body: body})
-                                        .then((response) => checkFetch(response))
-                                        .then((json) => console.log(json))
-                                        .then(() => {console.info("Nouvelle entrée : commentaire d'activité"); setUpToDate(false)})
-                                        .catch((error) => {setUpToDate(false); handleError (error)});
-                                  }
-                                  else{
-                                    let body = new FormData();
-                                    params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
-                                    body.append('params',JSON.stringify(params));
-                                    body.append('token',token);
-                                    fetch('http://' + constantes.BDD + '/APP/AP_UPD_SUIVI_ACTIVITE/', {
-                                      method: 'POST',
-                                      body: body})
-                                        .then((response) => checkFetch(response))
-                                        .then((texte) => console.log(texte))
-                                        .then(() => {console.info("update entrée : commentaire d'activité "); setUpToDate(false)})
-                                        .catch((error) => {setUpToDate(false); handleError (error)});
-                                  }
-                          }}
+                  onPress={() => fctCommentaireActivite()}
                 >
                   {({ pressed }) => (
                     <Text style={[styles.textStyle, {color:pressed?"lightgrey":"black"}]}>Valider</Text>
@@ -321,11 +351,16 @@ function activiteScreen({route, navigation}) {
               <TextInput
                 multiline
                 numberOfLines={3}
-                defaultValue={comment}
+                value={comment}
                 style={[styles.input, {borderWidth: 1}]}
                 onChangeText={setComment}
                 placeholder="Raison de votre absence"
                 autoCompleteType="off"
+                onSelectionChange={(event) => setMyCarret(event.nativeEvent.selection.end)}
+                onKeyUp={(keyUp) => keyUp.keyCode == 17 && setMyCtrl(false)}
+                onKeyPress={(keyPress) => { (!myCtrl && keyPress.keyCode == 13) && fctCommentaireAbsence();
+                                            (keyPress.keyCode == 13) && setComment(comment.slice(0, myCarret) + "\n" + comment.slice(myCarret));
+                                            keyPress.keyCode == 17 && setMyCtrl(true)} }
                 maxLength={99}
               />
               
@@ -333,19 +368,7 @@ function activiteScreen({route, navigation}) {
                 <Pressable
                   style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-end"}}
                   // écrire et envoyer le commentaire
-                  onPress={() => {setModalVisibleCommentaireAbsence(!modalVisibleCommentaireAbsence);
-                                  let body = new FormData();
-                                  params = {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
-                                  body.append('params',JSON.stringify(params));
-                                  body.append('token',token);
-                                  fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/", {
-                                    method: 'POST',
-                                    body: body})
-                                      .then((response) => checkFetch(response))
-                                      .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut : absent :"); console.log(texte); setUpToDate(false); setComment("")})
-                                      .catch((error) => {setUpToDate(false); setComment(""); handleError (error)});
-
-                                }}
+                  onPress={() => fctCommentaireAbsence()}
                 >
                   {({ pressed }) => (
                     <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", textAlign: "center"}]}>Valider</Text>
