@@ -212,7 +212,7 @@ function engagement({navigation}) {
     <engagementStack.Navigator screenOptions = {screenOptionsBase}>
 	  <engagementStack.Screen name="Engagements" component={engagementScreen} options={screenOptionsFirstPage(nav, "Mes engagements")}/>
 	  <engagementStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
-    <engagementStack.Screen name="ListeUtilisateur" component={listeUtilisateurScreen} options={{title: "Ajout d’un bénévole"}}/>
+      <engagementStack.Screen name="ListeUtilisateur" component={listeUtilisateurScreen} options={{title: "Ajout d’un bénévole"}}/>
     </engagementStack.Navigator>
   );
 }
@@ -220,28 +220,28 @@ function engagement({navigation}) {
 function referent({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions= {screenOptionsBase}>
+    <synthRefStack.Navigator screenOptions= {screenOptionsBase}>
 	  <synthRefStack.Screen name="SynthRef" component={referentScreen} options={screenOptionsFirstPage(nav, "Ma synthèse référent") } />
 	  <engagementStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
-    </engagementStack.Navigator>
+    </synthRefStack.Navigator>
   );
 }
 
 function compte({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={screenOptionsBase}>
+    <compteStack.Navigator screenOptions={screenOptionsBase}>
 	  <compteStack.Screen name="Compte" component={compteScreen} options={screenOptionsFirstPage(nav,"Mon compte")} />
-    </engagementStack.Navigator>
+    </compteStack.Navigator>
   );
 }
 
 function contact({navigation}) {
   const nav = navigation
   return (
-    <engagementStack.Navigator screenOptions={screenOptionsBase}>
+    <contactsStack.Navigator screenOptions={screenOptionsBase}>
 	  <contactsStack.Screen name="Contacts" component={contactScreen} options={screenOptionsFirstPage(nav, "Mes contacts")}/>
-    </engagementStack.Navigator>
+    </contactsStack.Navigator>
   );
 }
 
