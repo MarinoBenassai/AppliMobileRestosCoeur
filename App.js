@@ -19,6 +19,8 @@ import engagementScreen from './src/screens/Engagements';
 import referentScreen from './src/screens/SynthRef';
 import activiteScreen from './src/screens/Activite';
 import oublieScreen from './src/screens/MdpOublie';
+import informationScreen from './src/screens/Informations';
+
 import listeUtilisateurScreen from './src/screens/ListeUtilisateur';
 import {checkFetch} from './src/components/checkFetch';
 import {userContext} from './src/contexts/userContext';
@@ -32,8 +34,9 @@ import { ToastProvider } from 'react-native-toast-notifications'
 const engagementStack = createStackNavigator();
 const synthRefStack = createStackNavigator();
 const compteStack = createStackNavigator();
-const contactsStack = createStackNavigator();
+const contactStack = createStackNavigator();
 const identificationStack = createStackNavigator();
+const informationStack = createStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
@@ -170,6 +173,7 @@ export default function App() {
 					<Drawer.Screen name="SynthRef" component={referent} options={{ title: "Ma synthèse référent" }} />
 					<Drawer.Screen name="Compte" component={compte} options={{ title: "Mon compte" }} />
 					<Drawer.Screen name="Contacts" component={contact} options={{ title: "Mes contacts" }} />
+					<Drawer.Screen name="Informations" component={information} options={{ title: "Mes informations" }} />
 					</>
 				)}
 				</Drawer.Navigator>
@@ -207,7 +211,7 @@ const screenOptionsBase = {headerRight: () => (boutonLogOut()), headerStyle: {ba
 function screenOptionsFirstPage (nav, title) {return {title: title, headerLeft: () => (boutonMenu({nav})), headerLeftContainerStyle: {paddingLeft: 20},}}
 
 function engagement({navigation}) {
-  const nav = navigation
+  const nav = navigation;
   return (
     <engagementStack.Navigator screenOptions = {screenOptionsBase}>
 	  <engagementStack.Screen name="Engagements" component={engagementScreen} options={screenOptionsFirstPage(nav, "Mes engagements")}/>
@@ -218,7 +222,7 @@ function engagement({navigation}) {
 }
 
 function referent({navigation}) {
-  const nav = navigation
+  const nav = navigation;
   return (
     <synthRefStack.Navigator screenOptions= {screenOptionsBase}>
 	  <synthRefStack.Screen name="SynthRef" component={referentScreen} options={screenOptionsFirstPage(nav, "Ma synthèse référent") } />
@@ -228,7 +232,7 @@ function referent({navigation}) {
 }
 
 function compte({navigation}) {
-  const nav = navigation
+  const nav = navigation;
   return (
     <compteStack.Navigator screenOptions={screenOptionsBase}>
 	  <compteStack.Screen name="Compte" component={compteScreen} options={screenOptionsFirstPage(nav,"Mon compte")} />
@@ -237,12 +241,21 @@ function compte({navigation}) {
 }
 
 function contact({navigation}) {
-  const nav = navigation
+  const nav = navigation;
   return (
-    <contactsStack.Navigator screenOptions={screenOptionsBase}>
-	  <contactsStack.Screen name="Contacts" component={contactScreen} options={screenOptionsFirstPage(nav, "Mes contacts")}/>
-    </contactsStack.Navigator>
+    <contactStack.Navigator screenOptions={screenOptionsBase}>
+	  <contactStack.Screen name="Contacts" component={contactScreen} options={screenOptionsFirstPage(nav, "Mes contacts")}/>
+    </contactStack.Navigator>
   );
 }
+
+function information({navigation}) {
+	const nav = navigation;
+	return (
+	  <informationStack.Navigator screenOptions={screenOptionsBase}>
+		<informationStack.Screen name="Informations" component={informationScreen} options={screenOptionsFirstPage(nav, "Mes Informations")}/>
+	  </informationStack.Navigator>
+	);
+  }
 
  

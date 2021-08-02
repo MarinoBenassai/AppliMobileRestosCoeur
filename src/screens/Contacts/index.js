@@ -137,11 +137,13 @@ function contactScreen() {
           <Text style = {styles.headerTitle}>Info contact</Text>
         </View>
       </View>
-        <FlatList
-          data={visibleData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        <View style={{flex: 1}}>
+          <FlatList
+            data={visibleData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
       </>
       )}
     </SafeAreaView>

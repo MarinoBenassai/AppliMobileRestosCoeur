@@ -45,6 +45,9 @@ const styles = StyleSheet.create({
   REFERENT: {
     backgroundColor: '#f7d4e8',
   },
+  GENERAL: {
+    backgroundColor: '#b2f772',
+  },
   loading: {
     position: 'absolute',
     left: 0,
