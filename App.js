@@ -122,14 +122,7 @@ export default function App() {
 	fetch('http://' + constantes.BDD + '/APP/AP_LOGOUT/', {
 	    method: 'POST',
 	    body: body})
-	  .then((response) => {
-		if (response.ok) {
-			return response.text();
-		}
-		else {
-			throw new Error('Une erreur est survenue.');
-		}
-	  })
+	  .then((response) => checkFetch(response))
 	  .then((data) => {
 		  setUserID("");
 		  setToken("");
@@ -138,12 +131,11 @@ export default function App() {
 			  SecureStore.deleteItemAsync('token');
 		  }
 	  })
-	  .catch((error) => alert("Une erreur est survenue"));
+	  .catch((error) => handleError(error));
   }
   
   function handleError (erreur) {
 	  if (erreur === "Invalid token"){
-		//TODO message de deconnexion
 		alert("Votre session a expiré, veuillez vous reconnecter");
 		setUserID("");
 		setToken("");
@@ -151,10 +143,10 @@ export default function App() {
 			SecureStore.deleteItemAsync('id');
 			SecureStore.deleteItemAsync('token');
 		}
+		logout();
 	  }
 	  else {
 		alert(erreur);
-		console.error(erreur);
 	  }
   }
   
