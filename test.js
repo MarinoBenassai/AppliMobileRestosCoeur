@@ -1,8 +1,11 @@
-const contact = require('./src/screens/Contacts/index');
+const info = require('./src/screens/Informations/index');
 
 test('test 1', () => {
 
-    const a = render();
+    const a = info.traiter();
+    dataEngagement = [{idrole: 2, idactivite2}];
+    
+    data = [{idrole: 2, idactivite2}];
 
-  expect(sum(1, 2)).toBe(3);
+  expect(a).toBe(data);
 });
