@@ -15,32 +15,19 @@ function oublieScreen({navigation}){
   
   const handleError = React.useContext(userContext).handleError;
   
-  //Paramètres des fetch
-  var params = {}
+  //Fonction de communication avec l'API
+  const sendAPI = React.useContext(userContext).sendAPI;
   
   function resetPassword() {
 	if (textEmail != '') {
 		setLoading(true);
-		let body = new FormData();
-		body.append('email',textEmail);
-		fetch('http://' + constantes.BDD + '/AUT/AP_RST_MOTDEPASSE', {
-		method: 'POST',
-		body: body})	
-		  .then((response) => {
-			if (response.ok) {
-				return response.json();
-			}
-			else {
-				const json = response.json();
-				throw new Error(json['error']);
-			}
-		  })
-		  .then((json) => {
-			  alert("Si cette adresse est associée à un compte, un mail contenant votre nouveau mot de passe vient de vous être envoyé. Votre nouveau mot de passe est " + json["mdp"] +".");
-		      navigation.goBack();
-		  })
-		  .catch((error) => handleError (error))
-		  .finally(() => setLoading(false));
+		sendAPI('AUT', 'AP_RST_MOTDEPASSE',{'email':textEmail})
+		.then((json) => {
+			alert("Si cette adresse est associée à un compte, un mail contenant votre nouveau mot de passe vient de vous être envoyé. Votre nouveau mot de passe est " + json["mdp"] +".");
+			setLoading(false);
+			navigation.goBack();
+		})
+		.catch((error) => {setLoading(false); handleError (error)});
 		  
 	    onChangeTextEmail(""); //On vide le champ email
 	}

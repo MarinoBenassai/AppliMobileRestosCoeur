@@ -42,19 +42,14 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // On récupère les informations données en paramètres
   const { IDActivite, IDSite, IDJour, liste } = route.params;
 
-  //Paramètres des fetch
-  var params = {}
+  //Fonction de communication avec l'API
+  const sendAPI = React.useContext(userContext).sendAPI;
 
   // on va chercher les informations sur la BDD
   useEffect(() => {
-    let body = new FormData();
-    body.append('token',token);
-    fetch('http://' + constantes.BDD + '/APP/AP_ALL_BENEVOLE' , {
-      method: 'POST',
-      body: body})
-        .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json); console.info("Liste Utilisateurs : chargées"); setLoading(false)})
-        .catch((error) => {setLoading(false); handleError (error)});
+	sendAPI('APP', 'AP_ALL_BENEVOLE',{})
+	.then((json) =>  {setData(json); console.info("Liste Utilisateurs : chargées"); setLoading(false)})
+	.catch((error) => {setLoading(false); handleError (error)});
   }, []);
 
   // on met à jour la liste visible
@@ -69,17 +64,10 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   //Fonction d'ajout de bénévole
   const ajouterBenevole = (id, nom, prenom) => {
     console.info("Vous avez ajouter l'id : " + id + " " + IDJour + " " + IDActivite + " " + IDSite);
-    let body = new FormData();
-	  params = {"P_IDBENEVOLE":id, "P_JOURPRESENCE":IDJour, "P_IDACTIVITE":IDActivite, "P_IDSITE":IDSite, "P_IDROLE":1 };
-	  body.append('params',JSON.stringify(params));
-	  body.append('token',token);
-    fetch("http://" + constantes.BDD + "/APP/AP_INS_PRESENCE/", {
-      method: 'POST',
-      body: body})
-        .then((response) => checkFetch(response))
-        .then((json) =>  {console.info("changement statut !"); console.log(json)})
-        .then( () => {toastComponent("Ajout : " + prenom + " " + nom); goBack()})
-        .catch((error) => handleError (error));
+	sendAPI('APP', 'AP_INS_PRESENCE',{"P_IDBENEVOLE":id, "P_JOURPRESENCE":IDJour, "P_IDACTIVITE":IDActivite, "P_IDSITE":IDSite, "P_IDROLE":"1" })
+	.then((json) =>  {console.info("changement statut !"); console.log(json)})
+	.then( () => {toastComponent("Ajout : " + prenom + " " + nom); goBack()})
+	.catch((error) => handleError (error));
   }
   
 

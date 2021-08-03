@@ -52,8 +52,8 @@ function engagementScreen({navigation}) {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
   
-  //Paramètres des fetch
-  var params = {}
+  //Fonction de communication avec l'API
+  const sendAPI = React.useContext(userContext).sendAPI;
   
   // Focntion de chargement de l'activité
   function versActivite({navigation}, item) {
@@ -67,16 +67,9 @@ function engagementScreen({navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-      let body = new FormData();
-	  params = {'P_IDBENEVOLE':userID};
-	  body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_LST_PRE_BEN/', {
-        method: 'POST',
-        body: body})
-          .then((response) => checkFetch(response))
-          .then((json) =>  {console.log("ici"); setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
-          .catch((error) => {setLoading(false);handleError (error)});
+	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID})
+	  .then((json) =>  {console.log("ici"); setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
+	  .catch((error) => {setLoading(false);handleError (error)});
     });
 
 
@@ -89,16 +82,9 @@ function engagementScreen({navigation}) {
   useEffect(() => {
     if(upToDate == false){
       setLoading(true);
-      let body = new FormData();
-	  params = {'P_IDBENEVOLE':userID};
-	  body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_LST_PRE_BEN/', {
-        method: 'POST',
-        body: body})
-          .then((response) => checkFetch(response))
-          .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
-          .catch((error) => {setLoading(false); handleError (error)});
+	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID})
+	  .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
+	  .catch((error) => {setLoading(false); handleError (error)});
     }
   }, [upToDate]);
 
@@ -147,17 +133,10 @@ function engagementScreen({navigation}) {
     // Si absent
     if(statut == "Absent"){
       console.info("Vous êtiez actuellement : 'Absent'");
-	    setLoading(true);
-      let body = new FormData();
-      params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site};
-      body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch("http://" + bdd + "/APP/AP_DEL_PRESENCE/", {
-        method: 'POST',
-        body: body})
-          .then((response) => checkFetch(response))
-          .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
-          .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
+	  setLoading(true);
+	  sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site})
+	  .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+	  .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
     }
 
     // Si présent
@@ -176,16 +155,9 @@ function engagementScreen({navigation}) {
       else{
 		    setLoading(true);
         console.info("Vous étiez actuellement 'Non défini'");
-        let body = new FormData();
-	    params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role };
-		body.append('params',JSON.stringify(params));
-        body.append('token',token);
-        fetch("http://" + bdd + "/APP/AP_INS_PRESENCE/", {
-          method: 'POST',
-          body: body})
-            .then((response) => checkFetch(response))
-            .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
-            .catch((error) => {setUpToDate(false); setLoading(false);; handleError (error)});
+		sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role})
+		.then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+		.catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
       }
       
       // On raffraichie les composants quoi qu'il arrive
@@ -208,18 +180,11 @@ function engagementScreen({navigation}) {
   const fctCommentaireAbsence = () => {
     setModalVisibleSet(!modalVisibleSet);
     setLoading(true);
-    let body = new FormData();
-    params = {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
-    body.append('params',JSON.stringify(params));
-    body.append('token',token);
-    fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/", {
-      method: 'POST',
-      body: body})
-        .then((response) => checkFetch(response))
-        .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
-        .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
+	sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment})
+	.then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
+	.catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
 
-      // On raffraichi et reset le commentaire pour la prochaine fois (au dessus)
+    // On raffraichi et reset le commentaire pour la prochaine fois (au dessus)
   }
 
   // On retourne la flatliste

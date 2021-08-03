@@ -26,10 +26,12 @@ export default function IdScreen({navigation}) {
 	
 	const changeID = React.useContext(userContext).changeID;
 	const changeToken = React.useContext(userContext).changeToken;
+	
+    //Handler des erreurs de serveur
     const handleError = React.useContext(userContext).handleError;
 
-	//Paramètres des fetch
-    var params = {}
+    //Fonction de communication avec l'API
+    const sendAPI = React.useContext(userContext).sendAPI;
 	
 	// On va chercher le token de notification
 /* 	useEffect(() => {
@@ -40,44 +42,20 @@ export default function IdScreen({navigation}) {
   function checkPassword() {
 	if (textEmail != '' && textPassword != '') {
 		setLoading(true);
-		let body = new FormData();
-		body.append('email',textEmail);
-		body.append('motDePasse',textPassword);
-		fetch('http://' + constantes.BDD + '/AUT/AP_LOGIN', {
-		method: 'POST',
-		body: body})
-		.then((response) => { const device = Device.getDeviceTypeAsync(); return Promise.all([response, device]) })
-		.then(async function ([response, device]){
-				if (response.ok) {
-					const a = response.json();
-					const b = registerForPushNotificationsAsync(device);
-
-					return Promise.all([a, b])
-				}
-				else {
-					const json = await response.json();
-					throw json['error'];
-				}
-			})
+		sendAPI('AUT', 'AP_LOGIN', {'email':textEmail, 'motDePasse':textPassword})	
+		.then(async function (data){
 			
-			// TODO : aussi le faire lors de la connexion automatique et pensez à gérer la déconnexion
-			.then(([data, token]) => {
-				//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
-				if (data.tokennotification != token && token != "-1"){
-					let body = new FormData();
-					params = {'P_IDBENEVOLE':data.id, 'P_TOKENNOTIF':token};
-					body.append('params',JSON.stringify(params));
-					body.append('token',data.token);
-					fetch('http://' + constantes.BDD + '/APP/AP_UPD_NOTIF/', {
-					method: 'POST',
-					body: body});
-				}
-				login(data);
-			})
-
-			.catch((error) => {handleError(error); setLoading(false)})
+			const device = await Device.getDeviceTypeAsync();
+			const token = await registerForPushNotificationsAsync(device);
+			
+			//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
+			if (data.tokennotification != token && token != "-1"){
+				sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':data.id, 'P_TOKENNOTIF':token})
+			}
+			login(data);
+		})
+		.catch((error) => {handleError(error); setLoading(false)})
 		  
-
 		onChangeTextPassword(''); //On vide le champ mot de passe
 	}
   }

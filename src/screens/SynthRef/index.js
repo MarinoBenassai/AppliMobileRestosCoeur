@@ -30,8 +30,8 @@ function referentScreen({navigation}) {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
 
-  //Paramètres des fetch
-  var params = {}
+  //Fonction de communication avec l'API
+  const sendAPI = React.useContext(userContext).sendAPI;
 
   // Fonction de sélection de l'activité
   function versActivite({navigation}, item) {
@@ -45,16 +45,9 @@ function referentScreen({navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-      let body = new FormData();
-	  params = {'P_IDBENEVOLE':userID};
-	  body.append('params',JSON.stringify(params));
-	  body.append('token',token);
-    fetch('http://' + constantes.BDD + '/APP/AP_LST_SYN_REF/', {
-    	method: 'POST',
-	    body: body})
-        .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées"); setLoading(false)})
-        .catch((error) => {setLoading(false); handleError (error)});
+	  sendAPI('APP', 'AP_LST_SYN_REF', {'P_IDBENEVOLE':userID})
+	  .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées"); setLoading(false)})
+	  .catch((error) => {setLoading(false); handleError (error)});
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount

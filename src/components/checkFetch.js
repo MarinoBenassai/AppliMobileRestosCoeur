@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert} from 'react-native';
 
-export const  checkFetch = async function(response) {
+export const  checkFetch = async function(response, apCode = 'APP') {
     // console.info("response : " + response + "\n" + response.ok + "\n" + response.status);
 
     const type = response.headers.get('Content-Type');
@@ -11,7 +11,12 @@ export const  checkFetch = async function(response) {
         
         if(response.ok){
             
-            return Object.values(json.data);
+			if (apCode === 'APP') {
+              return Object.values(json.data);
+			}
+			else {
+			  return json;
+			}
         }
         else{
             throw json.error;

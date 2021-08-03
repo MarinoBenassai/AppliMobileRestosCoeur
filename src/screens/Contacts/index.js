@@ -31,21 +31,14 @@ function contactScreen() {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
   
-  //Paramètres des fetch
-  var params = {}
+  //Fonction de communication avec l'API
+  const sendAPI = React.useContext(userContext).sendAPI;
   
   // on va chercher les informations sur la BDD
   useEffect(() => {
-    let body = new FormData();
-	params = {'P_IDBENEVOLE':userID}
-	body.append('params',JSON.stringify(params))
-    body.append('token',token);
-    fetch('http://' + constantes.BDD + '/APP/AP_LST_CONTACT/', {
-      method: 'POST',
-      body: body})
-        .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json); console.info("Infos Contact Référent : chargées"); setLoading(false)})
-        .catch((error) => {setLoading(false); handleError (error)});
+	sendAPI('APP', 'AP_LST_CONTACT', {'P_IDBENEVOLE':userID})
+	.then((json) =>  {setData(json); console.info("Infos Contact Référent : chargées"); setLoading(false)})
+	.catch((error) => {setLoading(false); handleError (error)});
   }, []);
 
   // on met à jour la liste visible initiale
