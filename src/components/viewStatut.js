@@ -20,7 +20,7 @@ function ViewStatus(props) {
     const fctCommentaire = props.fctCommentaire;
 
     if(status == "Présent"){
-        return (<View style={{justifyContent: "center"}}>
+        return (<View style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
             <Pressable onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
                 {({ pressed }) => (
                     <Icon 
@@ -60,7 +60,7 @@ function ViewStatus(props) {
         </View>);
     }
     else if(status == "Absent") {
-        return(<View  style={{justifyContent: "center"}}>
+        return(<View  style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
             <Icon 
                 name='x' 
                 size={size}
@@ -70,7 +70,7 @@ function ViewStatus(props) {
         </View>);
     }
     else{
-        return(<View style={{justifyContent: "center"}}>
+        return(<View style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
             <Pressable onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
                 {({ pressed }) => (
                     <Icon 

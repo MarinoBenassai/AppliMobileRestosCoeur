@@ -348,58 +348,53 @@ function activiteScreen({route, navigation}) {
           data={visibleData}
           ListHeaderComponent={
             <>
-              <View style={{marginTop: 16, }}>
+              <View style={{justifyContent:"flex-start", padding: 0}}>
                 {/* Info générales */}
-                <View style={[styles.item, {justifyContent:"flex-start", padding: 5}]}>
-                  <Text style={[styles.info, {fontWeight: "bold",}]}>Activité : </Text>
-                  <Text style={styles.info}>{NomActivite}</Text>
+                <View style={[styles.item, styles.activite, {justifyContent: "center", paddingTop: 10}]}>
+                  <Text>
+                    <Text>Activité de </Text>
+                    <Text style={{fontWeight: "bold"}}>{NomActivite} </Text>
+                    <Text>à </Text>
+                    <Text style={{fontWeight: "bold"}}>{NomSite} </Text>
+                    <Text>le </Text>
+                    <Text style={{fontWeight: "bold"}}>{IDJour.split(" ")[0].split("-")[2]}/
+                                                        {IDJour.split(" ")[0].split("-")[1]}/
+                                                        {IDJour.split(" ")[0].split("-")[0]} </Text>
+                  </Text>
+
                 </View>
-                <View style={[styles.item, {justifyContent:"flex-start", padding: 5}]}>
-                  <Text style={[styles.info, {fontWeight: "bold",}]}>Site : </Text>
-                  <Text style={styles.info}>{NomSite}</Text>
-                </View>
-                <View style={[styles.item, {justifyContent:"flex-start", padding: 5}]}>
-                  <Text style={[styles.info, {fontWeight: "bold",}]}>Jour : </Text>
-                  <Text style={styles.info}>{IDJour.split(" ")[0].split("-")[2]}/
-                                            {IDJour.split(" ")[0].split("-")[1]}/
-                                            {IDJour.split(" ")[0].split("-")[0]}</Text>
-                </View>
+                <View style={[styles.ligne, styles.browser]}/>
 
                 {/* Icone d'administraion si référent */}
                 {(idRole == "2") &&	
-                  <View >
+                  <View>
 
-                    {/* Comentaire d'activité */}
-                    <View style={[styles.item, {justifyContent:"flex-start", padding: 5, paddingTop: 40}]}>
-                      <Text style={[styles.info, {fontWeight: "bold",}]}>Commentaire d'Activité : </Text>
+                    <View style={[styles.item, styles.activite, {justifyContent: "space-evenly"}]}>
+
                       <Pressable onPress={() =>  {
-						  sendAPI('APP', 'AP_LST_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour})
-                          .then((json) =>  {if( json.length != 0 ){
-                            setInfoActivite(1); console.info("Info commentaire d'activité : chargées");
-                            setCommentActivite(json[0].commentaire); setBeneficiaireActivite(json[0].nombre_beneficiaire || "0");
-                            setLoading(false); setUpToDate(true);}
-                            else{
-                              setInfoActivite(0); console.info("Info commentaire d'activité : chargées");
-                              setCommentActivite(""); setBeneficiaireActivite("0");
-                              setLoading(false); setUpToDate(true);
-                            }})
-                          .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
+                        sendAPI('APP', 'AP_LST_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour})
+                        .then((json) =>  {if( json.length != 0 ){
+                          setInfoActivite(1); console.info("Info commentaire d'activité : chargées");
+                          setCommentActivite(json[0].commentaire); setBeneficiaireActivite(json[0].nombre_beneficiaire || "0");
+                          setLoading(false); setUpToDate(true);}
+                          else{
+                            setInfoActivite(0); console.info("Info commentaire d'activité : chargées");
+                            setCommentActivite(""); setBeneficiaireActivite("0");
+                            setLoading(false); setUpToDate(true);
+                          }})
+                        .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
 
-                          setmodalVisibleCommentaireActivite(true)}}>
-                        {({ pressed }) => (
-                          <Icon 
-                            name='comment-discussion' //repo
-                            size={30}
-                            color={pressed?'darkslategrey':'black'}
-                            style={{paddingLeft: 20}}
-                          />
-                        )}
+                        setmodalVisibleCommentaireActivite(true)}}>
+                          {({ pressed }) => (
+                            <Icon 
+                              name='comment-discussion' //repo
+                              size={30}
+                              color={pressed?'darkslategrey':'black'}
+                              style={{paddingLeft: 20}}
+                            />
+                          )}
                       </Pressable>
-                    </View>
 
-                    {/* onPress={() => {props.setVisible(!props.visible);;}} */}
-                    <View style={[styles.item, {justifyContent:"flex-start", padding: 5}]}>
-                      <Text style={[styles.info, {fontWeight: "bold",}]}>Mail à tous : </Text>
                       <Pressable onPress={() => mailAll()}>
                         {({ pressed }) => (
                           <Icon 
@@ -410,11 +405,7 @@ function activiteScreen({route, navigation}) {
                           />
                         )}
                       </Pressable>
-                    </View>
 
-                    {/* Ajout bénévole */}
-                    <View style={[styles.item, {justifyContent:"flex-start", padding: 5, paddingBottom: 40}]}>
-                      <Text style={[styles.info, {fontWeight: "bold",}]}>Ajout Bénévole : </Text>
                       <Pressable onPress={() => versListe({navigation}, data)}>
                         {({ pressed }) => (
                           <Icon 
@@ -425,21 +416,23 @@ function activiteScreen({route, navigation}) {
                           />
                         )}
                       </Pressable>
+                    
                     </View>
-                
+                    <View style={[styles.ligne, styles.browser]}/>
                   </View>
+                  
                 }
 
               </View>
               
 
               {/* "header" de la flatlist */}
-              <View style={[ styles.item, {paddingBottom: 0, justifyContent: "flex-start", padding: 5}]}>
+              <View style={[ styles.item, styles.activite, {paddingLeft: 10}]}>
                 <Text style={[styles.info, {fontWeight: "bold"}]}>Liste des Engagés :</Text>
               </View>
 
               {/* Réordonnancement - Sélection */}
-              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-between"}}>
+              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 5, flexDirection: "row", justifyContent: "space-between"}}>
                 
                 <RNPickerSelect
                   placeholder={{}}
@@ -513,12 +506,15 @@ const normalizeInputNumber = (value, previousValue) => {
   console.log("prev : " + previousValue);
 
   if(previousValue == 0  && currentValue.length>1){
+    console.log("1");
     return currentValue.replace(/0/g, '');
   }
   else if( currentValue.length === 0 ){
+    console.log("2");
     return '0';
   }
-  else if (!previousValue || value.length > previousValue.length) {
+  else {
+    console.log("3");
     return currentValue;
   }
   
