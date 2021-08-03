@@ -70,18 +70,18 @@ function referentScreen({navigation}) {
         <View style={{flexDirection: "row"}}>
 
           {/* Conteneur 1ere colonne : site */}
-          <View style={[styles.colomn, {width:'25%'}]}>
-            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.nomsite}</Text>
+          <View style={[styles.colomn, {width:'25%', justifyContent: "center", alignSelf: "center"}]}>
+            <Text style= {{color: pressed ? 'white' : 'black', textAlign: "center"}}>{item.nomsite}</Text>
           </View>
 
           {/* Conteneur 2eme colonne : activite */}
           <View style={[styles.colomn, {width:'25%'}]}>
-            <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>{item.nomactivite}</Text>
+            <Text style= {{color: pressed ? 'white' : 'black', textAlign: "center"}}>{item.nomactivite}</Text>
           </View>
 
           {/* Conteneur 3eme colonne : date */}
           <View style={[styles.colomn, {width:'35%'}]}>
-          <Text style= {{color: pressed ? 'white' : 'black',textAlign: "center"}}>
+          <Text style= {{color: pressed ? 'white' : 'black', textAlign: "center"}}>
             {item.jourpresence.split(" ")[0].split("-")[2]}/
             {item.jourpresence.split(" ")[0].split("-")[1]}/
             {item.jourpresence.split(" ")[0].split("-")[0]}</Text>
@@ -130,7 +130,7 @@ function referentScreen({navigation}) {
           <>
             {/*Header de la liste*/}
             <View style = {styles.header}>
-            <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomsite", header, setHeader)}>
+              <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomsite", header, setHeader)}>
                 <Text style = {styles.headerTitle}>Site {header.nomsite}</Text>
               </Pressable>
               <Pressable style={{width:'25%', justifyContent: 'center'}} onPress={() => modeAffichage(data, visibleData, setVisibleData, setAncienMode, ancienMode, "nomactivite", header, setHeader)}>

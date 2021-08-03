@@ -35,7 +35,12 @@ const styles = StyleSheet.create({
 	  fontSize: 15
   },
   info: {
-    fontSize: 20,
+    fontSize: 15,
+  },
+  activite: {
+    alignContent: "center",
+    padding: 0,
+    //paddingLeft: 10
   },
 
   // Couleur dynamique
