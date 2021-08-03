@@ -89,7 +89,7 @@ function informationScreen({navigation}) {
 
 
   // On filtre les informations
-  const traiter = (liste) => {
+  const traiter = () => {
       var liste2 = [];
       for(var i=0; i<data.length; i++){
         const liste3 = dataEngagement.filter( (l) => ( (l.idrole == data[i].idrole || data[i].idrole == "0") && (l.idactivite == data[i].idactivite || data[i].idactivite == "0") ) );

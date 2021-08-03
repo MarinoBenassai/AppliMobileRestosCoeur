@@ -249,7 +249,7 @@ function engagementScreen({navigation}) {
                 onKeyPress={(keyPress) => { (!myCtrl && keyPress.keyCode == 13) && fctCommentaireAbsence();
                                             (keyPress.keyCode == 13) && setComment(comment.slice(0, myCarret) + "\n" + comment.slice(myCarret));
                                             keyPress.keyCode == 17 && setMyCtrl(true)} }
-                maxLength={99}
+                maxLength={999}
               />
 
               <View style={styles.modalContactButtonView}>
