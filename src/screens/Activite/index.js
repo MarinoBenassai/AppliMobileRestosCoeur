@@ -67,6 +67,9 @@ function activiteScreen({route, navigation}) {
 
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
+  
+  //Fonction de communication avec l'API
+  const sendAPI = React.useContext(userContext).sendAPI;
 
   // Fonction de sélection de l'activité
   function versListe({navigation}, liste) {
@@ -83,16 +86,9 @@ function activiteScreen({route, navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-      let body = new FormData();
-	  params = {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour };
-	  body.append('params',JSON.stringify(params));
-	  body.append('token',token);
-	  fetch('http://' + constantes.BDD + '/APP/AP_LST_PRE_EQU/', {
-	    method: 'POST',
-	    body: body})
-        .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées "); setLoading(false); setUpToDate(true)})
-        .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
+	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour })
+	  .then((json) =>  {setData(json);console.info(json); setLoading(false); setUpToDate(true)})
+	  .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -105,16 +101,9 @@ function activiteScreen({route, navigation}) {
     if(!upToDate){
 	  setLoading(true);
       // Update la liste
-      let body = new FormData();
-	  params = {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour};
-	  body.append('params',JSON.stringify(params));
-	  body.append('token',token);
-	  fetch('http://' + constantes.BDD + '/APP/AP_LST_PRE_EQU/', {
-	    method: 'POST',
-	    body: body})
-        .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées "); setLoading(false); setUpToDate(true)})
-        .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
+	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour})
+      .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées "); setLoading(false); setUpToDate(true)})
+      .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
 
       // Update commentaire d'activité (dans le fetch au dessus)
     }
@@ -175,16 +164,9 @@ function activiteScreen({route, navigation}) {
     // Si absent
     if(statut == "Absent"){
       console.info("Vous êtiez actuellement 'Absent'");
-      let body = new FormData();
-      params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site};
-      body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch("http://" + bdd + "/APP/AP_DEL_PRESENCE/", {
-        method: 'POST',
-        body: body})
-          .then((response) => checkFetch(response))
-          .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement status : non défini : "); console.log(texte); setUpToDate(false)})
-          .catch((error) => {setUpToDate(false); handleError (error)});
+	  sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site})
+	  .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement status : non défini : "); console.log(texte); setUpToDate(false)})
+	  .catch((error) => {setUpToDate(false); handleError (error)});
     }
 
     // Si présent
@@ -202,16 +184,9 @@ function activiteScreen({route, navigation}) {
     // Si non-défini
     else{
       console.info("Vous êtiez actuellement 'Non défini'");
-      let body = new FormData();
-	  params = {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role};
-	  body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch("http://" + constantes.BDD + "/APP/AP_INS_PRESENCE/", {
-        method: 'POST',
-        body: body})
-          .then((response) => checkFetch(response))
-          .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut : présent : "); console.log(texte); setUpToDate(false)})
-          .catch((error) => {setUpToDate(false); handleError (error)});
+	  sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role})
+	  .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut : présent : "); console.log(texte); setUpToDate(false)})
+	  .catch((error) => {setUpToDate(false); handleError (error)});
     }
   }
 
@@ -245,45 +220,24 @@ function activiteScreen({route, navigation}) {
   const fctCommentaireActivite = () => {
     setmodalVisibleCommentaireActivite(false)
     if(infoActivite == 0){
-      let body = new FormData();
-      params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
-      body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_INS_SUIVI_ACTIVITE/', {
-        method: 'POST',
-        body: body})
-          .then((response) => checkFetch(response))
-          .then((json) => console.log(json))
-          .then(() => {console.info("Nouvelle entrée : commentaire d'activité"); setUpToDate(false)})
-          .catch((error) => {setUpToDate(false); handleError (error)});
+	  sendAPI('APP', 'AP_INS_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite})
+	  .then((json) => console.log(json))
+	  .then(() => {console.info("Nouvelle entrée : commentaire d'activité"); setUpToDate(false)})
+	  .catch((error) => {setUpToDate(false); handleError (error)});
     }
     else{
-      let body = new FormData();
-      params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite};
-      body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_UPD_SUIVI_ACTIVITE/', {
-        method: 'POST',
-        body: body})
-          .then((response) => checkFetch(response))
-          .then((texte) => console.log(texte))
-          .then(() => {console.info("update entrée : commentaire d'activité "); setUpToDate(false)})
-          .catch((error) => {setUpToDate(false); handleError (error)});
+	  sendAPI('APP', 'AP_UPD_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite})
+	  .then((json) => console.log(json))
+	  .then(() => {console.info("update entrée : commentaire d'activité "); setUpToDate(false)})
+	  .catch((error) => {setUpToDate(false); handleError (error)});
     }
   }
 
   const fctCommentaireAbsence = () => {
     setModalVisibleCommentaireAbsence(!modalVisibleCommentaireAbsence);
-    let body = new FormData();
-    params = {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment};
-    body.append('params',JSON.stringify(params));
-    body.append('token',token);
-    fetch("http://" + constantes.BDD + "/APP/AP_UPD_PRESENCE/", {
-      method: 'POST',
-      body: body})
-        .then((response) => checkFetch(response))
-        .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut : absent :"); console.log(texte); setUpToDate(false); setComment("")})
-        .catch((error) => {setUpToDate(false); setComment(""); handleError (error)});
+    sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment})
+	.then((json) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut : absent :"); console.log(json); setUpToDate(false); setComment("")})
+	.catch((error) => {setUpToDate(false); setComment(""); handleError (error)});
 
   }
 
@@ -419,14 +373,7 @@ function activiteScreen({route, navigation}) {
                     <View style={[styles.item, {justifyContent:"flex-start", padding: 5, paddingTop: 40}]}>
                       <Text style={[styles.info, {fontWeight: "bold",}]}>Commentaire d'Activité : </Text>
                       <Pressable onPress={() =>  {
-                          let body = new FormData();
-                          params = {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour};
-                          body.append('params',JSON.stringify(params));
-                          body.append('token',token);
-                          fetch('http://' + constantes.BDD + '/APP/AP_LST_SUIVI_ACTIVITE/', {
-                            method: 'POST',
-                            body: body})
-                          .then((response) => checkFetch(response))
+						  sendAPI('APP', 'AP_LST_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour})
                           .then((json) =>  {if( json.length != 0 ){
                             setInfoActivite(1); console.info("Info commentaire d'activité : chargées");
                             setCommentActivite(json[0].commentaire); setBeneficiaireActivite(json[0].nombre_beneficiaire || "0");

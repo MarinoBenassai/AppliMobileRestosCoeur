@@ -80,6 +80,16 @@ export default function App() {
 	  .catch((error) => handleError(error));
   }, []);
   
+  async function sendAPI(apCode,sqlCode,params) {
+	  let body = new FormData();
+	  body.append('params',JSON.stringify(params));
+	  body.append('token',token);
+	  const response = await fetch('http://' + constantes.BDD + '/' + apCode + '/' + sqlCode + '/', {
+	    method: 'POST',
+	    body: body});
+	  return checkFetch(response);
+  }
+  
   async function autoConnect() {
 	  
 	  if (Device.brand){
@@ -91,16 +101,8 @@ export default function App() {
 			setToken(token);
 			setUserID(id);
 			const tokennotif = await registerForPushNotificationsAsync(device);
-			let body = new FormData();
-			params = {'P_IDBENEVOLE':id, 'P_TOKENNOTIF':tokennotif};
-			body.append('params',JSON.stringify(params));
-			body.append('token',token);
-			fetch('http://' + constantes.BDD + '/APP/AP_UPD_NOTIF/', {
-			method: 'POST',
-			body: body})
-			.then((response) => checkFetch(response))
+			sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':id, 'P_TOKENNOTIF':tokennotif})
 			.catch((error) => handleError (error));
-			//TODO Vérifier la valeur de retour
 		}
 		await SplashScreen.hideAsync();
 	  }
@@ -118,23 +120,17 @@ export default function App() {
   async function logout() {
 	const device = await Device.getDeviceTypeAsync();
 	const tokennotif = await registerForPushNotificationsAsync(device);
-    let body = new FormData();
-	params = {'P_TOKEN':token,'P_TOKENNOTIF':tokennotif};
-	body.append('params',JSON.stringify(params));
-    body.append('token',token);
-	fetch('http://' + constantes.BDD + '/APP/AP_LOGOUT/', {
-	    method: 'POST',
-	    body: body})
-	  .then((response) => checkFetch(response))
-	  .then((data) => {
-		  setUserID("");
-		  setToken("");
-		  if (Device.brand){
-			  SecureStore.deleteItemAsync('id');
-			  SecureStore.deleteItemAsync('token');
-		  }
-	  })
-	  .catch((error) => handleError(error));
+	
+	sendAPI('APP','AP_LOGOUT',{'P_TOKEN':token,'P_TOKENNOTIF':tokennotif})
+	.then((data) => {
+		setUserID("");
+		setToken("");
+		if (Device.brand){
+			SecureStore.deleteItemAsync('id');
+			SecureStore.deleteItemAsync('token');
+		}
+	})
+	.catch((error) => handleError(error));
   }
   
   function handleError (erreur) {
@@ -161,7 +157,8 @@ export default function App() {
 		logoutUser: logout,
 		changeID: changeID,
 		changeToken: changeToken,
-		handleError: handleError
+		handleError: handleError,
+		sendAPI: sendAPI
 		}}>
 		<NavigationContainer>
 			<Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
