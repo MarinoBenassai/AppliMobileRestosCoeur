@@ -83,11 +83,13 @@ export default function App() {
   async function sendAPI(apCode,sqlCode,params) {
 	  let body = new FormData();
 	  body.append('params',JSON.stringify(params));
-	  body.append('token',token);
+	  if (apCode === 'APP') {
+	    body.append('token',token);
+	  }
 	  const response = await fetch('http://' + constantes.BDD + '/' + apCode + '/' + sqlCode + '/', {
 	    method: 'POST',
 	    body: body});
-	  return checkFetch(response);
+	  return checkFetch(response,apCode);
   }
   
   async function autoConnect() {

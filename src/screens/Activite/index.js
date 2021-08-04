@@ -77,9 +77,6 @@ function activiteScreen({route, navigation}) {
   	  IDActivite: IDActivite, IDSite: IDSite, IDJour: IDJour, liste: liste
   	});
   }
-  
-  //Paramètres des fetch
-  var params = {}
 
   // On va chercher les données
   useEffect(() => {

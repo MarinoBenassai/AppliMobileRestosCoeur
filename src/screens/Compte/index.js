@@ -52,37 +52,23 @@ const compteScreen = () => {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
   
-  //Paramètres des fetch
-  var params = {}
+  //Fonction de communication avec l'API
+  const sendAPI = React.useContext(userContext).sendAPI;
   
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
-    let body = new FormData();
-    params = {'P_IDBENEVOLE':userID};
-    body.append('params',JSON.stringify(params));
-    body.append('token',token);
-    fetch('http://' + constantes.BDD + '/APP/AP_LST_ENG_BEN/', {
-      method: 'POST',
-      body: body})
-        .then((response) => checkFetch(response))
-        .then((json) =>  {setDataEngagementDefaut(json); console.info("Infos Engagement Défaut : chargées")})
-        .catch((error) => handleError (error))
+	sendAPI('APP', 'AP_LST_ENG_BEN',{'P_IDBENEVOLE':userID})
+	.then((json) =>  {setDataEngagementDefaut(json); console.info("Infos Engagement Défaut : chargées")})
+	.catch((error) => handleError (error))
   }, []);
 
   // On récupère les informations personelles
   useEffect(() => {
     if (persoUpToDate === false) {
       setPersoUpToDate(true);
-      let body = new FormData();
-	  params = {'P_IDBENEVOLE':userID};
-	  body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_MON_COMPTE/', {
-        method: 'POST',
-        body: body})
-          .then((response) => checkFetch(response))
-          .then((json) =>  {setDataPerso(json[0]); console.info("Infos Personelles : chargées"); setLoading(false)})
-          .catch((error) => {setLoading(false); handleError (error)});
+	  sendAPI('APP', 'AP_MON_COMPTE',{'P_IDBENEVOLE':userID})
+	  .then((json) =>  {setDataPerso(json[0]); console.info("Infos Personelles : chargées"); setLoading(false)})
+	  .catch((error) => {setLoading(false); handleError (error)});
 	  }
   }, [persoUpToDate]);
 
@@ -315,25 +301,10 @@ const compteScreen = () => {
 	  // tout est bon
 	  else {
 		setLoading(true);
-	    let body = new FormData();
-		body.append('ancienMDP',oldP);
-		body.append('nouveauMDP',newP);
-		body.append('idBenevole',userID);
-		fetch('http://' + constantes.BDD + '/AUT/AP_UPD_MOTDEPASSE', {
-		method: 'POST',
-		body: body})
-		.then(async function (response) {
-			if (response.ok) {
-				return response.json();
-			}
-			else {
-				const json = await response.json();
-				throw json['error'];
-			}
-		})
+		sendAPI('AUT', 'AP_UPD_MOTDEPASSE', {'ancienMDP':oldP, 'nouveauMDP':newP, 'idBenevole':userID})
 		.then((json) => {
-			Device.brand ? toastComponent("Votre mot de passe a bien été modifié.", "success") : alert("Votre mot de passe a bien été modifié.");;
-      setLoading(false);
+			Device.brand ? toastComponent("Votre mot de passe a bien été modifié.", "success") : alert("Votre mot de passe a bien été modifié.");
+            setLoading(false);
 		})
 		.catch((error) => {setLoading(false); handleError (error)});
 
@@ -374,26 +345,18 @@ const compteScreen = () => {
 
 	  if( (phone != dataPerso.telephone) || (mail != dataPerso.email) ){
 
-      let body = new FormData();
-	    params = {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone};
-      body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_UPD_INFO_BENEVOLE/', {
-        method: 'POST',
-        body: body})
-      
-      .then((response) => checkFetch(response))
+      sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone})
       .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
       .catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
 
-	    Device.brand ? toastComponent("Vos informations ont bien été mises à jour.", "success") : alert(
+      Device.brand ? toastComponent("Vos informations ont bien été mises à jour.", "success") : alert(
         "Vos informations ont bien été mises à jour.",
         [
           { text: "OK", onPress: () => console.info("OK ContactPerso Pressed") }
         ]
-  
-        );
-	  }
+
+	    );
+    }
 
     setPhone("");
     setMail("");
