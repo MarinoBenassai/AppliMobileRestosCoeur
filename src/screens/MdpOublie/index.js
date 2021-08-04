@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, TextInput, Button, StatusBar, Pressable, Alert} from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Text, View} from 'react-native';
+import {TextInput, Button} from 'react-native';
 
-import constantes from '../../constantes';
 import styles from '../../styles';
 import {userContext} from '../../contexts/userContext';
-
 
 
 function oublieScreen({navigation}){
   const [textEmail, onChangeTextEmail] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-  const [data, setData] = React.useState('');
   
   const handleError = React.useContext(userContext).handleError;
   
@@ -19,17 +16,27 @@ function oublieScreen({navigation}){
   const sendAPI = React.useContext(userContext).sendAPI;
   
   function resetPassword() {
-	if (textEmail != '') {
-		setLoading(true);
-		sendAPI('AUT', 'AP_RST_MOTDEPASSE',{'email':textEmail})
-		.then((json) => {
-			alert("Si cette adresse est associée à un compte, un mail contenant votre nouveau mot de passe vient de vous être envoyé. Votre nouveau mot de passe est " + json["mdp"] +".");
-			setLoading(false);
-			navigation.goBack();
-		})
-		.catch((error) => {setLoading(false); handleError (error)});
-		  
-	    onChangeTextEmail(""); //On vide le champ email
+	
+	// Regex
+    var regexMail = /^(?:[a-zA-Z0-9!#$%&'*+/=?^_‘{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_‘{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/;
+    
+	if( !regexMail.test(textEmail) ){
+		alert("Email non valide");
+	}
+	else{
+
+		if (textEmail != '') {
+			setLoading(true);
+			sendAPI('AUT', 'AP_RST_MOTDEPASSE',{'email':textEmail})
+			.then((json) => {
+				alert("Si cette adresse est associée à un compte, un mail contenant votre nouveau mot de passe vient de vous être envoyé. Votre nouveau mot de passe est " + json["mdp"] +".");
+				setLoading(false);
+				navigation.goBack();
+			})
+			.catch((error) => {setLoading(false); handleError (error)});
+			
+			onChangeTextEmail(""); //On vide le champ email
+		}
 	}
   }
   

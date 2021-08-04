@@ -220,7 +220,7 @@ const compteScreen = () => {
                           textContentType='newPassword'
                           onChangeText={text => setVerifP(text)}
 						              value = {verifP}
-                          onKeyPress={(keyPress) => keyPress.keyCode == 13 && changeMdP(oldP, newP, verifP)}
+                          onSubmitEditing={() => changeMdP(oldP, newP, verifP)}
                         />
                       </View>
                       <Button
@@ -323,8 +323,6 @@ const compteScreen = () => {
     // Regex
     var regexMail = /^(?:[a-zA-Z0-9!#$%&'*+/=?^_‘{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_‘{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/;
     var regexPhone = /^([0-9]{10})|(\+33[0-9]{9})$/;
-
-    console.log(phone);
 
     // On vérifie les entrées
     if( phone == "" ){

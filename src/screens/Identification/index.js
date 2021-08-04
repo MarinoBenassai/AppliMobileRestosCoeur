@@ -97,7 +97,7 @@ export default function IdScreen({navigation}) {
         onChangeText={onChangeTextPassword}
 		value={textPassword}
 		textContentType = "password"
-		onKeyPress={(keyPress) => keyPress.keyCode == 13 && checkPassword()}
+		onSubmitEditing={() => checkPassword()}
 
 	  />
 	  <Button
