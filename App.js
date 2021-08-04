@@ -54,6 +54,7 @@ Notifications.setNotificationHandler({
 export default function App() {
   const [userID,setUserID] = React.useState("");
   const [token, setToken] = React.useState("");
+  const [estReferent, setReferent] = React.useState(true);
 
   // Notification
   const [notification, setNotification] = useState(false);
@@ -160,7 +161,8 @@ export default function App() {
 		changeID: changeID,
 		changeToken: changeToken,
 		handleError: handleError,
-		sendAPI: sendAPI
+		sendAPI: sendAPI,
+		setReferent: setReferent
 		}}>
 		<NavigationContainer>
 			<Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
@@ -169,7 +171,7 @@ export default function App() {
 				) : (
 					<>
 					<Drawer.Screen name="Engagements" component={engagement} options={{ title: "Mes engagements" }} />
-					<Drawer.Screen name="SynthRef" component={referent} options={{ title: "Ma synthèse référent" }} />
+					{estReferent && <Drawer.Screen name="SynthRef" component={referent} options={{ title: "Ma synthèse référent" }} />}
 					<Drawer.Screen name="Compte" component={compte} options={{ title: "Mon compte" }} />
 					<Drawer.Screen name="Contacts" component={contact} options={{ title: "Mes contacts" }} />
 					<Drawer.Screen name="Informations" component={information} options={{ title: "Mes informations" }} />

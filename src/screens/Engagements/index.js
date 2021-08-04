@@ -55,6 +55,9 @@ function engagementScreen({navigation}) {
   //Fonction de communication avec l'API
   const sendAPI = React.useContext(userContext).sendAPI;
   
+  //Affichage ou non du menu synthese referent
+  const setReferent = React.useContext(userContext).setReferent;
+  
   // Focntion de chargement de l'activité
   function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
@@ -77,6 +80,14 @@ function engagementScreen({navigation}) {
     return unsubscribe;
     
   }, [navigation]);
+
+  useEffect(() => {
+	sendAPI('APP', 'AP_LST_SYN_REF', {'P_IDBENEVOLE':userID})
+	.then(data => setReferent(data.length !== 0))
+    .catch((error) => handleError (error));
+  }, []);
+
+
 
   // Lors d'un changement
   useEffect(() => {
