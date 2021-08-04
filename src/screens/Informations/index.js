@@ -29,35 +29,12 @@ function informationScreen({navigation}) {
   
   //Paramètres des fetch
   var params = {}
-  
-
-  // On va chercher les information d'engagements pour comparer
-  useEffect(() => {
-    // Lors du focus de la page
-    const unsubscribe = navigation.addListener('focus', () => {
-	  setLoading(true);
-      let body = new FormData();
-	  params = {'P_IDBENEVOLE':userID};
-	  body.append('params',JSON.stringify(params));
-      body.append('token',token);
-      fetch('http://' + constantes.BDD + '/APP/AP_LST_PRE_BEN/', {
-        method: 'POST',
-        body: body})
-          .then((response) => checkFetch(response))
-          .then((json) =>  {console.log("ici"); setDataEngagement(json); console.info("Infos Engagement: chargées"); setLoading(false)})
-          .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
-    });
-
-    // Return the function to unsubscribe from the event so it gets removed on unmount
-    return unsubscribe;
-    
-    
-  }, [navigation]);
-
 
   // on va chercher les informations sur la BDD
   useEffect(() => {
     let body = new FormData();
+    params = {'P_IDBENEVOLE':userID};
+    body.append('params',JSON.stringify(params));
     body.append('token',token);
     fetch('http://' + constantes.BDD + '/APP/AP_LST_INFO/' , {
       method: 'POST',

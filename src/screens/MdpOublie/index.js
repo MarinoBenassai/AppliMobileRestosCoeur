@@ -58,6 +58,7 @@ function oublieScreen({navigation}){
 		textContentType = "emailAddress"
 		autoCompleteType = "email"
 		autoCorrect = {false}
+		onSubmitEditing={() => resetPassword()}
 	  />
 	  <Button
 		onPress = {() => resetPassword()}
