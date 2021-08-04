@@ -265,8 +265,9 @@ function referent({navigation}) {
   return (
     <synthRefStack.Navigator screenOptions= {screenOptionsBase}>
 	  <synthRefStack.Screen name="SynthRef" component={referentScreen} options={screenOptionsFirstPage(nav, "Ma synthèse référent") } />
-	  <engagementStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
-    </synthRefStack.Navigator>
+	  <synthRefStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
+	  <synthRefStack.Screen name="ListeUtilisateur" component={listeUtilisateurScreen} options={{title: "Ajout d’un bénévole"}}/>
+	</synthRefStack.Navigator>
   );
 }
 

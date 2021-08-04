@@ -125,8 +125,8 @@ function activiteScreen({route, navigation}) {
 
       {/* Conteneur 1ere colonne */}
       <View style={{ justifyContent:"space-evenly", flexDirection: "column", marginLeft: 10, paddingLeft: "5%"}}>
-        <Text>{item.nom}</Text>
         <Text>{item.prenom}</Text>
+        <Text>{item.nom}</Text>
       </View>
       
       <View style={{flexDirection: "row", paddingRight: "1%", justifyContent: "flex-end"}}>
@@ -469,7 +469,7 @@ function activiteScreen({route, navigation}) {
               {/*Header de la flatlist*/}
               <View style = {[styles.header,{paddingRight: 5}]}>
                 <View style={{width:'50%'}}>
-                  <Text style = {[styles.headerTitle, {textAlign: "left",  marginLeft: 5}]}>Nom/Prénom</Text>
+                  <Text style = {[styles.headerTitle, {textAlign: "left",  marginLeft: 5}]}>Prénom/Nom</Text>
                 </View>
                 <View style={{width:'50%', justifyContent: "flex-end"}}>
                   <Text style = {[styles.headerTitle, {textAlign: "right", paddingRight: 20}]}>Présence/Contacter</Text>

@@ -167,7 +167,7 @@ const compteScreen = () => {
                           keyboardType='email-address'
                           onChangeText={text => setMail(text)}
 						              value = {mail}
-                          onKeyPress={(keyPress) => keyPress.keyCode == 13 && changeContact(phone, mail)}
+                          onSubmitEditing={() => changeContact(phone, mail)}
                         />
                       </View>
                       <Button
@@ -220,7 +220,7 @@ const compteScreen = () => {
                           textContentType='newPassword'
                           onChangeText={text => setVerifP(text)}
 						              value = {verifP}
-                          onKeyPress={(keyPress) => keyPress.keyCode == 13 && changeMdP(oldP, newP, verifP)}
+                          onSubmitEditing={() => changeMdP(oldP, newP, verifP)}
                         />
                       </View>
                       <Button
@@ -319,28 +319,41 @@ const compteScreen = () => {
 	// Fonction de changement d'information de contact
 	function changeContact (phone, mail) {
     phone = phone.replace(/[^\d+]/g, '');
-    phone = phone.replace(/\+/g, '%2B');
 
-	if( (phone != "" && phone != dataPerso.telephone) || (mail != "" && mail != dataPerso.email) ){
-	    
-      if( phone == "" ){
-        phone = dataPerso.telephone;
-      }
-      if( mail == "" ){
-        mail = dataPerso.email;
-      }
+    // Regex
+    var regexMail = /^(?:[a-zA-Z0-9!#$%&'*+/=?^_‘{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_‘{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/;
+    var regexPhone = /^([0-9]{10})|(\+33[0-9]{9})$/;
 
-	sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone})
-	.then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
-	.catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
+    // On vérifie les entrées
+    if( phone == "" ){
+      phone = dataPerso.telephone;
+    }
+    if( mail == "" ){
+      mail = dataPerso.email;
+    }
+    if( !regexMail.test(mail) ){
+      mail = dataPerso.email;
+      alert("Email non valide");
+    }
+    if( !regexPhone.test(phone) ){
+      phone = dataPerso.telephone;
+      alert("Numéro de téléphone non valide");
+    }
 
-	Device.brand ? toastComponent("Vos informations ont bien été mises à jour.", "success") : alert(
-	"Vos informations ont bien été mises à jour.",
-	[
-	  { text: "OK", onPress: () => console.info("OK ContactPerso Pressed") }
-	]
 
-	);
+	  if( (phone != dataPerso.telephone) || (mail != dataPerso.email) ){
+
+      sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone})
+      .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
+      .catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
+
+      Device.brand ? toastComponent("Vos informations ont bien été mises à jour.", "success") : alert(
+        "Vos informations ont bien été mises à jour.",
+        [
+          { text: "OK", onPress: () => console.info("OK ContactPerso Pressed") }
+        ]
+
+	    );
     }
 
     setPhone("");
