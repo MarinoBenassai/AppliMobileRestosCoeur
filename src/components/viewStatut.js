@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import styles from '../styles';
+import {userContext} from '../contexts/userContext';
 
 // Div status
 function ViewStatus(props) {
@@ -18,7 +19,13 @@ function ViewStatus(props) {
 
     const fctStatut = props.fctStatut;
     const fctCommentaire = props.fctCommentaire;
+	
+	const commentaire = props.commentaire;
 
+	const afficherInfoBulle = React.useContext(userContext).afficherInfoBulle;
+	const cacherInfoBulle = React.useContext(userContext).cacherInfoBulle;
+	const refBoutonComentaire = useRef(null);
+	
     if(status == "Présent"){
         return (<View style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
             <Pressable onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
@@ -35,7 +42,10 @@ function ViewStatus(props) {
     }
     else if( (status == "Absent") && ((role == "2") || id1 == id2) ) {
         return(<View style={{ justifyContent:"center", flexDirection: align, alignSelf: "center"}}>
-            <Pressable onPress={fctCommentaire}>
+            <Pressable onPress={fctCommentaire}
+			onHoverIn = {() => {refBoutonComentaire.current.measure((x, y, width, height, pageX, pageY) => afficherInfoBulle(pageX, pageY,commentaire));}}
+			onHoverOut = {cacherInfoBulle}
+			ref = {refBoutonComentaire}>
                 {({ pressed }) => (
                     <Icon 
                         name='note' 

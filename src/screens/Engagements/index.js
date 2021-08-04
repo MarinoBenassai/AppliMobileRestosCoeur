@@ -132,7 +132,7 @@ function engagementScreen({navigation}) {
       {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
       <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, userID, item.jourpresence, item.idactivite, item.idsite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
                   fctCommentaire={() => {setModalVisibleSet(true); setComment(item.commentaire); setInfoComment([ item.jourpresence, item.idactivite, item.idsite ])}} //TODO get ??
-                  status={item.etat} role="2" align="column-reverse" id1={userID} id2={userID}/>
+                  status={item.etat} role="2" align="column-reverse" id1={userID} id2={userID} commentaire = {item.commentaire}/>
       
     </View>
   );

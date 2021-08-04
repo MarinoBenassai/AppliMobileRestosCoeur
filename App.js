@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Button, Text, View, Image, TextInput} from 'react-native';
+import {ActivityIndicator, StyleSheet, Button, Text, View, Image, TextInput} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -40,8 +40,6 @@ const informationStack = createStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
-var params = {};
-
 // handler de notification
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -56,11 +54,44 @@ export default function App() {
   const [token, setToken] = React.useState("");
   const [estReferent, setReferent] = React.useState(true);
 
+
+  //Bulle d'info
+  const [X,setX] = React.useState(0);
+  const [Y,setY] = React.useState(0);
+  const [bulleVisible, setBulleVisible] = React.useState(false);
+  const [messageBulle, setMessageBulle] = React.useState("");
+  
+  function afficherInfoBulle (pageX, pageY, message){
+	setBulleVisible(true);
+	setX(pageX);
+	setY(pageY);
+	setMessageBulle(message);
+  }
+  
+  function cacherInfoBulle (){
+	setBulleVisible(false);
+  }
+
+  const styles = StyleSheet.create({
+  bulle: {
+    position: 'absolute',
+    left: X,
+    right: 0,
+    top: Y,
+    bottom: 0,
+	width: 30,
+	height: 30,
+    backgroundColor: '#FFFFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  });
+
   // Notification
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-//ExponentPushToken[vTpWliDgX7_KFLUO69inj7]
+
   useEffect(() => {
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
@@ -162,26 +193,33 @@ export default function App() {
 		changeToken: changeToken,
 		handleError: handleError,
 		sendAPI: sendAPI,
-		setReferent: setReferent
+		setReferent: setReferent,
+		afficherInfoBulle: afficherInfoBulle,
+		cacherInfoBulle: cacherInfoBulle
 		}}>
-		<NavigationContainer>
-			<Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
-				{userID === "" ? (
-					<Drawer.Screen name="Identification" component = {identification}/>		
-				) : (
-					<>
-					<Drawer.Screen name="Engagements" component={engagement} options={{ title: "Mes engagements" }} />
-					{estReferent && <Drawer.Screen name="SynthRef" component={referent} options={{ title: "Ma synthèse référent" }} />}
-					<Drawer.Screen name="Compte" component={compte} options={{ title: "Mon compte" }} />
-					<Drawer.Screen name="Contacts" component={contact} options={{ title: "Mes contacts" }} />
-					<Drawer.Screen name="Informations" component={information} options={{ title: "Mes informations" }} />
-					</>
-				)}
+			<NavigationContainer>
+				<Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
+					{userID === "" ? (
+						<Drawer.Screen name="Identification" component = {identification}/>		
+					) : (
+						<>
+						<Drawer.Screen name="Engagements" component={engagement} options={{ title: "Mes engagements" }} />
+						{estReferent && <Drawer.Screen name="SynthRef" component={referent} options={{ title: "Ma synthèse référent" }} />}
+						<Drawer.Screen name="Compte" component={compte} options={{ title: "Mon compte" }} />
+						<Drawer.Screen name="Contacts" component={contact} options={{ title: "Mes contacts" }} />
+						<Drawer.Screen name="Informations" component={information} options={{ title: "Mes informations" }} />
+						</>
+					)}
 				</Drawer.Navigator>
 			</NavigationContainer>
+			({bulleVisible &&
+			<View pointerEvents="none" style={styles.bulle}>
+			<Text>{messageBulle}</Text>
+			</View>})
 		</userContext.Provider>
 	</ToastProvider>
   );
+  
 }
 
 const boutonMenu = ({nav}) => <Icon 
@@ -259,4 +297,3 @@ function information({navigation}) {
 	);
   }
 
- 
