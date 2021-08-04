@@ -48,7 +48,7 @@ function informationScreen({navigation}) {
   // on met à jour la liste visible initiale
   useEffect(() => {
     //if(upToDate){
-        setVisibleData( traiter(data) );
+        setVisibleData( (data) );
     //}
   }, [data, dataEngagement]);
 
@@ -64,20 +64,6 @@ function informationScreen({navigation}) {
     </View>
   );
 
-
-  // On filtre les informations
-  const traiter = () => {
-      var liste2 = [];
-      for(var i=0; i<data.length; i++){
-        const liste3 = dataEngagement.filter( (l) => ( (l.idrole == data[i].idrole || data[i].idrole == "0") && (l.idactivite == data[i].idactivite || data[i].idactivite == "0") ) );
-        if(liste3.length > 0){
-            liste2.push(data[i]);
-        }
-    }
-
-
-      return liste2;
-    }
 
 
   const handleClick = (url) => {
