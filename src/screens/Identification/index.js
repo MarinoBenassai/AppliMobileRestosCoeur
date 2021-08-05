@@ -50,7 +50,8 @@ export default function IdScreen({navigation}) {
 			
 			//On n'envoie le token de notification que s'il est différent de celui stocké sur le serveur
 			if (data.tokennotification != token && token != "-1"){
-				sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':data.id, 'P_TOKENNOTIF':token})
+				sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':data.id, 'P_TOKENNOTIF':token}, data.token)
+				.catch((error) => {handleError(error); setLoading(false)});
 			}
 			login(data);
 		})

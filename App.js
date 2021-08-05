@@ -195,11 +195,11 @@ export default function App() {
 	  .catch((error) => handleError(error));
   }, []);
   
-  async function sendAPI(apCode,sqlCode,params) {
+  async function sendAPI(apCode,sqlCode,params, tokenCo = token) {
 	  let body = new FormData();
 	  body.append('params',JSON.stringify(params));
 	  if (apCode === 'APP') {
-	    body.append('token',token);
+	    body.append('token',tokenCo);
 	  }
 	  const response = await fetch('http://' + constantes.BDD + '/' + apCode + '/' + sqlCode + '/', {
 	    method: 'POST',
@@ -218,7 +218,7 @@ export default function App() {
 			setToken(token);
 			setUserID(id);
 			const tokennotif = await registerForPushNotificationsAsync(device);
-			sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':id, 'P_TOKENNOTIF':tokennotif})
+			sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':id, 'P_TOKENNOTIF':tokennotif},token)
 			.catch((error) => handleError (error));
 		}
 		await SplashScreen.hideAsync();
