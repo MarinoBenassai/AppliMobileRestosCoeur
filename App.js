@@ -1,6 +1,7 @@
 import React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import {ActivityIndicator, StyleSheet, Button, Text, View, Image, TextInput} from 'react-native';
+import { useState, useEffect, useRef} from 'react';
+import { useWindowDimensions } from 'react-native';
+import {ActivityIndicator, StyleSheet, Button, Text, View, Image, TextInput, PixelRatio} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -50,40 +51,122 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
+	
   const [userID,setUserID] = React.useState("");
   const [token, setToken] = React.useState("");
   const [estReferent, setReferent] = React.useState(true);
-
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
 
   //Bulle d'info
+  const fSize = 12;
   const [X,setX] = React.useState(0);
   const [Y,setY] = React.useState(0);
   const [bulleVisible, setBulleVisible] = React.useState(false);
   const [messageBulle, setMessageBulle] = React.useState("");
+  const [horizPos,setHorizPos] = React.useState('left');
+  const [vertPos,setVertPos] = React.useState('up');
   
   function afficherInfoBulle (pageX, pageY, message){
+	console.log(windowWidth,windowHeight,pageX, pageY, PixelRatio.get());//, getPixelSizeForLayoutSize(windowWidth), getPixelSizeForLayoutSize(windowHeight));
+	getCoordFromText(message, pageX, pageY);
 	setBulleVisible(true);
-	setX(pageX);
-	setY(pageY);
-	setMessageBulle(message);
   }
   
   function cacherInfoBulle (){
 	setBulleVisible(false);
   }
 
+  function getCoordFromText(comment, X, Y) {
+	setY(Y);
+    setX(X);
+	//On calcule les dimensions maximum de la bulle d'aide
+	var horizSpace = 0;
+	var vertSpace = 0;
+
+	if (X > windowWidth/2){
+		//Il y a plus d'espace à gauche
+		setHorizPos('left');
+		horizSpace = X;
+	}
+	else {
+		//Il y a plus d'espace à droite
+		setHorizPos('right');
+		horizSpace = windowWidth - X;
+	}
+	
+	if (Y > windowHeight/2){
+		//Il y a plus d'espace vers le haut
+		setVertPos('up');
+		vertSpace = Y;
+	}
+	else {
+		//Il y a plus d'espace vers le bas
+		setVertPos('down');
+		vertSpace = windowHeight - Y;
+	}
+
+	var formattedComment = [];
+	const maxNbLines = Math.floor(vertSpace/(fSize * PixelRatio.get()));
+	const maxLength = Math.floor(horizSpace/(fSize * PixelRatio.get()));
+	var currentLength = 0;
+	var nbLines = 0;
+	
+	const lines = comment.split("\n");
+	for (let i = 0; i<lines.length; i++) {
+		nbLines += 1;
+		const words = lines[i].split(" ");
+		for (let j = 0; j<words.length; j++){
+			if ((currentLength + words[j].length) <	maxLength) {
+				currentLength += words[j].length
+				formattedComment.push(words[j]);
+			}
+			else {
+				if ((nbLines + 1) >maxNbLines){
+					formattedComment.push("...")
+					setMessageBulle(" " + formattedComment.join(" ").trim());
+					return;
+				}
+				else {
+					nbLines += 1;
+					currentLength = 0;
+					formattedComment.push(words[j] + "\n");
+				}
+			}
+		}
+		if ((nbLines + 1) > maxNbLines){
+			formattedComment.push("...")
+			setMessageBulle(" " + formattedComment.join(" ").trim());
+			return;
+		}
+		else {
+			nbLines += 1;
+			currentLength = 0;
+			formattedComment[formattedComment.length - 1] += "\n";
+		}
+	}	
+	setMessageBulle(" " + formattedComment.join(" ").trim());
+  }
+
   const styles = StyleSheet.create({
   bulle: {
-    position: 'absolute',
-    left: X,
-    right: 0,
-    top: Y,
-    bottom: 0,
-	width: 30,
-	height: 30,
     backgroundColor: '#FFFFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
+	padding: 5,
+	borderColor: 'black',
+	borderWidth: 1,
+  },
+  bullePlacer: {
+    position: 'fixed',
+	width: horizPos === 'left' ? X : 'auto',
+    left: horizPos === 'left' ? 0 : X,
+	height: vertPos === 'up' ? Y : 'auto',
+    top: vertPos === 'up' ? 0 : Y,
+    backgroundColor: 'transparent',
+	flexDirection: 'row',
+	justifyContent: horizPos === 'left' ? 'flex-end' : 'flex-start',
+	alignItems: vertPos === 'up' ? 'flex-end' : 'flex-start'
   },
   });
 
@@ -212,10 +295,12 @@ export default function App() {
 					)}
 				</Drawer.Navigator>
 			</NavigationContainer>
-			({bulleVisible &&
-			<View pointerEvents="none" style={styles.bulle}>
-			<Text>{messageBulle}</Text>
-			</View>})
+			{(bulleVisible &&
+			<View pointerEvents="none" style={styles.bullePlacer}>
+				<View pointerEvents="none" style={styles.bulle}>
+					<Text style = {{fontSize: fSize}}>{messageBulle}</Text>
+				</View>
+			</View>)}
 		</userContext.Provider>
 	</ToastProvider>
   );
