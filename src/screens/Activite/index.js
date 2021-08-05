@@ -134,7 +134,7 @@ function activiteScreen({route, navigation}) {
         {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
         <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, item.idbenevole, IDJour, IDActivite, IDSite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
                     fctCommentaire={() => {setModalVisibleCommentaireAbsence(true); setComment(item.commentaire);  setInfoComment([ IDJour, IDActivite, IDSite, item.idbenevole ])}}
-                    status={item.etat} role={idRole} align="row" id1={userID} id2={item.idbenevole}/>
+                    status={item.etat} role={idRole} align="row" id1={userID} id2={item.idbenevole} commentaire = {item.commentaire}/>
 
         {/* Conteneur 3eme colonne */}
 
