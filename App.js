@@ -158,7 +158,7 @@ export default function App() {
 	borderWidth: 1,
   },
   bullePlacer: {
-    position: 'fixed',
+    position: Device.brand?'absolute':'fixed',
 	width: horizPos === 'left' ? X : 'auto',
     left: horizPos === 'left' ? 0 : X,
 	height: vertPos === 'up' ? Y : 'auto',
@@ -331,7 +331,7 @@ function identification() {
   );
 }
 
-const screenOptionsBase = {headerRight: () => (boutonLogOut()), headerStyle: {backgroundColor: '#41b495',}, headerRightContainerStyle: {paddingRight: 20},};
+const screenOptionsBase = {headerRight: () => (boutonLogOut()), headerStyle: {backgroundColor: '#e92682'}, headerRightContainerStyle: {paddingRight: 20},};
 function screenOptionsFirstPage (nav, title) {return {title: title, headerLeft: () => (boutonMenu({nav})), headerLeftContainerStyle: {paddingLeft: 20},}}
 
 function engagement({navigation}) {
