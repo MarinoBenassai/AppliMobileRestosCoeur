@@ -119,7 +119,7 @@ const compteScreen = () => {
          <ActivityIndicator size="large" color="#00ff00" />
 	      </View>) : (
         //View Principal, post chargement
-        <View>
+        <View style={{flex: 1}}>
 
           {/* La vue des infos profil (au dessus des activités) se trouve dans le header de la flatlist */}
 
@@ -130,17 +130,19 @@ const compteScreen = () => {
               ListHeaderComponent={
                 <>
                   {/* View du Profil (info, contact, MdP) */}
-                  <View>
+                  <View style={{marginTop: 10}}>
                     {/* View des information de profil */}
-                    <View style={styles.browser}>
-                      <Text style={styles.title}>Profil de :</Text>
-                      <Text style={styles.data}>Nom : {dataPerso.nom}</Text>
-                      <Text style={styles.data}>Prenom : {dataPerso.prenom}</Text>
+                    <View style={[styles.browser]}>
+                      
+                      <Text style={{textAlign: "center"}}>
+                        <Text>Profil de </Text>
+                        <Text style={{fontWeight: "bold"}}>{dataPerso.prenom} {dataPerso.nom}</Text>
+                      </Text>
                       <View style={styles.ligne}/>
                     </View>
 
                     {/* View des informations de contact */}
-                    <View style={styles.browser}>
+                    <View style={[styles.browser, {marginBottom: 10}]}>
                       <Text style={styles.title}>Modification des coordonnées :</Text>
                       <View style={{ flexDirection: "row"}}>
                         <Text style={styles.data}>Téléphone : </Text>
@@ -176,11 +178,10 @@ const compteScreen = () => {
                         color="#841584"
                         accessibilityLabel="Valider vos nouvelles informations de contact"
                       />
-                      <View style={styles.ligne}/>
                     </View>
 
                     {/* View des MdP */}
-                    <View style={styles.browser}>
+                    <View style={[styles.browser, {marginBottom: 10}]}>
                       <Text style={styles.title}>Modification du mot de passe :</Text>
                       <View style={{ flexDirection: "row"}}>
                         <Text style={styles.data}>Ancien mot de passe : </Text>
@@ -229,11 +230,10 @@ const compteScreen = () => {
                         color="#841584"
                         accessibilityLabel="Valider votre nouveau mot de passe"
                       />
-                      <View style={styles.ligne}/>
                     </View>
-					          <View style = {styles.item}>
+					          {/* <View style = {styles.item}>
                       <Text style={styles.title}>Mes Activités</Text>
-					          </View>
+					          </View> */}
 					
 
                     {/*Header de la liste*/}

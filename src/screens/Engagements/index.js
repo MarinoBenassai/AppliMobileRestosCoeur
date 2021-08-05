@@ -3,15 +3,13 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, ActionSheetIOS} from 'react-native';
 import { Dimensions } from 'react-native';
 
-import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
-import {traitementSort} from '../../components/pickerActivite';
 import {traitementFilter} from '../../components/pickerActivite';
 import constantes from '../../constantes';
 import styles from '../../styles';
 import ViewStatus from '../../components/viewStatut';
 
-import RNPickerSelect from 'react-native-picker-select';
+//import RNPickerSelect from 'react-native-picker-select';
 import { useToast } from "react-native-toast-notifications";
 import * as Device from 'expo-device';
 
@@ -43,7 +41,7 @@ function engagementScreen({navigation}) {
   const [affichage, setAffichage] = useState("TOUT"); // ("TOUT", "PRESENT", "ABSENT", "NONDEFINI");
   const [visibleData, setVisibleData] = useState('');
 
-  const [picker, setPicker] = useState("date");
+  //const [picker, setPicker] = useState("date");
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -103,37 +101,45 @@ function engagementScreen({navigation}) {
   // on met à jour la liste visible
   useEffect(() => {
 
-    const tr = traitementSort(picker.toUpperCase(), data, data, 1, 2, 3, 4, 6);
+    //const tr = traitementSort(picker.toUpperCase(), data, data, 1, 2, 3, 4, 6);
 
-    setVisibleData( traitementFilter(affichage, tr) );
+    setVisibleData( traitementFilter(affichage, data) );
 
   }, [data, affichage]);
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
-    // Conteneur Principal de chaque item
-    <View style={[styles.item, styles[item.nomrole]]}>
-      
-      {/* Conteneur 1ere colonne */}
-      <Pressable onPress={() => versActivite({navigation}, item)} style={{width: "75%"}} >
-      {({ pressed }) => (
-        <View style={{flexDirection: "column",}}>
-          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.nomsite}</Text>
-          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.nomactivite}</Text> 
-          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>
-            {item.jourpresence.split(" ")[0].split("-")[2]}/
-            {item.jourpresence.split(" ")[0].split("-")[1]}/
-            {item.jourpresence.split(" ")[0].split("-")[0]}
-          </Text>
-          <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>Participants : {item.nombre_present}</Text>
-        </View> )}
-      </Pressable>
+    <View style={[styles.item, styles[item.nomrole], {paddingVertical: 0}]}>
+      <Pressable onPress={() => versActivite({navigation}, item)} style={{marginVertical: 5, alignSelf: "center", width: "100%", maxWidth: 600, padding: 0, justifyContent: "space-between",}}>
+        {({ pressed }) => (
+        <View style={{flexDirection: "row"}}>
 
-      {/* Conteneur 2eme colonne (modifiable : status + commentaire)*/}
-      <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, userID, item.jourpresence, item.idactivite, item.idsite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
-                  fctCommentaire={() => {setModalVisibleSet(true); setComment(item.commentaire); setInfoComment([ item.jourpresence, item.idactivite, item.idsite ])}} //TODO get ??
-                  status={item.etat} role="2" align="column-reverse" id1={userID} id2={userID}/>
-      
+          {/* Conteneur 1ere colonne : site */}
+          <View style={[styles.colomn, {width:'33%'}]}>
+            <Text style={{color: pressed ? 'white' : 'black',textAlign: "center", fontSize: 12}}>{item.nomsite}</Text>
+            <Text style={{color: pressed ? 'white' : 'black', textAlign: "center", fontSize: 12}}>{item.nomactivite}</Text> 
+          </View>
+
+          {/* Conteneur 2eme colonne : jour */}
+          <View style={[styles.colomn, {width:'33%'}]}>
+          <Text style={{color: pressed ? 'white' : 'black', textAlign: "center", fontSize: 12}}>
+              {item.jourpresence.split(" ")[0].split("-")[2]}/
+              {item.jourpresence.split(" ")[0].split("-")[1]}/
+              {item.jourpresence.split(" ")[0].split("-")[0]}
+            </Text>
+            <Text style={{color: pressed ? 'white' : 'black', textAlign: "center", fontSize: 12}}>Participants : {item.nombre_present}</Text>
+          </View>
+
+          {/* Conteneur 3eme colonne : statut */}
+          <View style={[styles.colomn, {width:'33%'}]}>
+            <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, userID, item.jourpresence, item.idactivite, item.idsite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
+                        fctCommentaire={() => {setModalVisibleSet(true); setComment(item.commentaire); setInfoComment([ item.jourpresence, item.idactivite, item.idsite ])}} //TODO get ??
+                        status={item.etat} role="2" align="row" id1={userID} id2={userID}/>
+          </View>
+
+        </View>
+        )}
+      </Pressable>
     </View>
   );
 
@@ -144,10 +150,10 @@ function engagementScreen({navigation}) {
     // Si absent
     if(statut == "Absent"){
       console.info("Vous êtiez actuellement : 'Absent'");
-	  setLoading(true);
-	  sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site})
-	  .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
-	  .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
+      setLoading(true);
+      sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site})
+      .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+      .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
     }
 
     // Si présent
@@ -166,9 +172,9 @@ function engagementScreen({navigation}) {
       else{
 		    setLoading(true);
         console.info("Vous étiez actuellement 'Non défini'");
-		sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role})
-		.then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
-		.catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
+        sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role})
+        .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+        .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
       }
       
       // On raffraichie les composants quoi qu'il arrive
@@ -191,9 +197,9 @@ function engagementScreen({navigation}) {
   const fctCommentaireAbsence = () => {
     setModalVisibleSet(!modalVisibleSet);
     setLoading(true);
-	sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment})
-	.then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
-	.catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
+    sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment})
+    .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
+    .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
 
     // On raffraichi et reset le commentaire pour la prochaine fois (au dessus)
   }
@@ -261,7 +267,7 @@ function engagementScreen({navigation}) {
             <>
 
               {/* Réordonnancement - Sélection */}
-              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-between"}}>
+              {/* <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20, flexDirection: "row", justifyContent: "space-between"}}>
 
                 <RNPickerSelect
                   placeholder={{}}
@@ -297,15 +303,18 @@ function engagementScreen({navigation}) {
                   InputAccessoryView={() => null}
                 />
                   
-              </View>
+              </View> */}
 			  
               {/*Header de la flatlist*/}
               <View style = {styles.header}>
-                <View style={{width:'50%'}}>
-                  <Text style = {[styles.headerTitle, {textAlign: "left",  marginLeft: 40}]}>Activité</Text>
+                <View style={{width:'33%'}}>
+                  <Text style = {[styles.headerTitle, {textAlign: "center"}]}>Activité</Text>
                 </View>
-                <View style={{width:'50%'}}>
-                  <Text style = {[styles.headerTitle, {textAlign: "right",  marginRight: 20}]}>Présence</Text>
+                <View style={{width:'33%'}}>
+                  <Text style = {[styles.headerTitle, {textAlign: "center"}]}>Infos</Text>
+                </View>
+                <View style={{width:'33%'}}>
+                  <Text style = {[styles.headerTitle, {textAlign: "center"}]}>Présence</Text>
                 </View>
               </View>
             </>
@@ -332,7 +341,7 @@ export default engagementScreen;
 
 
 // Style
-const pickerSelectStyles = StyleSheet.create({
+/* const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     margin: 20,
     fontSize: 16,
@@ -371,3 +380,4 @@ const pickerSelectStyles = StyleSheet.create({
     color: 'black',
   }
 });
+ */

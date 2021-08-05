@@ -3,7 +3,7 @@ import { StyleSheet, Button, Text, View, Image, TextInput, StatusBar} from 'reac
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    marginTop: 0,
     justifyContent: "center",
   },
   // chaque item de la flatlist
@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
 
   // Couleur dynamique
   BENEVOLE: {
-    backgroundColor: '#c8e7df',
+    backgroundColor: "#d0d9d2", //"lightgrey", //'#c8e7df',
   },
   REFERENT: {
-    backgroundColor: '#f7d4e8',
+    backgroundColor: "#e92682", //"#E2017A", //'#f7d4e8',
   },
   GENERAL: {
     backgroundColor: '#b2f772',
@@ -104,16 +104,18 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },  
   title: {
-    fontSize: 20,
-    marginVertical: 16,
+    fontWeight: "bold",
+    fontSize: 15,
+    marginVertical: 5,
     marginHorizontal: 20,
   },
   data: {
-    marginVertical: 10,
+    marginVertical: 5,
     marginHorizontal: 16,
   },
   input: {
-    padding: 7,
+    paddingLeft: 7,
+    marginVertical: 5,
   },
   field: {
     marginVertical: 4,

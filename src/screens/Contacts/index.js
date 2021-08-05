@@ -3,9 +3,8 @@ import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput} from 'react-native';
 import {Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-import RNPickerSelect from 'react-native-picker-select';
+//import RNPickerSelect from 'react-native-picker-select';
 
-import {checkFetch} from '../../components/checkFetch';
 import {traitementSort} from '../../components/pickerActivite';
 import {userContext} from '../../contexts/userContext';
 import ModalContact from '../../components/modalContact';
@@ -22,7 +21,7 @@ function contactScreen() {
   const [mail, setMail] = useState("");
   const [phone, setPhone] = useState("");
 
-  const [picker, setPicker] = useState("nom");
+  //const [picker, setPicker] = useState("nom");
   
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -51,24 +50,24 @@ function contactScreen() {
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal
-    <View style={[styles.item, styles.REFERENT]}>
+    <View style={[styles.item, styles.REFERENT, {paddingVertical: 0}]}>
 
       {/* Conteneur 1ere colonne : info personne */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Text style = {{textAlign: "center"}}>{item.nom}</Text>
-        <Text style = {{textAlign: "center"}}>{item.prenom}</Text>
+        <Text style = {{textAlign: "center", fontSize: 12}}>{item.nom}</Text>
+        <Text style = {{textAlign: "center", fontSize: 12}}>{item.prenom}</Text>
       </View>
 
       {/* Conteneur 2eme colonne : info lieu */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Text style = {{textAlign: "center"}}>{item.jourdefaut}</Text>
-        <Text style = {{textAlign: "center"}}>{item.nomsite}</Text>
-        <Text style = {{textAlign: "center"}}>{item.nomactivite}</Text>
+        <Text style = {{textAlign: "center", fontSize: 12}}>{item.jourdefaut}</Text>
+        <Text style = {{textAlign: "center", fontSize: 12}}>{item.nomsite}</Text>
+        <Text style = {{textAlign: "center", fontSize: 12}}>{item.nomactivite}</Text>
       </View>
 
       {/* Conteneur 3eme colonne : contacter */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Pressable onPress={() => {setMail(item.email);setPhone(item.telephone);setModalVisible(!modalVisible)}}>
+        <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setModalVisible(!modalVisible)}}>
           {({ pressed }) => (
             <Icon 
               style = {{alignSelf: "center"}}
@@ -96,7 +95,7 @@ function contactScreen() {
       <>
 
       {/*Picker*/}
-      <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20}}>
+      {/* <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 20}}>
         <RNPickerSelect
           placeholder={{}}
           useNativeAndroidPickerStyle={true}
@@ -116,7 +115,7 @@ function contactScreen() {
           InputAccessoryView={() => null}
         />
 
-      </View>
+      </View> */}
 
       {/*Header de la liste*/}
       <View style = {styles.header}>
@@ -150,7 +149,7 @@ export default contactScreen;
 
 
 // Style
-const pickerSelectStyles = StyleSheet.create({
+/* const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     margin: 20,
     fontSize: 16,
@@ -189,3 +188,4 @@ const pickerSelectStyles = StyleSheet.create({
     color: 'black',
   }
 });
+ */

@@ -2,17 +2,15 @@ import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, useFocusEffect, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-import RNPickerSelect from 'react-native-picker-select';
+//import RNPickerSelect from 'react-native-picker-select';
 import {Linking} from 'react-native';
 
-import {traitementSort} from '../../components/pickerActivite';
 import {traitementFilter} from '../../components/pickerActivite';
 import {userContext} from '../../contexts/userContext';
 import constantes from '../../constantes';
 import styles from '../../styles';
 import ModalContact from '../../components/modalContact';
 import ViewStatus from '../../components/viewStatut';
-import {checkFetch} from '../../components/checkFetch';
 
 import { useToast } from "react-native-toast-notifications";
 import * as Device from 'expo-device';
@@ -40,6 +38,9 @@ function activiteScreen({route, navigation}) {
   const [modalVisibleCommentaireActivite, setmodalVisibleCommentaireActivite] = useState(false);
   const [modalVisibleContact, setmodalVisibleContact] = useState(false);
 
+  // Icone
+  const [icone, setIcone] = useState('person');
+
   // Pour le commentaire
   const [comment, setComment] = useState('');
   const [infoComment, setInfoComment] = useState(['', '', '', '']);
@@ -52,7 +53,7 @@ function activiteScreen({route, navigation}) {
   // Mode d'affichage
   const [affichage, setAffichage] = useState("TOUT"); // ("TOUT", "PRESENT", "ABSENT", "NONDEFINI");
   const [visibleData, setVisibleData] = useState('');
-  const [picker, setPicker] = useState("prenom");
+  //const [picker, setPicker] = useState("prenom");
 
   //Données pour le modal de contact
   const [mail, setMail] = useState('');
@@ -112,9 +113,9 @@ function activiteScreen({route, navigation}) {
   // on met à jour la liste visible
   useEffect(() => {
     
-    const tr = traitementSort(picker.toUpperCase(), data, data, 0, 0, 4, 3, 0);
+    //const tr = traitementSort(picker.toUpperCase(), data, data, 0, 0, 4, 3, 0);
 
-    setVisibleData( traitementFilter(affichage, tr, 6) );
+    setVisibleData( traitementFilter(affichage, data, 6) );
 
   }, [data, affichage]);
 
@@ -238,11 +239,34 @@ function activiteScreen({route, navigation}) {
 
   }
 
+
+  // change l'affichage
+  const changeAffichage = () => {
+    if(affichage == "TOUT"){
+      setAffichage("PRESENT");
+      setIcone("check");
+    }
+    else if(affichage == "PRESENT"){
+      setAffichage("ABSENT");
+      setIcone("x");
+    }
+    else if(affichage == "ABSENT"){
+      setAffichage("NONDEFINI");
+      setIcone("unverified");
+    }
+    else{
+      setAffichage("TOUT");
+      setIcone("person");
+    }
+    
+    
+  }
+
   // On retourne la flatlist
   return (
     <>
       <SafeAreaView style={styles.container}>	  
-        <View>
+        <View style={{flex: 1}}>
 	        <ModalContact visible = {modalVisibleContact} setVisible = {setmodalVisibleContact} mail = {mail} phone = {phone}/>
           
           <Modal
@@ -406,7 +430,18 @@ function activiteScreen({route, navigation}) {
                       <Pressable onPress={() => versListe({navigation}, data)}>
                         {({ pressed }) => (
                           <Icon 
-                            name='plus' 
+                            name='plus'
+                            size={30}
+                            color={pressed?'darkslategrey':'black'}
+                            style={{paddingLeft: 20}}
+                          />
+                        )}
+                      </Pressable>
+
+                      <Pressable onPress={() => changeAffichage()}>
+                        {({ pressed }) => (
+                          <Icon 
+                            name={icone}
                             size={30}
                             color={pressed?'darkslategrey':'black'}
                             style={{paddingLeft: 20}}
@@ -424,12 +459,12 @@ function activiteScreen({route, navigation}) {
               
 
               {/* "header" de la flatlist */}
-              <View style={[ styles.item, styles.activite, {paddingLeft: 10}]}>
+              {/* <View style={[ styles.item, styles.activite, {paddingLeft: 10}]}>
                 <Text style={[styles.info, {fontWeight: "bold"}]}>Liste des Engagés :</Text>
-              </View>
+              </View> */}
 
               {/* Réordonnancement - Sélection */}
-              <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 5, flexDirection: "row", justifyContent: "space-between"}}>
+              {/* <View style={{alignSelf: "center", width: "100%", maxWidth: 550, paddingTop: 5, flexDirection: "row", justifyContent: "space-between"}}>
                 
                 <RNPickerSelect
                   placeholder={{}}
@@ -464,8 +499,9 @@ function activiteScreen({route, navigation}) {
                   InputAccessoryView={() => null}
                 />
 
-                
-              </View>
+              </View> */}
+
+
               {/*Header de la flatlist*/}
               <View style = {[styles.header,{paddingRight: 5}]}>
                 <View style={{width:'50%'}}>
@@ -522,7 +558,7 @@ export default activiteScreen;
 
 
 // Style
-const pickerSelectStyles = StyleSheet.create({
+/* const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     margin: 20,
     fontSize: 16,
@@ -561,3 +597,4 @@ const pickerSelectStyles = StyleSheet.create({
     color: 'black',
   }
 });
+ */
