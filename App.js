@@ -52,12 +52,12 @@ Notifications.setNotificationHandler({
 
 export default function App() {
 	
-  const [userID,setUserID] = React.useState("");
-  const [token, setToken] = React.useState("");
+  const [userID,setUserID] = React.useState(null);
+  const [token, setToken] = React.useState(null);
   const [estReferent, setReferent] = React.useState(true);
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-
+  const [ready,setReady] = React.useState(false);
   //Bulle d'info
   const fSize = 12;
   const [X,setX] = React.useState(0);
@@ -191,10 +191,36 @@ export default function App() {
   }, []);
   
   useEffect(() => {
-	  autoConnect()
+	  async function splash() {
+		console.log("Show",await SplashScreen.preventAutoHideAsync());
+	  }
+	  splash().
+	  then(() => autoConnect())
 	  .catch((error) => handleError(error));
   }, []);
   
+  useEffect(() => {
+	  if (userID !== null && token !== null){
+		  setReady(true);
+	  }
+  }, [userID, token]);
+  
+  useEffect(() => {
+	  async function hide() {
+		await SplashScreen.hideAsync();
+		if (userID !== "" && token !== "" && userID !== null && token !== null){
+		  const device = await Device.getDeviceTypeAsync();
+		  const tokennotif = await registerForPushNotificationsAsync(device);
+		  sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':userID, 'P_TOKENNOTIF':tokennotif},token)
+		  .catch((error) => handleError (error));
+	    }
+	  }
+	  if (ready){
+		  hide()
+		  .catch((error) => handleError(error));
+	  }
+  }, [ready]);
+
   async function sendAPI(apCode,sqlCode,params, tokenCo = token) {
 	  let body = new FormData();
 	  body.append('params',JSON.stringify(params));
@@ -210,20 +236,17 @@ export default function App() {
   async function autoConnect() {
 	  
 	  if (Device.brand){
-		const device = await Device.getDeviceTypeAsync();
-		await SplashScreen.preventAutoHideAsync();
 		const token = await SecureStore.getItemAsync('token');
 		const id = await SecureStore.getItemAsync('id');
 		if (token !== null && id !== null){
 			setToken(token);
 			setUserID(id);
-			const tokennotif = await registerForPushNotificationsAsync(device);
-			sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':id, 'P_TOKENNOTIF':tokennotif},token)
-			.catch((error) => handleError (error));
 		}
-		await SplashScreen.hideAsync();
+		else {
+			setUserID("");
+			setToken("");
+		}
 	  }
-	  
   }
   
   function changeID(ID) {
@@ -282,7 +305,7 @@ export default function App() {
 		}}>
 			<NavigationContainer>
 				<Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
-					{userID === "" ? (
+					{userID === "" || userID === null ? (
 						<Drawer.Screen name="Identification" component = {identification}/>		
 					) : (
 						<>
