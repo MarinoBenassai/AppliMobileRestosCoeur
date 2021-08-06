@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useRef} from 'react';
-import { useWindowDimensions } from 'react-native';
-import {ActivityIndicator, StyleSheet, Button, Text, View, Image, TextInput, PixelRatio} from 'react-native';
+import { Modal, useWindowDimensions } from 'react-native';
+import {ActivityIndicator, StyleSheet, Button, Text, View, Image, TextInput, PixelRatio, ImageBackground, Pressable} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -21,6 +21,7 @@ import referentScreen from './src/screens/SynthRef';
 import activiteScreen from './src/screens/Activite';
 import oublieScreen from './src/screens/MdpOublie';
 import informationScreen from './src/screens/Informations';
+import styles from './src/styles';
 
 import listeUtilisateurScreen from './src/screens/ListeUtilisateur';
 import {checkFetch} from './src/components/checkFetch';
@@ -31,6 +32,9 @@ import constantes from './src/constantes';
 import {registerForPushNotificationsAsync} from "./src/components/registerForPushNotificationsAsync.js";
 
 import { ToastProvider } from 'react-native-toast-notifications'
+
+import logoVide from './assets/logovide.png';
+
 
 const engagementStack = createStackNavigator();
 const synthRefStack = createStackNavigator();
@@ -148,7 +152,7 @@ export default function App() {
 	setMessageBulle(" " + formattedComment.join(" ").trim());
   }
 
-  const styles = StyleSheet.create({
+  const stylesBulle = StyleSheet.create({
   bulle: {
     backgroundColor: '#FFFFFFFF',
     alignItems: 'center',
@@ -288,6 +292,19 @@ export default function App() {
 		alert(erreur);
 	  }
   }
+
+
+  // modal
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalTexteTitre, setModalTexteTitre] = useState("");
+  const [modalTexte, setModalTexte] = useState("");
+
+  const fctModalApp = (titre, texte) => {
+	  setModalTexteTitre(titre);
+	  setModalTexte(texte);
+	  setModalVisible(true);
+  }
+
   
   return (
 	<ToastProvider>
@@ -301,8 +318,11 @@ export default function App() {
 		sendAPI: sendAPI,
 		setReferent: setReferent,
 		afficherInfoBulle: afficherInfoBulle,
-		cacherInfoBulle: cacherInfoBulle
+		cacherInfoBulle: cacherInfoBulle,
+		fctModalApp: fctModalApp
 		}}>
+
+			
 			<NavigationContainer>
 				<Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
 					{userID === "" || userID === null ? (
@@ -319,11 +339,41 @@ export default function App() {
 				</Drawer.Navigator>
 			</NavigationContainer>
 			{(bulleVisible &&
-			<View pointerEvents="none" style={styles.bullePlacer}>
-				<View pointerEvents="none" style={styles.bulle}>
+			<View pointerEvents="none" style={stylesBulle.bullePlacer}>
+				<View pointerEvents="none" style={stylesBulle.bulle}>
 					<Text style = {{fontSize: fSize}}>{messageBulle}</Text>
 				</View>
 			</View>)}
+
+			<Modal
+				animationType="slide"
+				transparent={true}
+				visible={modalVisible}
+				onRequestClose={() => setModalVisible(false)}
+				>
+				<View style={styles.centeredView}>
+					<ImageBackground source={logoVide} resizeMode="cover" style={styles.modalContactView} imageStyle={styles.modalContactView2}>
+						<Text style={styles.modalContactTitle}>{modalTexteTitre}</Text>
+						<View style={styles.modalContactContentView}>
+							<Text style={styles.modalText}>{modalTexte}</Text>
+						</View>
+
+						<View style={styles.modalContactButtonView}>
+							<Pressable
+								style={styles.buttonAlertModal}
+								onPress={() => {setModalVisible(false);console.info("OK  App Pressed");}}
+							>
+								{({ pressed }) => (
+									<View >
+									<Text style={{color:pressed?"lightgrey":"black", fontWeight: "bold"}}>OK</Text>
+									</View>
+								)}
+							</Pressable>
+						</View>
+					</ImageBackground>
+				</View>
+    		</Modal>
+
 		</userContext.Provider>
 	</ToastProvider>
   );

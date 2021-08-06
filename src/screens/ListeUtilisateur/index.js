@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Linking, TextInput} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
@@ -20,6 +20,8 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
   // Toast
   const toast = useToast();
+
+  const refListe = useRef(null);
 
   // Bénévole à chercher
   const [ajout, setAjout] = useState('');
@@ -48,7 +50,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // on va chercher les informations sur la BDD
   useEffect(() => {
 	sendAPI('APP', 'AP_ALL_BENEVOLE',{})
-	.then((json) =>  {setData(json); console.info("Liste Utilisateurs : chargées"); setLoading(false)})
+	.then((json) =>  {setData(json); console.info("Liste Utilisateurs : chargées"); setLoading(false); refListe.current.focus()})
 	.catch((error) => {setLoading(false); handleError (error)});
   }, []);
 
@@ -129,6 +131,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 		<>
 		  <View>
 			<TextInput
+        ref = {refListe}
 			  style={[, styles.input, styles.item, {backgroundColor: "#ebe0c3"}]}
 			  onChangeText={text => setAjout(text)}
 			  placeholder="Prénom du bénévole à ajouter :"

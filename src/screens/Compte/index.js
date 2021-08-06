@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput, Alert} from 'react-native';
+import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput} from 'react-native';
 import * as Crypto from 'expo-crypto';
 
 import {normalizeInputPhone} from '../../components/normalizeInputPhone';
@@ -54,6 +54,9 @@ const compteScreen = () => {
   
   //Fonction de communication avec l'API
   const sendAPI = React.useContext(userContext).sendAPI;
+
+  // On récupère les fonction pour gérer le modal d'informations
+  const fctModalApp = React.useContext(userContext).fctModalApp;
   
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
@@ -267,35 +270,17 @@ const compteScreen = () => {
 	  // Champs vide
 	  if(oldP == "" || newP == "" || verifP == ""){
     
-      Device.brand ? toastComponent("Au moins un des champs est vide", "warning") : alert(
-        "Champs vide",
-        "\nAu moins un des champs est vide",
-        [
-        { text: "OK", onPress: () => console.info("Vide MdP Pressed") }
-        ]
-      );
+      Device.brand ? toastComponent("Au moins un des champs est vide", "warning") : fctModalApp("Attention", "Au moins un des champs est vide");
 
 	  }
 	  // vérif failled
 	  else if(newP != verifP){
-      Device.brand ? toastComponent("Les champs correspondant au nouveau mot de passe ne sont pas identiques", "danger") : alert(
-        "Erreur Nouveau Mot de Passe",
-        "\nLes champs correspondant au nouveau mot de passe ne sont pas identiques",
-        [
-        { text: "OK", onPress: () => console.info("verif failled MdP Pressed") }
-        ]
-      );
+      Device.brand ? toastComponent("Les champs correspondant au nouveau mot de passe ne sont pas identiques", "danger") : fctModalApp("Attention", "Les champs du nouveau mot de passe ne concordent pas");
 		
 	  }
 	  // Condition (court)
 	  else if(newP.length < 8){
-      Device.brand ? toastComponent("Votre mot de passe doit contenir au moins 8 caractères", "danger") : alert(
-        "Mot de passe trop court",
-        "\nVotre mot de passe doit contenir au moins 8 caractères",
-        [
-        { text: "OK", onPress: () => console.info("test MdP Pressed") }
-        ]
-      );
+      Device.brand ? toastComponent("Votre mot de passe doit contenir au moins 8 caractères", "danger") : fctModalApp("Mot de passe trop court", "Le mot de passe doit contenir au moins 8 caractères");
 
 	  }
 	  // tout est bon
@@ -303,7 +288,7 @@ const compteScreen = () => {
 		setLoading(true);
 		sendAPI('AUT', 'AP_UPD_MOTDEPASSE', {'ancienMDP':oldP, 'nouveauMDP':newP, 'idBenevole':userID})
 		.then((json) => {
-			Device.brand ? toastComponent("Votre mot de passe a bien été modifié.", "success") : alert("Votre mot de passe a bien été modifié.");
+			Device.brand ? toastComponent("Votre mot de passe a bien été modifié.", "success") : fctModalApp("succès", "Votre mot de passe a bien été modifié");
             setLoading(false);
 		})
 		.catch((error) => {setLoading(false); handleError (error)});
@@ -333,11 +318,11 @@ const compteScreen = () => {
     }
     if( !regexMail.test(mail) ){
       mail = dataPerso.email;
-      alert("Email non valide");
+      Device.brand ? toastComponent("Email non valide", "error") : fctModalApp("Attention", "Email non valide");
     }
     if( !regexPhone.test(phone) ){
       phone = dataPerso.telephone;
-      alert("Numéro de téléphone non valide");
+      Device.brand ? toastComponent("Numéro de téléphone non valide", "error") : fctModalApp("Attention", "Numéro de téléphone non valide");
     }
 
 
@@ -347,13 +332,7 @@ const compteScreen = () => {
       .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
       .catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
 
-      Device.brand ? toastComponent("Vos informations ont bien été mises à jour.", "success") : alert(
-        "Vos informations ont bien été mises à jour.",
-        [
-          { text: "OK", onPress: () => console.info("OK ContactPerso Pressed") }
-        ]
-
-	    );
+      Device.brand ? toastComponent("Vos informations ont bien été mises à jour.", "success") : fctModalApp("succès", "Vos informations ont bien été mise à jour");
     }
 
     setPhone("");

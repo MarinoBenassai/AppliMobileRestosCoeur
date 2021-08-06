@@ -137,7 +137,15 @@ const styles = StyleSheet.create({
     marginVertical: 8, 
     justifyContent:"space-evenly",
   },
+
+  buttonAlertModal: {
+    padding: 10,
+    elevation: 2,
+	  alignSelf: "center"
+  },
   modalContactView: {
+    //width: "80%",
+    maxWidth: 400,
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
@@ -151,14 +159,13 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5,
 	  alignSelf: "center",
+    elevation: 5,
   },
   modalContactView2: {
     borderRadius: 20,
 	  paddingBottom: 20,
     alignItems: "center",
-    elevation: 5,
 	  alignSelf: "center",
   },
   modalContactTitle: {

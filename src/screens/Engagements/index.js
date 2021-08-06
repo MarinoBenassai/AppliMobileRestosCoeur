@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View} from 'react-native';
+import { ActivityIndicator, FlatList, Text, View, ImageBackground, ScrollView} from 'react-native';
 import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, ActionSheetIOS} from 'react-native';
 import { Dimensions } from 'react-native';
 
@@ -12,6 +12,8 @@ import ViewStatus from '../../components/viewStatut';
 //import RNPickerSelect from 'react-native-picker-select';
 import { useToast } from "react-native-toast-notifications";
 import * as Device from 'expo-device';
+
+import logoVide from '../../../assets/logovide.png';
 
 
 // Fonction Principale
@@ -215,47 +217,49 @@ function engagementScreen({navigation}) {
           visible={modalVisibleSet}
           onRequestClose={() => {setModalVisibleSet(!modalVisibleSet); setComment("")}}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Commentaire d'Absence :</Text>
-              <TextInput
-                style={[styles.input, {borderWidth: 1}]}
-                multiline
-                numberOfLines={3}
-                onChangeText={setComment}
-                value={comment}
-                placeholder="Raison de votre absence"
-                autoCompleteType="off"
-                onSelectionChange={(event) => setMyCarret(event.nativeEvent.selection.end)}
-                onKeyUp={(keyUp) => keyUp.keyCode == 17 && setMyCtrl(false)}
-                onKeyPress={(keyPress) => { (!myCtrl && keyPress.keyCode == 13) && fctCommentaireAbsence();
-                                            (keyPress.keyCode == 13) && setComment(comment.slice(0, myCarret) + "\n" + comment.slice(myCarret));
-                                            keyPress.keyCode == 17 && setMyCtrl(true)} }
-                maxLength={999}
-              />
+          <ScrollView >
+            <View style={styles.centeredView}>
+              <ImageBackground source={logoVide} resizeMode="cover" style={styles.modalContactView} imageStyle={styles.modalContactView2}>
+                <Text style={styles.modalContactTitle}>Commentaire d'Absence :</Text>
+                <TextInput
+                  style={[styles.input, {borderWidth: 1}]}
+                  multiline
+                  numberOfLines={3}
+                  onChangeText={setComment}
+                  value={comment}
+                  placeholder="Raison de votre absence"
+                  autoCompleteType="off"
+                  onSelectionChange={(event) => setMyCarret(event.nativeEvent.selection.end)}
+                  onKeyUp={(keyUp) => keyUp.keyCode == 17 && setMyCtrl(false)}
+                  onKeyPress={(keyPress) => { (!myCtrl && keyPress.keyCode == 13) && fctCommentaireAbsence();
+                                              (keyPress.keyCode == 13) && setComment(comment.slice(0, myCarret) + "\n" + comment.slice(myCarret));
+                                              keyPress.keyCode == 17 && setMyCtrl(true)} }
+                  maxLength={999}
+                />
 
-              <View style={styles.modalContactButtonView}>
-                <Pressable
-                  style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-end"}}
-                  onPress={() =>  fctCommentaireAbsence()}
-                >
-                  {({ pressed }) => (
-                    <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black"}]}>Valider</Text>
-                  )}
-                </Pressable>
+                <View style={styles.modalContactButtonView}>
+                  <Pressable
+                    style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-end"}}
+                    onPress={() =>  fctCommentaireAbsence()}
+                  >
+                    {({ pressed }) => (
+                      <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>Valider</Text>
+                    )}
+                  </Pressable>
 
-                <Pressable
-                  style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-start"}}
-                  onPress={() => {setModalVisibleSet(!modalVisibleSet);
-                                  setComment("");}}
-                >
-                  {({ pressed }) => (
-                    <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black"}]}>Annuler</Text>
-                  )}
-                </Pressable>
-              </View>
+                  <Pressable
+                    style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-start"}}
+                    onPress={() => {setModalVisibleSet(!modalVisibleSet);
+                                    setComment("");}}
+                  >
+                    {({ pressed }) => (
+                      <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>Annuler</Text>
+                    )}
+                  </Pressable>
+                </View>
+              </ImageBackground>
             </View>
-          </View>
+          </ScrollView>
         </Modal>
       
 		
