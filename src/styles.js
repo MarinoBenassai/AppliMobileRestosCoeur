@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#d0d9d2", //"lightgrey", //'#c8e7df',
   },
   REFERENT: {
-    backgroundColor: "#e92682", //"#E2017A", //'#f7d4e8',
+    backgroundColor: "#f7a823"    //"#e92682", //"#E2017A", //'#f7d4e8',
   },
   GENERAL: {
     backgroundColor: '#b2f772',
@@ -151,6 +151,13 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
+    elevation: 5,
+	  alignSelf: "center",
+  },
+  modalContactView2: {
+    borderRadius: 20,
+	  paddingBottom: 20,
+    alignItems: "center",
     elevation: 5,
 	  alignSelf: "center",
   },

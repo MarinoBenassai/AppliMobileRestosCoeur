@@ -411,7 +411,6 @@ function activiteScreen({route, navigation}) {
                               name='comment-discussion' //repo
                               size={30}
                               color={pressed?'darkslategrey':'black'}
-                              style={{paddingLeft: 20}}
                             />
                           )}
                       </Pressable>
@@ -422,7 +421,6 @@ function activiteScreen({route, navigation}) {
                             name='megaphone' 
                             size={30}
                             color={pressed?'darkslategrey':'black'}
-                            style={{paddingLeft: 20}}
                           />
                         )}
                       </Pressable>
@@ -433,7 +431,6 @@ function activiteScreen({route, navigation}) {
                             name='plus'
                             size={30}
                             color={pressed?'darkslategrey':'black'}
-                            style={{paddingLeft: 20}}
                           />
                         )}
                       </Pressable>
@@ -444,7 +441,6 @@ function activiteScreen({route, navigation}) {
                             name={icone}
                             size={30}
                             color={pressed?'darkslategrey':'black'}
-                            style={{paddingLeft: 20}}
                           />
                         )}
                       </Pressable>
