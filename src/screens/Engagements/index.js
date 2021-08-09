@@ -54,6 +54,9 @@ function engagementScreen({navigation}) {
   
   //Affichage ou non du menu synthese referent
   const setReferent = React.useContext(userContext).setReferent;
+
+  //Affichage ou non du menu synthese responsable
+  const setResponsable = React.useContext(userContext).setResponsable;
   
   // Focntion de chargement de l'activité
   function versActivite({navigation}, item) {
@@ -84,6 +87,11 @@ function engagementScreen({navigation}) {
     .catch((error) => handleError (error));
   }, []);
 
+  useEffect(() => {
+    sendAPI('APP', 'AP_LST_SYN_RESP', {'P_IDBENEVOLE':userID})
+    .then(data => setResponsable(data.length !== 0))
+      .catch((error) => handleError (error));
+  }, []);
 
 
   // Lors d'un changement

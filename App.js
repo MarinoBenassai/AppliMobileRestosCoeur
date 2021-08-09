@@ -16,6 +16,7 @@ import compteScreen from './src/screens/Compte';
 import contactScreen from './src/screens/Contacts';
 import engagementScreen from './src/screens/Engagements';
 import referentScreen from './src/screens/SynthRef';
+import responsableScreen from './src/screens/SynthResp';
 import activiteScreen from './src/screens/Activite';
 import oublieScreen from './src/screens/MdpOublie';
 import informationScreen from './src/screens/Informations';
@@ -36,6 +37,7 @@ import logoVide from './assets/logovide.png';
 
 const engagementStack = createStackNavigator();
 const synthRefStack = createStackNavigator();
+const synthRespStack = createStackNavigator();
 const compteStack = createStackNavigator();
 const contactStack = createStackNavigator();
 const identificationStack = createStackNavigator();
@@ -57,6 +59,7 @@ export default function App() {
   const [userID,setUserID] = React.useState(null);
   const [token, setToken] = React.useState(null);
   const [estReferent, setReferent] = React.useState(true);
+  const [estResponsable, setResponsable] = React.useState(true);
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   const [ready,setReady] = React.useState(false);
@@ -274,22 +277,6 @@ export default function App() {
 	})
 	.catch((error) => handleError(error));
   }
-  
-  function handleError (erreur) {
-	  if (erreur === "Invalid token"){
-		alert("Votre session a expiré, veuillez vous reconnecter");
-		setUserID("");
-		setToken("");
-		if (Device.brand){
-			SecureStore.deleteItemAsync('id');
-			SecureStore.deleteItemAsync('token');
-		}
-		logout();
-	  }
-	  else {
-		alert(erreur);
-	  }
-  }
 
 
   // modal
@@ -302,6 +289,26 @@ export default function App() {
 	  setModalTexte(texte);
 	  setModalVisible(true);
   }
+  
+  function handleError (erreur) {
+	  if (erreur === "Invalid token"){
+		fctModalApp("Attention", "Votre session a expiré, veuillez vous reconnecter");
+		setUserID("");
+		setToken("");
+		if (Device.brand){
+			SecureStore.deleteItemAsync('id');
+			SecureStore.deleteItemAsync('token');
+		}
+		logout();
+	  }
+	  else {
+		fctModalApp("Attention", erreur);
+		
+	  }
+  }
+
+
+  
 
   
   return (
@@ -315,6 +322,7 @@ export default function App() {
 		handleError: handleError,
 		sendAPI: sendAPI,
 		setReferent: setReferent,
+		setResponsable: setResponsable,
 		afficherInfoBulle: afficherInfoBulle,
 		cacherInfoBulle: cacherInfoBulle,
 		fctModalApp: fctModalApp
@@ -329,6 +337,7 @@ export default function App() {
 						<>
 						<Drawer.Screen name="Engagements" component={engagement} options={{ title: "Mes engagements" }} />
 						{estReferent && <Drawer.Screen name="SynthRef" component={referent} options={{ title: "Ma synthèse référent" }} />}
+						{estResponsable && <Drawer.Screen name="SynthResp" component={responsable} options={{ title: "Ma synthèse responsable" }} />}
 						<Drawer.Screen name="Compte" component={compte} options={{ title: "Mon compte" }} />
 						<Drawer.Screen name="Contacts" component={contact} options={{ title: "Mes contacts" }} />
 						<Drawer.Screen name="Informations" component={information} options={{ title: "Mes informations" }} />
@@ -426,6 +435,17 @@ function referent({navigation}) {
 	</synthRefStack.Navigator>
   );
 }
+
+function responsable({navigation}) {
+	const nav = navigation;
+	return (
+	  <synthRespStack.Navigator screenOptions= {screenOptionsBase}>
+		<synthRespStack.Screen name="SynthResp" component={responsableScreen} options={screenOptionsFirstPage(nav, "Ma synthèse responsable") } />
+		<synthRespStack.Screen name="Activite" component={activiteScreen} options={{ title: "Détails" }} />
+		<synthRespStack.Screen name="ListeUtilisateur" component={listeUtilisateurScreen} options={{title: "Ajout d’un bénévole"}}/>
+	  </synthRespStack.Navigator>
+	);
+  }
 
 function compte({navigation}) {
   const nav = navigation;

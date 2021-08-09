@@ -1,5 +1,6 @@
 import React, {useRef } from 'react';
 import { Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
+
 import * as Device from 'expo-device';
 import * as SecureStore from 'expo-secure-store';
 

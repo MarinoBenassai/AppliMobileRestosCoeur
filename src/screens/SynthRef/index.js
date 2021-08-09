@@ -9,7 +9,7 @@ import {modeAffichage} from '../../components/modeAffichage';
 // Fonction Principale
 function referentScreen({navigation}) {
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState('');
+  const [data, setData] = useState([]);
 
   // On importe l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
@@ -21,7 +21,7 @@ function referentScreen({navigation}) {
                                         "jourpresence": "\u25B2",
                                         "nombre_present": "",
                                       });
-  const [visibleData, setVisibleData] = useState('');
+  const [visibleData, setVisibleData] = useState([]);
   const [ancienMode, setAncienMode] = useState("jourpresence");
   
   //Handler des erreurs de serveur

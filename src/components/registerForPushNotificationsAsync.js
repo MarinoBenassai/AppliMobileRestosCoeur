@@ -1,14 +1,11 @@
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
 
 // Fonction de création/registration du token de notification
 export const  registerForPushNotificationsAsync = async function (device) {
 	let token = "-1";
 	if (Device.isDevice) {
 		if (!Device.brand){//if(device != "1" && device != "2"){
-			console.log("on sort");
 			return token;
 		}
 		const { status: existingStatus } = await Notifications.getPermissionsAsync();
