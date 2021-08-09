@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
-import * as Crypto from 'expo-crypto';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
@@ -106,6 +105,7 @@ export default function IdScreen({navigation}) {
 		title="CONNEXION"
 		color="#e7007d"
 		accessibilityLabel="Bouton de connexion"
+		testID="LoginButton"
 
 	  />
 	  <Pressable title = "mdp" onPress = {() => navigation.navigate("Oublie")} >

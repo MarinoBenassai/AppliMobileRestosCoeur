@@ -17,7 +17,6 @@
     "@react-navigation/stack": "^5.14.5",
     "expo": "^42.0.0",
     "expo-clipboard": "~1.1.0",
-    "expo-crypto": "~9.2.0",
     "expo-device": "~3.3.0",
     "expo-notifications": "~0.12.3",
     "expo-random": "~11.2.0",
@@ -37,7 +36,12 @@
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
-    "jest": "^27.0.6"
+    "@testing-library/jest-native": "^4.0.2",
+    "@testing-library/react-native": "^7.2.0",
+    "jest": "^27.0.6",
+    "jest-expo": "^42.1.0",
+    "react-test-renderer": "^17.0.2",
+    "ts-jest": "^27.0.4"
   },
   "private": true,
   "homepage": "./"
