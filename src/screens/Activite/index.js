@@ -1,19 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View, ScrollView, ImageBackground} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, useFocusEffect, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/Octicons';
-//import RNPickerSelect from 'react-native-picker-select';
+import {SafeAreaView, Pressable, Modal, TextInput} from 'react-native';
 import {Linking} from 'react-native';
 
 import {traitementFilter} from '../../components/pickerActivite';
 import {userContext} from '../../contexts/userContext';
+
+import { useToast } from "react-native-toast-notifications";
+
+//import RNPickerSelect from 'react-native-picker-select';
+
+import Icon from 'react-native-vector-icons/Octicons';
+import * as Device from 'expo-device';
+
 import constantes from '../../constantes';
 import styles from '../../styles';
 import ModalContact from '../../components/modalContact';
 import ViewStatus from '../../components/viewStatut';
-
-import { useToast } from "react-native-toast-notifications";
-import * as Device from 'expo-device';
 
 import logoVide from '../../../assets/logovide.png';
 
@@ -64,7 +67,6 @@ function activiteScreen({route, navigation}) {
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID;
-  const token = React.useContext(userContext).token;
 
   // On récupère les informations données en paramètres
   const { IDActivite, IDSite, IDJour, NomActivite, NomSite, idRole } = route.params;
@@ -88,7 +90,7 @@ function activiteScreen({route, navigation}) {
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
 	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour })
-	  .then((json) =>  {setData(json);console.info(json); setLoading(false); setUpToDate(true)})
+	  .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées"); setLoading(false); setUpToDate(true)})
 	  .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
     });
 
@@ -103,7 +105,7 @@ function activiteScreen({route, navigation}) {
 	  setLoading(true);
       // Update la liste
 	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour})
-      .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées "); setLoading(false); setUpToDate(true)})
+      .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées"); setLoading(false); setUpToDate(true)})
       .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
 
       // Update commentaire d'activité (dans le fetch au dessus)
@@ -538,20 +540,13 @@ const normalizeInputNumber = (value, previousValue) => {
   if (!value || value == 0 ) return '0';
   const currentValue = value.replace(/[^\d]/g, '');
 
-  console.log("value : " + value);
-  console.log("current : " + currentValue);
-  console.log("prev : " + previousValue);
-
   if(previousValue == 0  && currentValue.length>1){
-    console.log("1");
     return currentValue.replace(/0/g, '');
   }
   else if( currentValue.length === 0 ){
-    console.log("2");
     return '0';
   }
   else {
-    console.log("3");
     return currentValue;
   }
   

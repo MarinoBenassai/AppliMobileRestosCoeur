@@ -1,7 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
-import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
+import React, {useRef } from 'react';
+import { Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
 import * as Device from 'expo-device';
 import * as SecureStore from 'expo-secure-store';
 
@@ -12,6 +10,8 @@ import logo from '../../../assets/logoRdC.png';
 
 import {registerForPushNotificationsAsync} from "../../components/registerForPushNotificationsAsync.js";
 
+
+
 export default function IdScreen({navigation}) {
 
 	const refMdp = useRef(null);
@@ -20,8 +20,6 @@ export default function IdScreen({navigation}) {
 	const [textPassword, onChangeTextPassword] = React.useState('');
 
 	const [loading, setLoading] = React.useState(false);
-
-	const [expoPushToken, setExpoPushToken] = useState('');
 	
 	const changeID = React.useContext(userContext).changeID;
 	const changeToken = React.useContext(userContext).changeToken;
@@ -32,10 +30,6 @@ export default function IdScreen({navigation}) {
     //Fonction de communication avec l'API
     const sendAPI = React.useContext(userContext).sendAPI;
 	
-	// On va chercher le token de notification
-/* 	useEffect(() => {
-		registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-	}, []); */
 
   
   function checkPassword() {

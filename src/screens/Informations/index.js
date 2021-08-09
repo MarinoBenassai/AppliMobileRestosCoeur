@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput} from 'react-native';
+import {SafeAreaView, Pressable} from 'react-native';
 import {Linking} from 'react-native';
-import Icon from 'react-native-vector-icons/Octicons';
 
-import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
-import ModalContact from '../../components/modalContact';
-import constantes from '../../constantes';
 import styles from '../../styles';
 
 // Fonction Principale
@@ -16,52 +12,44 @@ function informationScreen({navigation}) {
   const [isLoading, setLoading] = useState(true);
   const [visibleData, setVisibleData] = useState("");
   const [data, setData] = useState([]);
-  const [dataEngagement, setDataEngagement] = useState([]);
-
-  const [upToDate, setUpToDate] = useState(false);
   
   //récupération de l'id de l'utilisateur courrant
-  const userID = React.useContext(userContext).userID
-  const token = React.useContext(userContext).token
+  const userID = React.useContext(userContext).userID;
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
   
-  //Paramètres des fetch
-  var params = {}
+  //Fonction de communication avec l'API
+  const sendAPI = React.useContext(userContext).sendAPI;
+
 
   // on va chercher les informations sur la BDD
   useEffect(() => {
-    let body = new FormData();
-    params = {'P_IDBENEVOLE':userID};
-    body.append('params',JSON.stringify(params));
-    body.append('token',token);
-    fetch('http://' + constantes.BDD + '/APP/AP_LST_INFO/' , {
-      method: 'POST',
-      body: body})
-        .then((response) => checkFetch(response))
-        .then((json) =>  {setData(json); console.info("Infos Informations : chargées"); setLoading(false)})
-        .catch((error) => {setLoading(false); handleError (error)});
+    setLoading(true);
+    sendAPI('APP', 'AP_LST_INFO', {'P_IDBENEVOLE':userID})
+      .then((json) =>  {setData(json); console.info("Infos Informations : chargées"); setLoading(false)})
+      .catch((error) => {setLoading(false); handleError (error)});
   }, []);
 
 
   // on met à jour la liste visible initiale
   useEffect(() => {
-    //if(upToDate){
         setVisibleData( (data) );
-    //}
-  }, [data, dataEngagement]);
+
+  }, [data]);
 
   
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
     // Conteneur Principal
-    <View style={[{justifyContent: "center"}, styles.item, (item.idrole==2)?styles.REFERENT:(item.idrole==0)?styles.GENERAL:styles.BENEVOLE]}>
-        <Pressable onPress={() => handleClick(item.lien)}>
-            <Text>{item.commentaire}</Text>
+    
+        <Pressable onPress={() => handleClick(item.lien)} style={[{justifyContent: "center"}, styles.item, (item.idrole==2)?styles.REFERENT:(item.idrole==0)?styles.GENERAL:styles.BENEVOLE]}>
+          {({ pressed }) => (
+            <Text style={{color: pressed?"white":"black"}}>{item.commentaire}</Text>
+          )}
         </Pressable>
-    </View>
+    
   );
 
 
@@ -71,7 +59,7 @@ function informationScreen({navigation}) {
       if (supported) {
         Linking.openURL(url);
       } else {
-        console.log("Don't know how to open URI: " + url);
+        console.error("Don't know how to open URI: " + url);
       }
     });
   };

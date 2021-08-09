@@ -1,17 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View, Button} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, TextInput} from 'react-native';
-import * as Crypto from 'expo-crypto';
+import {SafeAreaView, Pressable, TextInput} from 'react-native';
 
 import {normalizeInputPhone} from '../../components/normalizeInputPhone';
-import {checkFetch} from '../../components/checkFetch';
 import {modeAffichage} from '../../components/modeAffichage';
 import {userContext} from '../../contexts/userContext';
-import constantes from '../../constantes';
-import styles from '../../styles';
 
 import { useToast } from "react-native-toast-notifications";
 import * as Device from 'expo-device';
+
+import styles from '../../styles';
+
 
 // Fonction Principale
 const compteScreen = () => {

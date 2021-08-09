@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Linking, TextInput} from 'react-native';
-import Icon from 'react-native-vector-icons/Octicons';
-
-import {checkFetch} from '../../components/checkFetch';
-import {userContext} from '../../contexts/userContext';
-import constantes from '../../constantes';
-import styles from '../../styles';
-
-import ModalContact from '../../components/modalContact';
+import {SafeAreaView, Pressable, TextInput} from 'react-native';
 
 import { useToast } from "react-native-toast-notifications";
+import {userContext} from '../../contexts/userContext';
+
+import Icon from 'react-native-vector-icons/Octicons';
+
+import styles from '../../styles';
+import ModalContact from '../../components/modalContact';
+
+
 
 // Fonction Principale
 function listeUtilisateurScreen({route, navigation: { goBack }}) {
@@ -33,10 +33,6 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   //Données pour le modal de contact
   const [mail, setMail] = useState('');
   const [phone, setPhone] = useState('');
-
-  //récupération de l'id de l'utilisateur courrant
-  const userID = React.useContext(userContext).userID
-  const token = React.useContext(userContext).token
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;

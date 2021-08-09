@@ -1,13 +1,11 @@
 import React from 'react';
 import { useState, useEffect, useRef} from 'react';
 import { Modal, useWindowDimensions } from 'react-native';
-import {ActivityIndicator, StyleSheet, Button, Text, View, Image, TextInput, PixelRatio, ImageBackground, Pressable} from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import {StyleSheet, Text, View, PixelRatio, ImageBackground, Pressable} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Octicons';
-import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 import * as Device from 'expo-device';
 import * as SplashScreen from 'expo-splash-screen';
@@ -72,7 +70,7 @@ export default function App() {
   const [vertPos,setVertPos] = React.useState('up');
   
   function afficherInfoBulle (pageX, pageY, message){
-	console.log(windowWidth,windowHeight,pageX, pageY, PixelRatio.get());//, getPixelSizeForLayoutSize(windowWidth), getPixelSizeForLayoutSize(windowHeight));
+	//console.log(windowWidth,windowHeight,pageX, pageY, PixelRatio.get());//, getPixelSizeForLayoutSize(windowWidth), getPixelSizeForLayoutSize(windowHeight));
 	getCoordFromText(message, pageX, pageY);
 	setBulleVisible(true);
   }

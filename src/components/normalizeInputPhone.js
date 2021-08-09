@@ -1,5 +1,3 @@
-
-
 // Phone only
 export const normalizeInputPhone = (value) => {
     // retourne rien si rien

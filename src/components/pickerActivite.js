@@ -1,13 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View, Pressable} from 'react-native';
-
-
 // on met à jour la liste visible
-export const traitementSort = function(affichage, data, visibleData, activite, site, nom, prenom, participant) {
-    // On traite les données
-    /* const ligne = data.split(/\n/);
-    ligne.shift(); //enlève le premier élement (et le retourne)
-    ligne.pop();   //enlève le dernier élement (et le retourne) */
+export const traitementSort = function(affichage, data, visibleData) {
 
     /* const ligneInit = ligne; */
     const cpyVisibleData = [...visibleData];

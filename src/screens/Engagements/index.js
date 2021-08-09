@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View, ImageBackground, ScrollView} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput, ActionSheetIOS} from 'react-native';
-import { Dimensions } from 'react-native';
+import {SafeAreaView, Pressable, Modal, TextInput} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
-import {traitementFilter} from '../../components/pickerActivite';
-import constantes from '../../constantes';
+import { useToast } from "react-native-toast-notifications";
+
+//import {traitementFilter} from '../../components/pickerActivite';
+//import RNPickerSelect from 'react-native-picker-select';
+
 import styles from '../../styles';
 import ViewStatus from '../../components/viewStatut';
-
-//import RNPickerSelect from 'react-native-picker-select';
-import { useToast } from "react-native-toast-notifications";
 import * as Device from 'expo-device';
-
 import logoVide from '../../../assets/logovide.png';
 
 
@@ -40,14 +38,13 @@ function engagementScreen({navigation}) {
   const [infoComment, setInfoComment] = useState(['', '', '']);
 
   // Mode d'affichage
-  const [affichage, setAffichage] = useState("TOUT"); // ("TOUT", "PRESENT", "ABSENT", "NONDEFINI");
   const [visibleData, setVisibleData] = useState('');
+  //const [affichage, setAffichag] = useState("TOUT");
 
   //const [picker, setPicker] = useState("date");
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
-  const token = React.useContext(userContext).token
 
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
@@ -71,7 +68,7 @@ function engagementScreen({navigation}) {
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
 	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID})
-	  .then((json) =>  {console.log("ici"); setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
+	  .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
 	  .catch((error) => {setLoading(false);handleError (error)});
     });
 
@@ -105,9 +102,9 @@ function engagementScreen({navigation}) {
 
     //const tr = traitementSort(picker.toUpperCase(), data, data, 1, 2, 3, 4, 6);
 
-    setVisibleData( traitementFilter(affichage, data) );
+    setVisibleData( data ); //traitementFilter(affichage, data) );
 
-  }, [data, affichage]);
+  }, [data]);
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
@@ -134,7 +131,7 @@ function engagementScreen({navigation}) {
 
           {/* Conteneur 3eme colonne : statut */}
           <View style={[styles.colomn, {width:'33%'}]}>
-            <ViewStatus fctStatut={() => changerStatut(constantes.BDD, item.etat, userID, item.jourpresence, item.idactivite, item.idsite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
+            <ViewStatus fctStatut={() => changerStatut(item.etat, userID, item.jourpresence, item.idactivite, item.idsite, (item.nomrole == "BENEVOLE") ? "1" : "2")}
                         fctCommentaire={() => {setModalVisibleSet(true); setComment(item.commentaire); setInfoComment([ item.jourpresence, item.idactivite, item.idsite ])}} //TODO get ??
                         status={item.etat} role="2" align="row" id1={userID} id2={userID} commentaire = {item.commentaire}/>
           </View>
@@ -147,7 +144,7 @@ function engagementScreen({navigation}) {
 
 
   // Fonction de changement de statut
-  const changerStatut = (bdd, statut, benevole, jour, activite, site, role) => {
+  const changerStatut = (statut, benevole, jour, activite, site, role) => {
 
     // Si absent
     if(statut == "Absent"){

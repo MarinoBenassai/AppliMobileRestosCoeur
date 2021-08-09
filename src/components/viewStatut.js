@@ -1,8 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { ActivityIndicator, FlatList, Text, View, Pressable} from 'react-native';
+import React, { useRef } from 'react';
+import {View, Pressable} from 'react-native';
+
+import {userContext} from '../contexts/userContext';
+
 import Icon from 'react-native-vector-icons/Octicons';
 import styles from '../styles';
-import {userContext} from '../contexts/userContext';
+
 
 // Div status
 function ViewStatus(props) {
@@ -15,7 +18,6 @@ function ViewStatus(props) {
     const align = props.align;
 
     const size = 32;
-    const pad = 15;
 
     const fctStatut = props.fctStatut;
     const fctCommentaire = props.fctCommentaire;

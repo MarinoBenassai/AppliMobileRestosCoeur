@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable} from 'react-native';
+import {SafeAreaView, Pressable} from 'react-native';
 
-import {checkFetch} from '../../components/checkFetch';
 import {userContext} from '../../contexts/userContext';
-import constantes from '../../constantes';
 import styles from '../../styles';
 import {modeAffichage} from '../../components/modeAffichage';
 
@@ -15,7 +13,6 @@ function referentScreen({navigation}) {
 
   // On importe l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
-  const token = React.useContext(userContext).token
 
   // Mode d'affichage
   const [header, setHeader] = useState({
@@ -126,7 +123,7 @@ function referentScreen({navigation}) {
   function Synthese(props) {
 
     if (visibleData.length != 0){
-      return  <View style={{flex: 1}}>
+      return  (<View style={{flex: 1}}>
           <>
             {/*Header de la liste*/}
             <View style = {styles.header}>
@@ -151,15 +148,15 @@ function referentScreen({navigation}) {
               keyExtractor={(item, index) => index.toString()}
             />
           </>
-        </View>;
+        </View>);
         
     }
     else{
-      return <View>
+      return (<View>
                 <Text style={styles.item}>
                   Il semblerait que vous ne soyez référent d'aucune activité pour le moment.
                 </Text>
-              </View>;
+              </View>);
 
     }
   }

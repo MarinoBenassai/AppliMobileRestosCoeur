@@ -1,6 +1,3 @@
-import React from 'react';
-import {Alert} from 'react-native';
-
 export const  checkFetch = async function(response, apCode = 'APP') {
     // console.info("response : " + response + "\n" + response.ok + "\n" + response.status);
 

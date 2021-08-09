@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, View} from 'react-native';
-import {SafeAreaView, StyleSheet, StatusBar, Pressable, Modal, TextInput} from 'react-native';
-import {Linking} from 'react-native';
+import {SafeAreaView, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-//import RNPickerSelect from 'react-native-picker-select';
 
-import {traitementSort} from '../../components/pickerActivite';
+//import RNPickerSelect from 'react-native-picker-select';
+//import {traitementSort} from '../../components/pickerActivite';
+
 import {userContext} from '../../contexts/userContext';
 import ModalContact from '../../components/modalContact';
-import constantes from '../../constantes';
 import styles from '../../styles';
 
 // Fonction Principale
@@ -25,7 +24,6 @@ function contactScreen() {
   
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
-  const token = React.useContext(userContext).token
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
@@ -42,7 +40,7 @@ function contactScreen() {
 
   // on met à jour la liste visible initiale
   useEffect(() => {
-    setVisibleData( traitementSort("NOM", data, data, 1, 2, 3, 4, 0) ); // ordonne la liste initiale
+    setVisibleData( data ); //traitementSort("NOM", data, data, 1, 2, 3, 4, 0) ); // ordonne la liste initiale
   }, [data]);
 
   
