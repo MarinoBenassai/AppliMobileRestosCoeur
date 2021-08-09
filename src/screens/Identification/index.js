@@ -1,19 +1,22 @@
 import React, {useRef } from 'react';
 import { Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
 
+import {userContext} from '../../contexts/userContext';
+
 import * as Device from 'expo-device';
 import * as SecureStore from 'expo-secure-store';
 
 import constantes from '../../constantes';
-import {userContext} from '../../contexts/userContext';
 import styles from '../../styles';
 import logo from '../../../assets/logoRdC.png';
 
-import {registerForPushNotificationsAsync} from "../../components/registerForPushNotificationsAsync.js";
 
 
 
 export default function IdScreen({navigation}) {
+
+	// On récupère la fonction pour gérer le token de notification
+	const registerForPushNotificationsAsync = React.useContext(userContext).registerForPushNotificationsAsync;
 
 	const refMdp = useRef(null);
 

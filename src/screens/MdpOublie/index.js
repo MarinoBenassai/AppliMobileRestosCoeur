@@ -15,7 +15,7 @@ function oublieScreen({navigation}){
   //Fonction de communication avec l'API
   const sendAPI = React.useContext(userContext).sendAPI;
 
-  // On récupère les fonction pour gérer le modal d'informations
+  // On récupère la fonction pour gérer le modal d'informations
   const fctModalApp = React.useContext(userContext).fctModalApp;
   
   function resetPassword() {
