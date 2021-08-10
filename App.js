@@ -216,8 +216,10 @@ export default function App() {
 		if (userID !== "" && token !== "" && userID !== null && token !== null){
 		  const device = await Device.getDeviceTypeAsync();
 		  const tokennotif = await registerForPushNotificationsAsync(device);
-		  sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':userID, 'P_TOKENNOTIF':tokennotif},token)
-		  .catch((error) => handleError (error));
+		  if (tokennotif != "-1") {
+		    sendAPI('APP', 'AP_UPD_NOTIF', {'P_IDBENEVOLE':userID, 'P_TOKENNOTIF':tokennotif},token)
+		    .catch((error) => handleError (error));
+		  }
 	    }
 	  }
 	  if (ready){
