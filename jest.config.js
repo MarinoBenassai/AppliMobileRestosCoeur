@@ -22,4 +22,6 @@ module.exports = {
       "android.ts",
       "android.tsx"
     ],
+  setupFiles: ['./node_modules/react-native-gesture-handler/jestSetup.js'],
+  setupFilesAfterEnv: ['./jest.setup.js'],
 };
