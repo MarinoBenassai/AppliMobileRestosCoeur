@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import styles from '../../styles';
 import ModalContact from '../../components/modalContact';
+import {sendAPI} from '../../components/sendAPI';
 
 
 
@@ -40,12 +41,9 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   // On récupère les informations données en paramètres
   const { IDActivite, IDSite, IDJour, liste } = route.params;
 
-  //Fonction de communication avec l'API
-  const sendAPI = React.useContext(userContext).sendAPI;
-
   // on va chercher les informations sur la BDD
   useEffect(() => {
-	sendAPI('APP', 'AP_ALL_BENEVOLE',{})
+	sendAPI('APP', 'AP_ALL_BENEVOLE',{},userID)
 	.then((json) =>  {setData(json); console.info("Liste Utilisateurs : chargées"); setLoading(false); refListe.current.focus()})
 	.catch((error) => {setLoading(false); handleError (error)});
   }, []);
@@ -62,7 +60,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   //Fonction d'ajout de bénévole
   const ajouterBenevole = (id, nom, prenom) => {
     console.info("Vous avez ajouter l'id : " + id + " " + IDJour + " " + IDActivite + " " + IDSite);
-	sendAPI('APP', 'AP_INS_PRESENCE',{"P_IDBENEVOLE":id, "P_JOURPRESENCE":IDJour, "P_IDACTIVITE":IDActivite, "P_IDSITE":IDSite, "P_IDROLE":"1" })
+	sendAPI('APP', 'AP_INS_PRESENCE',{"P_IDBENEVOLE":id, "P_JOURPRESENCE":IDJour, "P_IDACTIVITE":IDActivite, "P_IDSITE":IDSite, "P_IDROLE":"1" },userID)
 	.then((json) =>  {console.info("changement statut !"); console.log(json)})
 	.then( () => {toastComponent("Ajout : " + prenom + " " + nom); goBack()})
 	.catch((error) => handleError (error));

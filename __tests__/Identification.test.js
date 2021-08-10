@@ -1,33 +1,13 @@
 import React from 'react';
 import { cleanup, render, fireEvent, waitFor } from "@testing-library/react-native";
-import constantes from '../src/constantes';
 
 import Identification from '../src/screens/Identification';
 import App from "../App.js"
 import {userContext} from '../src/contexts/userContext'
-import {checkFetch} from '../src/components/checkFetch';
-jest.mock("../src/components/registerForPushNotificationsAsync.js");
+import {registerForPushNotificationsAsync} from '../src/components/__mocks__/registerForPushNotificationsAsync'
+jest.mock("../src/components/sendAPI.js");
 
 afterEach(cleanup)
-
-const sendAPI =   async (apCode,sqlCode,params, tokenCo = null) => {
-  var body = {};
-  if (apCode === 'APP') {
-	body = JSON.stringify({
-	  'params' : params,
-	  'token' : tokenCo,
-	});
-  }
-  else {
-	body = JSON.stringify({
-	  'params' : params,
-	});
-  }
-  const response = await fetch('http://' + constantes.BDD + '/' + apCode + '/' + sqlCode + '/', {
-	method: 'POST',
-	body: body});
-  return checkFetch(response,apCode);
-};
 
 describe('Identification', () => {
 	
@@ -51,7 +31,6 @@ describe('Identification', () => {
 	const handleError = jest.fn(() => {});	
 	context = {
 		handleError: handleError,
-		sendAPI: sendAPI
 	}
 	
     const { getByTestId, getByText, getByPlaceholderText } = render(
@@ -70,13 +49,14 @@ describe('Identification', () => {
   
   it('should store id/token on correct login', async () => {
 
-	  
+	const handleError = jest.fn(() => {});	
 	const changeID = jest.fn(() => {});
 	const changeToken = jest.fn(() => {});
 	context = {
 		changeID: changeID,
 		changeToken: changeToken,
-		sendAPI: sendAPI
+		registerForPushNotificationsAsync: registerForPushNotificationsAsync,
+		handleError: handleError,
 	}
 	
 	const { getByTestId, getByText, getByPlaceholderText } = render(
@@ -88,11 +68,11 @@ describe('Identification', () => {
 	fireEvent.changeText(getByPlaceholderText('votre@email.fr'), "a@a.a");
 	fireEvent.changeText(getByPlaceholderText('********'), "aaaaaaaa");
     fireEvent.press(getByText('CONNEXION'));
+
 	await waitFor(() => expect(changeID).toHaveBeenCalledTimes(1));
 	expect(changeID).toBeCalledWith("1005");
 	expect(changeToken).toHaveBeenCalledTimes(1);
 	expect(changeToken).toBeCalledWith("123456789");
 	
   });
-  
 });

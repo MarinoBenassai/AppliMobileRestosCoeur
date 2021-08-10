@@ -7,7 +7,7 @@ import {traitementFilter} from '../../components/pickerActivite';
 import {userContext} from '../../contexts/userContext';
 
 import { useToast } from "react-native-toast-notifications";
-
+import {sendAPI} from '../../components/sendAPI';
 //import RNPickerSelect from 'react-native-picker-select';
 
 import Icon from 'react-native-vector-icons/Octicons';
@@ -73,9 +73,6 @@ function activiteScreen({route, navigation}) {
 
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
-  
-  //Fonction de communication avec l'API
-  const sendAPI = React.useContext(userContext).sendAPI;
 
   // Fonction de sélection de l'activité
   function versListe({navigation}, liste) {
@@ -89,7 +86,7 @@ function activiteScreen({route, navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour })
+	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour },userID)
 	  .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées"); setLoading(false); setUpToDate(true)})
 	  .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
     });
@@ -104,7 +101,7 @@ function activiteScreen({route, navigation}) {
     if(!upToDate){
 	  setLoading(true);
       // Update la liste
-	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour})
+	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour},userID)
       .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées"); setLoading(false); setUpToDate(true)})
       .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
 
@@ -167,7 +164,7 @@ function activiteScreen({route, navigation}) {
     // Si absent
     if(statut == "Absent"){
       console.info("Vous êtiez actuellement 'Absent'");
-	  sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site})
+	  sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site},userID)
 	  .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement status : non défini : "); console.log(texte); setUpToDate(false)})
 	  .catch((error) => {setUpToDate(false); handleError (error)});
     }
@@ -187,7 +184,7 @@ function activiteScreen({route, navigation}) {
     // Si non-défini
     else{
       console.info("Vous êtiez actuellement 'Non défini'");
-	  sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role})
+	  sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role},userID)
 	  .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut : présent : "); console.log(texte); setUpToDate(false)})
 	  .catch((error) => {setUpToDate(false); handleError (error)});
     }
@@ -223,13 +220,13 @@ function activiteScreen({route, navigation}) {
   const fctCommentaireActivite = () => {
     setmodalVisibleCommentaireActivite(false)
     if(infoActivite == 0){
-	  sendAPI('APP', 'AP_INS_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite})
+	  sendAPI('APP', 'AP_INS_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite},userID)
 	  .then((json) => console.log(json))
 	  .then(() => {console.info("Nouvelle entrée : commentaire d'activité"); setUpToDate(false)})
 	  .catch((error) => {setUpToDate(false); handleError (error)});
     }
     else{
-	  sendAPI('APP', 'AP_UPD_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite})
+	  sendAPI('APP', 'AP_UPD_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour, 'P_NOMBREBENEFICIAIRE':beneficiaireActivite, 'P_COMMENTAIRE':commentActivite},userID)
 	  .then((json) => console.log(json))
 	  .then(() => {console.info("update entrée : commentaire d'activité "); setUpToDate(false)})
 	  .catch((error) => {setUpToDate(false); handleError (error)});
@@ -238,7 +235,7 @@ function activiteScreen({route, navigation}) {
 
   const fctCommentaireAbsence = () => {
     setModalVisibleCommentaireAbsence(!modalVisibleCommentaireAbsence);
-    sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment})
+    sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment},userID)
 	.then((json) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut : absent :"); console.log(json); setUpToDate(false); setComment("")})
 	.catch((error) => {setUpToDate(false); setComment(""); handleError (error)});
 
@@ -403,7 +400,7 @@ function activiteScreen({route, navigation}) {
                     <View style={[styles.item, styles.activite, {justifyContent: "space-evenly"}]}>
 
                       <Pressable onPress={() =>  {
-                        sendAPI('APP', 'AP_LST_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour})
+                        sendAPI('APP', 'AP_LST_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour},userID)
                         .then((json) =>  {if( json.length != 0 ){
                           setInfoActivite(1); console.info("Info commentaire d'activité : chargées");
                           setCommentActivite(json[0].commentaire); setBeneficiaireActivite(json[0].nombre_beneficiaire || "0");

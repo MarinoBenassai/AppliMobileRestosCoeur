@@ -5,6 +5,7 @@ import {SafeAreaView, Pressable} from 'react-native';
 import {userContext} from '../../contexts/userContext';
 import styles from '../../styles';
 import {modeAffichage} from '../../components/modeAffichage';
+import {sendAPI} from '../../components/sendAPI';
 
 // Fonction Principale
 function responsableScreen({navigation}) {
@@ -27,9 +28,6 @@ function responsableScreen({navigation}) {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
 
-  //Fonction de communication avec l'API
-  const sendAPI = React.useContext(userContext).sendAPI;
-
   // Fonction de sélection de l'activité
   function versActivite({navigation}, item) {
   	navigation.navigate('Activite', {
@@ -42,7 +40,7 @@ function responsableScreen({navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-	  sendAPI('APP', 'AP_LST_SYN_RESP', {'P_IDBENEVOLE':userID})
+	  sendAPI('APP', 'AP_LST_SYN_RESP', {'P_IDBENEVOLE':userID},userID)
 	  .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées"); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
     });

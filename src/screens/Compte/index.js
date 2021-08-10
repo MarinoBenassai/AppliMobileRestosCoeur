@@ -4,6 +4,7 @@ import {SafeAreaView, Pressable, TextInput} from 'react-native';
 
 import {normalizeInputPhone} from '../../components/normalizeInputPhone';
 import {modeAffichage} from '../../components/modeAffichage';
+import {sendAPI} from '../../components/sendAPI';
 import {userContext} from '../../contexts/userContext';
 
 import { useToast } from "react-native-toast-notifications";
@@ -51,15 +52,13 @@ const compteScreen = () => {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
   
-  //Fonction de communication avec l'API
-  const sendAPI = React.useContext(userContext).sendAPI;
 
   // On récupère la fonction pour gérer le modal d'informations
   const fctModalApp = React.useContext(userContext).fctModalApp;
   
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
-	sendAPI('APP', 'AP_LST_ENG_BEN',{'P_IDBENEVOLE':userID})
+	sendAPI('APP', 'AP_LST_ENG_BEN',{'P_IDBENEVOLE':userID},userID)
 	.then((json) =>  {setDataEngagementDefaut(json); console.info("Infos Engagement Défaut : chargées")})
 	.catch((error) => handleError (error))
   }, []);
@@ -68,7 +67,7 @@ const compteScreen = () => {
   useEffect(() => {
     if (persoUpToDate === false) {
       setPersoUpToDate(true);
-	  sendAPI('APP', 'AP_MON_COMPTE',{'P_IDBENEVOLE':userID})
+	  sendAPI('APP', 'AP_MON_COMPTE',{'P_IDBENEVOLE':userID},userID)
 	  .then((json) =>  {setDataPerso(json[0]); console.info("Infos Personelles : chargées"); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
 	  }
@@ -327,7 +326,7 @@ const compteScreen = () => {
 
 	  if( (phone != dataPerso.telephone) || (mail != dataPerso.email) ){
 
-      sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone})
+      sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone},userID)
       .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
       .catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
 

@@ -5,6 +5,7 @@ import {SafeAreaView, Pressable} from 'react-native';
 import {userContext} from '../../contexts/userContext';
 import styles from '../../styles';
 import {modeAffichage} from '../../components/modeAffichage';
+import {sendAPI} from '../../components/sendAPI';
 
 // Fonction Principale
 function referentScreen({navigation}) {
@@ -26,9 +27,6 @@ function referentScreen({navigation}) {
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
-
-  //Fonction de communication avec l'API
-  const sendAPI = React.useContext(userContext).sendAPI;
 
   // Fonction de sélection de l'activité
   function versActivite({navigation}, item) {

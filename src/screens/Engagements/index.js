@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Text, View, ImageBackground, ScrollView} f
 import {SafeAreaView, Pressable, Modal, TextInput} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
+import {sendAPI} from '../../components/sendAPI';
 import { useToast } from "react-native-toast-notifications";
 
 //import {traitementFilter} from '../../components/pickerActivite';
@@ -49,9 +50,6 @@ function engagementScreen({navigation}) {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
   
-  //Fonction de communication avec l'API
-  const sendAPI = React.useContext(userContext).sendAPI;
-  
   //Affichage ou non du menu synthese referent
   const setReferent = React.useContext(userContext).setReferent;
 
@@ -70,7 +68,7 @@ function engagementScreen({navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID})
+	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID},userID)
 	  .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
 	  .catch((error) => {setLoading(false);handleError (error)});
     });
@@ -82,13 +80,13 @@ function engagementScreen({navigation}) {
   }, [navigation]);
 
   useEffect(() => {
-	sendAPI('APP', 'AP_LST_SYN_REF', {'P_IDBENEVOLE':userID})
+	sendAPI('APP', 'AP_LST_SYN_REF', {'P_IDBENEVOLE':userID},userID)
 	.then(data => setReferent(data.length !== 0))
     .catch((error) => handleError (error));
   }, []);
 
   useEffect(() => {
-    sendAPI('APP', 'AP_LST_SYN_RESP', {'P_IDBENEVOLE':userID})
+    sendAPI('APP', 'AP_LST_SYN_RESP', {'P_IDBENEVOLE':userID},userID)
     .then(data => setResponsable(data.length !== 0))
       .catch((error) => handleError (error));
   }, []);
@@ -98,7 +96,7 @@ function engagementScreen({navigation}) {
   useEffect(() => {
     if(upToDate == false){
       setLoading(true);
-	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID})
+	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID},userID)
 	  .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
     }
@@ -158,7 +156,7 @@ function engagementScreen({navigation}) {
     if(statut == "Absent"){
       console.info("Vous êtiez actuellement : 'Absent'");
       setLoading(true);
-      sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site})
+      sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site},userID)
       .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
       .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
     }
@@ -179,7 +177,7 @@ function engagementScreen({navigation}) {
       else{
 		    setLoading(true);
         console.info("Vous étiez actuellement 'Non défini'");
-        sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role})
+        sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role},userID)
         .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
         .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
       }
@@ -204,7 +202,7 @@ function engagementScreen({navigation}) {
   const fctCommentaireAbsence = () => {
     setModalVisibleSet(!modalVisibleSet);
     setLoading(true);
-    sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment})
+    sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment},userID)
     .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
     .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
 

@@ -4,6 +4,7 @@ import {SafeAreaView, Pressable} from 'react-native';
 import {Linking} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
+import {sendAPI} from '../../components/sendAPI';
 import styles from '../../styles';
 
 // Fonction Principale
@@ -18,15 +19,11 @@ function informationScreen({navigation}) {
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
-  
-  //Fonction de communication avec l'API
-  const sendAPI = React.useContext(userContext).sendAPI;
-
 
   // on va chercher les informations sur la BDD
   useEffect(() => {
     setLoading(true);
-    sendAPI('APP', 'AP_LST_INFO', {'P_IDBENEVOLE':userID})
+    sendAPI('APP', 'AP_LST_INFO', {'P_IDBENEVOLE':userID},userID)
       .then((json) =>  {setData(json); console.info("Infos Informations : chargées"); setLoading(false)})
       .catch((error) => {setLoading(false); handleError (error)});
   }, []);

@@ -4,6 +4,7 @@ import {TextInput, Button} from 'react-native';
 
 import styles from '../../styles';
 import {userContext} from '../../contexts/userContext';
+import {sendAPI} from '../../components/sendAPI';
 
 
 function oublieScreen({navigation}){
@@ -11,9 +12,6 @@ function oublieScreen({navigation}){
   const [loading, setLoading] = React.useState(false);
   
   const handleError = React.useContext(userContext).handleError;
-  
-  //Fonction de communication avec l'API
-  const sendAPI = React.useContext(userContext).sendAPI;
 
   // On récupère la fonction pour gérer le modal d'informations
   const fctModalApp = React.useContext(userContext).fctModalApp;

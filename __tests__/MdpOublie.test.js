@@ -1,32 +1,11 @@
 import React from 'react';
 import { cleanup, render, fireEvent, waitFor } from "@testing-library/react-native";
-import constantes from '../src/constantes';
 
 import MdpOublie from '../src/screens/MdpOublie';
-import App from "../App.js"
 import {userContext} from '../src/contexts/userContext'
-import {checkFetch} from '../src/components/checkFetch';
+jest.mock("../src/components/sendAPI.js");
 
 afterEach(cleanup)
-
-const sendAPI =   async (apCode,sqlCode,params, tokenCo = null) => {
-  var body = {};
-  if (apCode === 'APP') {
-	body = JSON.stringify({
-	  'params' : params,
-	  'token' : tokenCo,
-	});
-  }
-  else {
-	body = JSON.stringify({
-	  'params' : params,
-	});
-  }
-  const response = await fetch('http://' + constantes.BDD + '/' + apCode + '/' + sqlCode + '/', {
-	method: 'POST',
-	body: body});
-  return checkFetch(response,apCode);
-};
 
 describe('MdpOublie', () => {
 	
@@ -43,7 +22,6 @@ describe('MdpOublie', () => {
 	
 	context = {
 		handleError: handleError,
-		sendAPI: sendAPI,
 		fctModalApp: fctModalApp
 	}
 	
@@ -66,7 +44,6 @@ describe('MdpOublie', () => {
 	
 	context = {
 		handleError: handleError,
-		sendAPI: sendAPI,
 		fctModalApp: fctModalApp
 	}
 	
@@ -90,7 +67,6 @@ describe('MdpOublie', () => {
 	
 	context = {
 		handleError: handleError,
-		sendAPI: sendAPI,
 		fctModalApp: fctModalApp
 	}
 	

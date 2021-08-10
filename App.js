@@ -23,8 +23,8 @@ import informationScreen from './src/screens/Informations';
 import styles from './src/styles';
 
 import listeUtilisateurScreen from './src/screens/ListeUtilisateur';
-import {checkFetch} from './src/components/checkFetch';
 import {userContext} from './src/contexts/userContext';
+import {sendAPI} from './src/components/sendAPI';
 
 import constantes from './src/constantes';
 
@@ -225,18 +225,6 @@ export default function App() {
 		  .catch((error) => handleError(error));
 	  }
   }, [ready]);
-
-  async function sendAPI(apCode,sqlCode,params, tokenCo = token) {
-	  let body = new FormData();
-	  body.append('params',JSON.stringify(params));
-	  if (apCode === 'APP') {
-	    body.append('token',tokenCo);
-	  }
-	  const response = await fetch('http://' + constantes.BDD + '/' + apCode + '/' + sqlCode + '/', {
-	    method: 'POST',
-	    body: body});
-	  return checkFetch(response,apCode);
-  }
   
   async function autoConnect() {
 	  
@@ -266,7 +254,7 @@ export default function App() {
 	const device = await Device.getDeviceTypeAsync();
 	const tokennotif = await registerForPushNotificationsAsync(device);
 	
-	sendAPI('APP','AP_LOGOUT',{'P_TOKEN':token,'P_TOKENNOTIF':tokennotif})
+	sendAPI('APP','AP_LOGOUT',{'P_TOKEN':token,'P_TOKENNOTIF':tokennotif}, token)
 	.then((data) => {
 		setUserID("");
 		setToken("");
@@ -357,7 +345,6 @@ export default function App() {
 		changeID: changeID,
 		changeToken: changeToken,
 		handleError: handleError,
-		sendAPI: sendAPI,
 		setReferent: setReferent,
 		setResponsable: setResponsable,
 		afficherInfoBulle: afficherInfoBulle,

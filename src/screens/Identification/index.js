@@ -2,6 +2,7 @@ import React, {useRef } from 'react';
 import { Button, Text, View, Image, TextInput, Pressable, ActivityIndicator} from 'react-native';
 
 import {userContext} from '../../contexts/userContext';
+import {sendAPI} from '../../components/sendAPI';
 
 import * as Device from 'expo-device';
 import * as SecureStore from 'expo-secure-store';
@@ -30,11 +31,6 @@ export default function IdScreen({navigation}) {
 	
     //Handler des erreurs de serveur
     const handleError = React.useContext(userContext).handleError;
-
-    //Fonction de communication avec l'API
-    const sendAPI = React.useContext(userContext).sendAPI;
-	
-
   
   function checkPassword() {
 	if (textEmail != '' && textPassword != '') {

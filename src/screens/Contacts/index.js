@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import {userContext} from '../../contexts/userContext';
 import ModalContact from '../../components/modalContact';
+import {sendAPI} from '../../components/sendAPI';
 import styles from '../../styles';
 
 // Fonction Principale
@@ -28,12 +29,9 @@ function contactScreen() {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
   
-  //Fonction de communication avec l'API
-  const sendAPI = React.useContext(userContext).sendAPI;
-  
   // on va chercher les informations sur la BDD
   useEffect(() => {
-	sendAPI('APP', 'AP_LST_CONTACT', {'P_IDBENEVOLE':userID})
+	sendAPI('APP', 'AP_LST_CONTACT', {'P_IDBENEVOLE':userID},userID)
 	.then((json) =>  {setData(json); console.info("Infos Contact Référent : chargées"); setLoading(false)})
 	.catch((error) => {setLoading(false); handleError (error)});
   }, []);
