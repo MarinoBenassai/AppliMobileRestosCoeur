@@ -28,8 +28,6 @@ import {userContext} from './src/contexts/userContext';
 
 import constantes from './src/constantes';
 
-import {registerForPushNotificationsAsync} from "./src/components/registerForPushNotificationsAsync.js";
-
 import { ToastProvider } from 'react-native-toast-notifications'
 
 import logoVide from './assets/logovide.png';
@@ -310,6 +308,43 @@ export default function App() {
   }
 
 
+  const registerForPushNotificationsAsync = async function (device) {
+	let token = "-1";
+	if (Device.isDevice) {
+		if (!Device.brand){//if(device != "1" && device != "2"){
+			return token;
+		}
+		const { status: existingStatus } = await Notifications.getPermissionsAsync();
+		let finalStatus = existingStatus;
+		if (existingStatus !== 'granted') {
+			const { status } = await Notifications.requestPermissionsAsync();
+			finalStatus = status;
+		}
+
+		// Notification non autorisée
+		if (finalStatus !== 'granted') {
+			fctModalApp("Erreur", "Impossible de récupérer le token de notifications");
+			return token;
+		}
+
+		token = (await Notifications.getExpoPushTokenAsync()).data;
+		console.log(token);
+
+	} else {
+		fctModalApp("Attention", "Pas de notifications sur simulateur");
+	}
+  
+	if (Platform.OS === 'android') {
+		Notifications.setNotificationChannelAsync('default', {
+			name: 'default',
+			importance: Notifications.AndroidImportance.MAX,
+			vibrationPattern: [0, 250, 250, 250],
+			lightColor: '#FF231F7C',
+		});
+	}
+  
+	return token;
+}
   
 
   
@@ -327,7 +362,8 @@ export default function App() {
 		setResponsable: setResponsable,
 		afficherInfoBulle: afficherInfoBulle,
 		cacherInfoBulle: cacherInfoBulle,
-		fctModalApp: fctModalApp
+		fctModalApp: fctModalApp,
+		registerForPushNotificationsAsync: registerForPushNotificationsAsync
 		}}>
 
 			
