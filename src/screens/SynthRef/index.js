@@ -22,7 +22,7 @@ function referentScreen({navigation}) {
                                         "jourpresence": "\u25B2",
                                         "nombre_present": "",
                                       });
-  const [visibleData, setVisibleData] = useState([]);
+  const [visibleData, setVisibleData] = useState("");
   const [ancienMode, setAncienMode] = useState("jourpresence");
   
   //Handler des erreurs de serveur
@@ -34,6 +34,7 @@ function referentScreen({navigation}) {
   	  IDActivite: item.idactivite, IDSite: item.idsite, IDJour: item.jourpresence.split(" ")[0], NomActivite: item.nomactivite, NomSite: item.nomsite, idRole: '2'
   	});
   }
+
 
   // On va chercher les données
   useEffect(() => {
@@ -118,9 +119,9 @@ function referentScreen({navigation}) {
   );
 
   // Div Synthese //TODO: à débuger
-  function Synthese(props) {
+  function Synthese() {
 
-    if (visibleData.length != 0){
+    if (visibleData.length != 0 || true){
       return  (<View style={{flex: 1}}>
           <>
             {/*Header de la liste*/}

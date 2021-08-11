@@ -43,6 +43,7 @@ function activiteScreen({route, navigation}) {
   const [modalVisibleCommentaireAbsence, setModalVisibleCommentaireAbsence] = useState(false);
   const [modalVisibleCommentaireActivite, setmodalVisibleCommentaireActivite] = useState(false);
   const [modalVisibleContact, setmodalVisibleContact] = useState(false);
+  const [modalVisibleMailATous, setModalVisibleMailATous] = useState(false);
 
   // Icone
   const [icone, setIcone] = useState('person');
@@ -194,16 +195,39 @@ function activiteScreen({route, navigation}) {
     setBeneficiaireActivite( normalizeInputNumber(value, beneficiaireActivite) );
   };
 
-
+  // préparation des emails pour envoie collectif
   const mailAll = (  ) => { 
 
     var mails = "";
     for(let d of data){
-      mails += d.email;
+      mails += `${d.email},`;
     }
 
     Linking.openURL(`mailto:${mails}`);
   };
+
+  // préparation des numéro pour envoie collectif
+  const smsAll = (  ) => { 
+
+    var phones = "";
+    for(let d of data){
+      phones += d.telephone + ",";
+    }
+    phones = phones.slice(0, -1);
+
+    const url = (Platform.OS === 'android')
+    ? `sms:${phones}?body=`
+    : `sms:/open?addresses=${phones}&body=`;
+
+  Linking.canOpenURL(url).then((supported) => {
+    if (!supported) {
+      console.log('Unsupported url: ', url);
+    } else {
+      Linking.openURL(url).then(() => {
+      });
+    }
+  }).catch((err) => console.log('An error occurred', err));
+}
 
   // Affiche le toast
   const toastComponent = (texte, type) => {
@@ -294,7 +318,7 @@ function activiteScreen({route, navigation}) {
                     ref={refBenef}
                     multiline
                     numberOfLines={3}
-                    style={styles.idInput}
+                    style={[styles.idInput, {minHeight: 100}]}
                     onChangeText={setCommentActivite}
                     value={commentActivite}
                     onKeyUp={(keyUp) => keyUp.keyCode == 17 && setMyCtrl(false)}
@@ -372,6 +396,50 @@ function activiteScreen({route, navigation}) {
           </ScrollView>
         </Modal>
 
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisibleMailATous}
+          onRequestClose={() => {setModalVisibleMailATous(false)}}
+        >
+          <View style={styles.centeredView}>
+            <ImageBackground source={logoVide} resizeMode="cover" style={styles.modalContactView} imageStyle={styles.modalContactView2}>
+              <Text style={styles.modalContactTitle}>Contacter tout le monde :</Text>
+              
+              <View style={[styles.modalContactButtonView, {minHeight: 100}]}>
+                <Pressable
+                  style={{alignSelf: "center", padding: 10}}
+                  onPress={() => {setModalVisibleMailATous(false); console.info("Annuler ContactAll Pressed");}}
+                >
+                  {({ pressed }) => (
+                    <View>
+                      <Text style={{color:pressed?"lightgrey":"black", fontWeight: "bold"}}>ANNULER</Text>
+                    </View>
+                  )}
+                </Pressable>
+                <Pressable
+                  style={{alignSelf: "center", padding: 10}}
+                  onPress={() => {setModalVisibleMailATous(false); smsAll()}}
+                >
+                  {({ pressed }) => (
+                    <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>SMS</Text>
+                  )}
+                </Pressable>
+                <Pressable
+                  style={{alignSelf: "center", padding: 10}}
+                  onPress={() => {setModalVisibleMailATous(false); mailAll()}}
+                >
+                  {({ pressed }) => (
+                    <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>MAIL</Text>
+                  )}
+                </Pressable>
+              </View>
+              
+            </ImageBackground>
+          </View>
+        </Modal>
+
         <FlatList
           data={visibleData}
           ListHeaderComponent={
@@ -422,7 +490,7 @@ function activiteScreen({route, navigation}) {
                           )}
                       </Pressable>
 
-                      <Pressable onPress={() => mailAll()}>
+                      <Pressable onPress={() => setModalVisibleMailATous(true)}>
                         {({ pressed }) => (
                           <Icon 
                             name='megaphone' 
