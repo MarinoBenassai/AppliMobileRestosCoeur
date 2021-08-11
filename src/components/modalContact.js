@@ -55,13 +55,13 @@ const ModalContact = (props) => {
           <ImageBackground source={logoVide} resizeMode="cover" style={styles.modalContactView} imageStyle={styles.modalContactView2}>
 		        <Text style={styles.modalContactTitle}>Informations de contact</Text>
             <View style={styles.modalContactContentView}>
-              <Text style={styles.modalText} onPress={() => {setToClipboard(props.mail); Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{"Mail : " + props.mail}</Text>
-              <Text style={styles.modalText} onPress={() => {setToClipboard(props.phone);Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{"Tel : " + normalizeInputPhone(props.phone)}</Text>
+              <Text style={styles.modalText} onPress={() => {setToClipboard(props.mail); Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{props.mail}</Text>
+              <Text style={styles.modalText} onPress={() => {setToClipboard(props.phone);Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{normalizeInputPhone(props.phone)}</Text>
             </View>
             <View style={styles.modalContactButtonView}>
               <Pressable
                 style={styles.buttonContactLeft}
-                onPress={() => {props.setVisible(!props.visible);console.info("OK  Contact Pressed");}}
+                onPress={() => {props.setVisible(!props.visible); console.info("OK  Contact Pressed");}}
               >
                 {({ pressed }) => (
                   <View>
@@ -71,7 +71,7 @@ const ModalContact = (props) => {
               </Pressable>
               <Pressable
                 style={[styles.buttonContactMid, {marginRight: 10}]}
-                onPress={() => {props.setVisible(!props.visible);Linking.openURL(`sms:${props.phone}`);}}
+                onPress={() => {props.setVisible(!props.visible); Linking.openURL(`sms:${props.phone}`);}}
               >
                 {({ pressed }) => (
                   <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>SMS</Text>
@@ -79,7 +79,7 @@ const ModalContact = (props) => {
               </Pressable>
               <Pressable
                 style={[styles.buttonContactRight]}
-                onPress={() => {props.setVisible(!props.visible);Linking.openURL(`mailto:${props.mail}`);}}
+                onPress={() => {props.setVisible(!props.visible); Linking.openURL(`mailto:${props.mail}`);}}
               >
                 {({ pressed }) => (
                   <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>MAIL</Text>

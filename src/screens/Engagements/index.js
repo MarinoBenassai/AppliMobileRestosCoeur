@@ -72,7 +72,7 @@ function engagementScreen({navigation}) {
 	  setLoading(true);
 	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID})
 	  .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
-	  .catch((error) => {setLoading(false);handleError (error)});
+	  .catch((error) => {setLoading(false); handleError (error)});
     });
 
 
