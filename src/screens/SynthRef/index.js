@@ -41,7 +41,7 @@ function referentScreen({navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-	  sendAPI('APP', 'AP_LST_SYN_REF', {'P_IDBENEVOLE':userID})
+	  sendAPI('APP', 'AP_LST_SYN_REF', {'P_IDBENEVOLE':userID}, userID)
 	  .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées"); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
     });
