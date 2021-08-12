@@ -34,6 +34,9 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   //Données pour le modal de contact
   const [mail, setMail] = useState('');
   const [phone, setPhone] = useState('');
+
+  // On charge l'id de l'utilisateur courrant
+  const userID = React.useContext(userContext).userID;
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;

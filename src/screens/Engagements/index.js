@@ -80,14 +80,14 @@ function engagementScreen({navigation}) {
   }, [navigation]);
 
   useEffect(() => {
-	sendAPI('APP', 'AP_LST_SYN_REF', {'P_IDBENEVOLE':userID},userID)
-	.then(data => setReferent(data.length !== 0))
+	sendAPI('APP', 'AP_CHECK_REFERENT', {'P_IDBENEVOLE':userID},userID)
+	.then(data => setReferent(data[0].ref=="1"))
     .catch((error) => handleError (error));
   }, []);
 
   useEffect(() => {
-    sendAPI('APP', 'AP_LST_SYN_RESP', {'P_IDBENEVOLE':userID},userID)
-    .then(data => setResponsable(data.length !== 0))
+    sendAPI('APP', 'AP_CHECK_RESPONSABLE', {'P_IDBENEVOLE':userID},userID)
+    .then(data => setResponsable(data[0].resp=="1"))
       .catch((error) => handleError (error));
   }, []);
 
