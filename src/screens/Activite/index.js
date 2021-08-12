@@ -102,7 +102,7 @@ function activiteScreen({route, navigation}) {
     if(!upToDate){
 	  setLoading(true);
       // Update la liste
-	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDBENEVOLE':userID, 'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour},userID)
+	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour},userID)
       .then((json) =>  {setData(json);console.info("Infos bénévoles : chargées"); setLoading(false); setUpToDate(true)})
       .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
 
