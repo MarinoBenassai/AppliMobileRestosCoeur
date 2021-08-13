@@ -7,7 +7,7 @@ export const sendAPI = async function (apCode, sqlCode, params, tokenCo) {
   if (apCode === 'APP') {
 	body.append('token',tokenCo);
   }
-  const response = await fetch('http://' + constantes.BDD + '/' + apCode + '/' + sqlCode + '/', {
+  const response = await fetch(constantes.ADDRESS + '/' + apCode + '/' + sqlCode + '/', {
 	method: 'POST',
 	body: body});
   return checkFetch(response,apCode);
