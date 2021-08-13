@@ -46,6 +46,7 @@ function engagementScreen({navigation}) {
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
+  const token = React.useContext(userContext).token;
 
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
@@ -68,7 +69,7 @@ function engagementScreen({navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID},userID)
+	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID},token)
 	  .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
     });
@@ -80,13 +81,13 @@ function engagementScreen({navigation}) {
   }, [navigation]);
 
   useEffect(() => {
-	sendAPI('APP', 'AP_CHECK_REFERENT', {'P_IDBENEVOLE':userID},userID)
+	sendAPI('APP', 'AP_CHECK_REFERENT', {'P_IDBENEVOLE':userID},token)
 	.then(data => setReferent(data[0].ref=="1"))
     .catch((error) => handleError (error));
   }, []);
 
   useEffect(() => {
-    sendAPI('APP', 'AP_CHECK_RESPONSABLE', {'P_IDBENEVOLE':userID},userID)
+    sendAPI('APP', 'AP_CHECK_RESPONSABLE', {'P_IDBENEVOLE':userID},token)
     .then(data => setResponsable(data[0].resp=="1"))
       .catch((error) => handleError (error));
   }, []);
@@ -96,7 +97,7 @@ function engagementScreen({navigation}) {
   useEffect(() => {
     if(upToDate == false){
       setLoading(true);
-	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID},userID)
+	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID},token)
 	  .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
     }
@@ -156,7 +157,7 @@ function engagementScreen({navigation}) {
     if(statut == "Absent"){
       console.info("Vous êtiez actuellement : 'Absent'");
       setLoading(true);
-      sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site},userID)
+      sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site},token)
       .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
       .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
     }
@@ -177,7 +178,7 @@ function engagementScreen({navigation}) {
       else{
 		    setLoading(true);
         console.info("Vous étiez actuellement 'Non défini'");
-        sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role},userID)
+        sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role},token)
         .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
         .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
       }
@@ -202,7 +203,7 @@ function engagementScreen({navigation}) {
   const fctCommentaireAbsence = () => {
     setModalVisibleSet(!modalVisibleSet);
     setLoading(true);
-    sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment},userID)
+    sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment},token)
     .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
     .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
 

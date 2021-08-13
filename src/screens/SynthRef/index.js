@@ -14,7 +14,8 @@ function referentScreen({navigation}) {
 
   // On importe l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
-
+  const token = React.useContext(userContext).token;
+  
   // Mode d'affichage
   const [header, setHeader] = useState({
                                         "nomsite": "",
@@ -41,7 +42,7 @@ function referentScreen({navigation}) {
     // Lors du focus de la page
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
-	  sendAPI('APP', 'AP_LST_SYN_REF', {'P_IDBENEVOLE':userID}, userID)
+	  sendAPI('APP', 'AP_LST_SYN_REF', {'P_IDBENEVOLE':userID}, token)
 	  .then((json) =>  {setData(json); console.info("Infos Synthèse Référent : chargées"); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
     });

@@ -28,10 +28,11 @@ function contactScreen() {
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
-  
+  const token = React.useContext(userContext).token;
+
   // on va chercher les informations sur la BDD
   useEffect(() => {
-	sendAPI('APP', 'AP_LST_CONTACT', {'P_IDBENEVOLE':userID},userID)
+	sendAPI('APP', 'AP_LST_CONTACT', {'P_IDBENEVOLE':userID},token)
 	.then((json) =>  {setData(json); console.info("Infos Contact Référent : chargées"); setLoading(false)})
 	.catch((error) => {setLoading(false); handleError (error)});
   }, []);

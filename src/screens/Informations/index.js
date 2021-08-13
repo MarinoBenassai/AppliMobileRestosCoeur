@@ -16,6 +16,7 @@ function informationScreen({navigation}) {
   
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID;
+  const token = React.useContext(userContext).token;
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
@@ -23,7 +24,7 @@ function informationScreen({navigation}) {
   // on va chercher les informations sur la BDD
   useEffect(() => {
     setLoading(true);
-    sendAPI('APP', 'AP_LST_INFO', {'P_IDBENEVOLE':userID},userID)
+    sendAPI('APP', 'AP_LST_INFO', {'P_IDBENEVOLE':userID},token)
       .then((json) =>  {setData(json); console.info("Infos Informations : chargées"); setLoading(false)})
       .catch((error) => {setLoading(false); handleError (error)});
   }, []);
