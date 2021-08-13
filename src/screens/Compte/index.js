@@ -58,7 +58,7 @@ const compteScreen = () => {
   
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
-	sendAPI('APP', 'AP_LST_ENG_BEN',{'P_IDBENEVOLE':userID},userID)
+	sendAPI('APP', 'AP_LST_ENG_BEN',{'P_IDBENEVOLE':userID},token)
 	.then((json) =>  {setDataEngagementDefaut(json); console.info("Infos Engagement Défaut : chargées")})
 	.catch((error) => handleError (error))
   }, []);
@@ -67,7 +67,7 @@ const compteScreen = () => {
   useEffect(() => {
     if (persoUpToDate === false) {
       setPersoUpToDate(true);
-	  sendAPI('APP', 'AP_MON_COMPTE',{'P_IDBENEVOLE':userID},userID)
+	  sendAPI('APP', 'AP_MON_COMPTE',{'P_IDBENEVOLE':userID},token)
 	  .then((json) =>  {setDataPerso(json[0]); console.info("Infos Personelles : chargées"); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
 	  }
@@ -326,7 +326,7 @@ const compteScreen = () => {
 
 	  if( (phone != dataPerso.telephone) || (mail != dataPerso.email) ){
 
-      sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone},userID)
+      sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone},token)
       .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
       .catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
 

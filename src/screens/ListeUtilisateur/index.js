@@ -37,6 +37,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID;
+  const token = React.useContext(userContext).token;
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
@@ -46,7 +47,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
   // on va chercher les informations sur la BDD
   useEffect(() => {
-	sendAPI('APP', 'AP_ALL_BENEVOLE',{},userID)
+	sendAPI('APP', 'AP_ALL_BENEVOLE',{},token)
 	.then((json) =>  {setData(json); console.info("Liste Utilisateurs : chargées"); setLoading(false); refListe.current.focus()})
 	.catch((error) => {setLoading(false); handleError (error)});
   }, []);
@@ -63,7 +64,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   //Fonction d'ajout de bénévole
   const ajouterBenevole = (id, nom, prenom) => {
     console.info("Vous avez ajouter l'id : " + id + " " + IDJour + " " + IDActivite + " " + IDSite);
-	sendAPI('APP', 'AP_INS_PRESENCE',{"P_IDBENEVOLE":id, "P_JOURPRESENCE":IDJour, "P_IDACTIVITE":IDActivite, "P_IDSITE":IDSite, "P_IDROLE":"1" },userID)
+	sendAPI('APP', 'AP_INS_PRESENCE',{"P_IDBENEVOLE":id, "P_JOURPRESENCE":IDJour, "P_IDACTIVITE":IDActivite, "P_IDSITE":IDSite, "P_IDROLE":"1" },token)
 	.then((json) =>  {console.info("changement statut !"); console.log(json)})
 	.then( () => {toastComponent("Ajout : " + prenom + " " + nom); goBack()})
 	.catch((error) => handleError (error));
