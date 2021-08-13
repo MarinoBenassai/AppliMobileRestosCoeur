@@ -63,7 +63,7 @@ function contactScreen() {
 
       {/* Conteneur 3eme colonne : contacter */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setModalVisible(!modalVisible)}}>
+        <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setModalVisible(!modalVisible)}} testID="iconLettre">
           {({ pressed }) => (
             <Icon 
               style = {{alignSelf: "center"}}
