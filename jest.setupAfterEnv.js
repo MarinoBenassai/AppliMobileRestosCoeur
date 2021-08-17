@@ -1,5 +1,123 @@
 import constantes from './src/constantes';
 
+const engagementInit = {
+	"data": [
+		{
+			"jourpresence": "2021-08-16 00:00:00",
+			"nomactivite": "Distribution",
+			"nomsite": "Raisin",
+			"nomrole": "REFERENT",
+			"etat": "Absent",
+			"commentaire": "",
+			"nombre_present": "4",
+			"jour": "Lundi",
+			"idpresence": "261",
+			"idactivite": "3",
+			"idsite": "2",
+			"idrole": "2"
+		},
+		{
+			"jourpresence": "2021-08-16 00:00:00",
+			"nomactivite": "Traçabilité",
+			"nomsite": "Lalande",
+			"nomrole": "BENEVOLE",
+			"etat": "Présent",
+			"commentaire": "",
+			"nombre_present": "2",
+			"jour": "Lundi",
+			"idpresence": "169",
+			"idactivite": "4",
+			"idsite": "1",
+			"idrole": "1"
+		},
+		{
+			"jourpresence": "2021-08-23 00:00:00",
+			"nomactivite": "Distribution",
+			"nomsite": "Raisin",
+			"nomrole": "REFERENT",
+			"etat": "Absent",
+			"commentaire": "",
+			"nombre_present": "3",
+			"jour": "Lundi",
+			"idpresence": "252",
+			"idactivite": "3",
+			"idsite": "2",
+			"idrole": "2"
+		},
+		{
+			"jourpresence": "2021-08-23 00:00:00",
+			"nomactivite": "Traçabilité",
+			"nomsite": "Lalande",
+			"nomrole": "BENEVOLE",
+			"etat": "Absent",
+			"commentaire": "",
+			"nombre_present": "1",
+			"jour": "Lundi",
+			"idpresence": "253",
+			"idactivite": "4",
+			"idsite": "1",
+			"idrole": "1"
+		},
+		{
+			"jourpresence": "2021-08-30 00:00:00",
+			"nomactivite": "Distribution",
+			"nomsite": "Raisin",
+			"nomrole": "REFERENT",
+			"etat": "Absent",
+			"commentaire": "",
+			"nombre_present": "3",
+			"jour": "Lundi",
+			"idpresence": "251",
+			"idactivite": "3",
+			"idsite": "2",
+			"idrole": "2"
+		},
+		{
+			"jourpresence": "2021-08-30 00:00:00",
+			"nomactivite": "Traçabilité",
+			"nomsite": "Lalande",
+			"nomrole": "BENEVOLE",
+			"etat": "Non défini",
+			"commentaire": "",
+			"nombre_present": "1",
+			"jour": "Lundi",
+			"idpresence": null,
+			"idactivite": "4",
+			"idsite": "1",
+			"idrole": "1"
+		},
+		{
+			"jourpresence": "2021-09-06 00:00:00",
+			"nomactivite": "Distribution",
+			"nomsite": "Raisin",
+			"nomrole": "REFERENT",
+			"etat": "Absent",
+			"commentaire": "congés",
+			"nombre_present": "0",
+			"jour": "Lundi",
+			"idpresence": "193",
+			"idactivite": "3",
+			"idsite": "2",
+			"idrole": "2"
+		},
+		{
+			"jourpresence": "2021-09-06 00:00:00",
+			"nomactivite": "Traçabilité",
+			"nomsite": "Lalande",
+			"nomrole": "BENEVOLE",
+			"etat": "Absent",
+			"commentaire": "congés",
+			"nombre_present": "0",
+			"jour": "Lundi",
+			"idpresence": "194",
+			"idactivite": "4",
+			"idsite": "1",
+			"idrole": "1"
+		}
+	]
+}
+
+
 async function mockFetch(url, config) {
 
   const invalidToken = {
@@ -8,10 +126,10 @@ async function mockFetch(url, config) {
             json: async () => ({"error": "invalid token"}),
 		    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
           }
-
+  console.log(url);
   switch (url) {
 
-    case 'http://' + constantes.BDD + '/AUT/AP_LOGIN/': {
+    case constantes.ADDRESS + '/AUT/AP_LOGIN/': {
 
       const body = await JSON.parse(config.body)
 
@@ -33,7 +151,7 @@ async function mockFetch(url, config) {
 	  }
     }
 
-    case 'http://' + constantes.BDD + '/APP/AP_UPD_NOTIF/': {
+    case constantes.ADDRESS + '/APP/AP_UPD_NOTIF/': {
 		const body = await JSON.parse(config.body) 
 		
 		if (body.token === "123456789") {
@@ -50,7 +168,7 @@ async function mockFetch(url, config) {
 		
 	}
 	
-	case 'http://' + constantes.BDD + '/AUT/AP_RST_MOTDEPASSE/': {
+	case constantes.ADDRESS + '/AUT/AP_RST_MOTDEPASSE/': {
 
       const body = await JSON.parse(config.body)
 
@@ -71,9 +189,54 @@ async function mockFetch(url, config) {
         }
 	  }
     }
+	
+	case constantes.ADDRESS + '/APP/AP_LST_PRE_BEN/':{
+
+		const body = await JSON.parse(config.body)
+
+
+		//if (body.token !== body.params.P_IDBENEVOLE) {
+		//	throw new Error(`Unhandled request: ${url}`);
+		//}
+		
+		//switch (body.token) {
+			
+		//	case '1005': {
+				
+				
+				return {
+				  ok: true,
+				  status: 200,
+				  json: async () => (engagementInit),
+				  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+				}
+				
+				
+		//	}
+			
+		//}
+
+	}
+	
+	case constantes.ADDRESS + '/APP/AP_CHECK_REFERENT/':{
+		return {
+		  ok: true,
+		  status: 200,
+		  json: async () => ({"data":[{"ref":"1"}]}),
+		  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+		}
+	}
+	
+	case constantes.ADDRESS + '/APP/AP_CHECK_RESPONSABLE/':{
+		return {
+		  ok: true,
+		  status: 200,
+		  json: async () => ({"data":[{"resp":"1"}]}),
+		  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+		}
+	}
 
     default: {
-
       throw new Error(`Unhandled request: ${url}`)
 
     }

@@ -14,7 +14,7 @@ export const sendAPI =   async (apCode,sqlCode,params, tokenCo = null) => {
 	  'params' : params,
 	});
   }
-  const response = await fetch('http://' + constantes.BDD + '/' + apCode + '/' + sqlCode + '/', {
+  const response = await fetch(constantes.ADDRESS +  '/' + apCode + '/' + sqlCode + '/', {
 	method: 'POST',
 	body: body});
   return checkFetch(response,apCode);
