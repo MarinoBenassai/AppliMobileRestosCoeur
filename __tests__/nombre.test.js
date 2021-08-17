@@ -1,8 +1,6 @@
-import React from 'react';
-import { cleanup, render, act, fireEvent, waitFor, debug } from "@testing-library/react-native";
+import { cleanup} from "@testing-library/react-native";
 
 import {normalizeInputPhone} from '../src/components/normalizeInputPhone';
-import {userContext} from '../src/contexts/userContext'
 jest.mock("../src/components/sendAPI.js");
 
 afterEach(cleanup)

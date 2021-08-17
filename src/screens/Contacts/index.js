@@ -42,7 +42,12 @@ function contactScreen() {
     setVisibleData( data ); //traitementSort("NOM", data, data, 1, 2, 3, 4, 0) ); // ordonne la liste initiale
   }, [data]);
 
-  
+
+  const fctModal = (item) => {
+    setMail(item.email);
+    setPhone(item.telephone);
+    setModalVisible(!modalVisible);
+  }
 
   // On crée le renderer pour la flatlist
   const renderItem = ({ item }) => (
@@ -64,7 +69,7 @@ function contactScreen() {
 
       {/* Conteneur 3eme colonne : contacter */}
       <View style={[styles.colomn, {width:'33%'}]}>
-        <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setModalVisible(!modalVisible)}} testID="iconLettre">
+        <Pressable onPress={() => fctModal(item)} testID="iconLettre">
           {({ pressed }) => (
             <Icon 
               style = {{alignSelf: "center"}}
@@ -84,7 +89,7 @@ function contactScreen() {
   return (
     <>
     <SafeAreaView style={styles.container} >
-	    <ModalContact visible = {modalVisible} setVisible = {setModalVisible} mail = {mail} phone = {phone}/>
+	    <ModalContact visible={modalVisible} setVisible={setModalVisible} mail={mail} phone={phone}/>
       {isLoading ? (
           <View style={styles.loading}>
           <ActivityIndicator size="large" color="#00ff00" />

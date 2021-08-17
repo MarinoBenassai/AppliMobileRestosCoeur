@@ -222,7 +222,7 @@ async function mockFetch(url, config) {
   // Contact
   case constantes.ADDRESS + '/APP/AP_LST_CONTACT/': {
     const body = await JSON.parse(config.body);
-  if (body.params.P_IDBENEVOLE === 1005){
+  if (body.params.P_IDBENEVOLE === 0){
     return {
         ok: true,
         status: 200,
@@ -230,6 +230,15 @@ async function mockFetch(url, config) {
     headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
       }
   }
+  else if (body.params.P_IDBENEVOLE === 1){
+    return {
+        ok: false,
+        status: 404,
+        json: async () => ({"error": "contact erreur"}),
+    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+      }
+  }
+
   else {		  
       return {
         ok: false,

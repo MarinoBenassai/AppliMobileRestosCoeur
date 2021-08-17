@@ -10,46 +10,47 @@ afterEach(cleanup)
 describe('Contacts', () => {
 
   
-  it('Pas de test sur flatlist .....?', async () => {
+  it('Modal visible avce bonnes infos', async () => {
 	const handleError = jest.fn(() => {});
-	const userID = 1005;
-
-	const a = "a";
+	const userID = 0;
 	
 	context = {
 		handleError: handleError,
 		userID: userID
 	}
 	
-    const { getAllByTestId, debug, getByText, getByPlaceholderText } = render(
+    const { getAllByTestId, getByText } = render(
 	<userContext.Provider value = {context}>
 		<Contacts />
 	</userContext.Provider>, {}
 	);
 
 
-
-
-
-	/* const first = within(getby...(''));
-	expect(first.getByText('')).toBe...();
-
- */
-
-	//const flatlist = getByTestId('flatlist');
-
-
-
-
-	//await waitFor(() => expect(getByTestId('flatlist')));
-	//debug("làààà\n\n");
-	//debug("ici : " + JSON.stringify(getByTestId('flatlist').props.children));
-	//expect(getByTestId('flatlist').props.children).toHaveLength(2);
-
 	await waitFor(() => expect(getAllByTestId('iconLettre')));
-    fireEvent.press(getAllByTestId('iconLettre'));
-	await waitFor(() => expect(fctModalApp).toHaveBeenCalledTimes(1));
-	expect(fctModalApp).toBeCalledWith("Attention", "Email non valide");
+    fireEvent.press(getAllByTestId('iconLettre')[0]);
+	await waitFor(() => expect(getByText("Informations de contact")));
+	expect(getByText("00 00 00 00 00"));
+	expect(getByText("veeeee@hotmail.fr"));
+	  
+  });
+
+  it('catch', async () => {
+	const handleError = jest.fn(() => {});
+	const userID = 1;
+	
+	context = {
+		handleError: handleError,
+		userID: userID
+	}
+	
+    render(
+	<userContext.Provider value = {context}>
+		<Contacts />
+	</userContext.Provider>, {}
+	);
+
+
+	await waitFor(() => expect(handleError).toHaveBeenCalledWith("contact erreur"));
 	  
   });
   
