@@ -30,7 +30,7 @@ function ViewStatus(props) {
 	
     if(status == "Présent"){
         return (<View style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
-            <Pressable onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
+            <Pressable testID = "Présent" onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
                 {({ pressed }) => (
                     <Icon 
                         name='check' 
@@ -44,7 +44,7 @@ function ViewStatus(props) {
     }
     else if( (status == "Absent") && ((role == "2") || id1 == id2) ) {
         return(<View style={{ justifyContent:"center", flexDirection: align, alignSelf: "center"}}>
-            <Pressable onPress={() => {fctCommentaire();cacherInfoBulle();}}
+            <Pressable testID = "CommentaireAbsence" onPress={() => {fctCommentaire();cacherInfoBulle();}}
 			onHoverIn = {() => {refBoutonComentaire.current.measure((x, y, width, height, pageX, pageY) => afficherInfoBulle(pageX, pageY,commentaire));}}
 			onHoverOut = {cacherInfoBulle}
 			ref = {refBoutonComentaire}>
@@ -58,7 +58,7 @@ function ViewStatus(props) {
                 )}
             </Pressable>
             
-            <Pressable onPress={fctStatut}>
+            <Pressable testID = "Absent" onPress={fctStatut}>
                 {({ pressed }) => (
                     <Icon 
                         name='x' 
@@ -83,7 +83,7 @@ function ViewStatus(props) {
     }
     else{
         return(<View style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
-            <Pressable onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
+            <Pressable testID = "Non defini" onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
                 {({ pressed }) => (
                     <Icon 
                         name='unverified' 

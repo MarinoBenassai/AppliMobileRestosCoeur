@@ -21,7 +21,7 @@ describe('Contacts', () => {
 		userID: userID
 	}
 	
-    const { getByTestId, debug, getByText, getByPlaceholderText } = render(
+    const { getAllByTestId, debug, getByText, getByPlaceholderText } = render(
 	<userContext.Provider value = {context}>
 		<Contacts />
 	</userContext.Provider>, {}
