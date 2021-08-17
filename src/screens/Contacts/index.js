@@ -83,7 +83,7 @@ function contactScreen() {
   // on retourne la flatliste
   return (
     <>
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} >
 	    <ModalContact visible = {modalVisible} setVisible = {setModalVisible} mail = {mail} phone = {phone}/>
       {isLoading ? (
           <View style={styles.loading}>
@@ -131,6 +131,7 @@ function contactScreen() {
             data={visibleData}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
+            testID="flatlist"
           />
         </View>
       </>

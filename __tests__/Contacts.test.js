@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, render, fireEvent, waitFor } from "@testing-library/react-native";
+import { cleanup, render, act, fireEvent, waitFor, debug } from "@testing-library/react-native";
 
 import Contacts from '../src/screens/Contacts';
 import {userContext} from '../src/contexts/userContext'
@@ -10,23 +10,44 @@ afterEach(cleanup)
 describe('Contacts', () => {
 
   
-  it('should display contact information', async () => {
+  it('Pas de test sur flatlist .....?', async () => {
 	const handleError = jest.fn(() => {});
-	const fctModalApp = jest.fn(() => {});
+	const userID = 1005;
+
+	const a = "a";
 	
 	context = {
 		handleError: handleError,
-		fctModalApp: fctModalApp
+		userID: userID
 	}
 	
-    const { getByTestId, getByText, getByPlaceholderText } = render(
+    const { getByTestId, debug, getByText, getByPlaceholderText } = render(
 	<userContext.Provider value = {context}>
 		<Contacts />
-	</userContext.Provider>
+	</userContext.Provider>, {}
 	);
 
-	fireEvent.changeText(getByPlaceholderText('votre@email.fr'), "aaa");
-    fireEvent.press(getByText('ENVOYER'));
+
+
+
+
+	/* const first = within(getby...(''));
+	expect(first.getByText('')).toBe...();
+
+ */
+
+	//const flatlist = getByTestId('flatlist');
+
+
+
+
+	//await waitFor(() => expect(getByTestId('flatlist')));
+	//debug("làààà\n\n");
+	//debug("ici : " + JSON.stringify(getByTestId('flatlist').props.children));
+	//expect(getByTestId('flatlist').props.children).toHaveLength(2);
+
+	await waitFor(() => expect(getAllByTestId('iconLettre')));
+    fireEvent.press(getAllByTestId('iconLettre'));
 	await waitFor(() => expect(fctModalApp).toHaveBeenCalledTimes(1));
 	expect(fctModalApp).toBeCalledWith("Attention", "Email non valide");
 	  
