@@ -126,7 +126,7 @@ async function mockFetch(url, config) {
             json: async () => ({"error": "invalid token"}),
 		    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
           }
-  console.log(url);
+
   switch (url) {
 
     case constantes.ADDRESS + '/AUT/AP_LOGIN/': {
@@ -188,7 +188,7 @@ async function mockFetch(url, config) {
 	      headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
         }
 	  }
-    }
+  }
 	
 	case constantes.ADDRESS + '/APP/AP_LST_PRE_BEN/':{
 
@@ -227,7 +227,7 @@ async function mockFetch(url, config) {
         ok: true,
         status: 200,
         json: async () => ({"data":[{"jourdefaut":"Jeudi","nomactivite":"Pr\u00e9paration","nomsite":"Lalande","nom":"Haaaa","prenom":"Veeee","idbenevole":"212","telephone":"0000000000","email":"veeeee@hotmail.fr"},{"jourdefaut":"Jeudi","nomactivite":"Pr\u00e9paration","nomsite":"Lalande","nom":"eerdA","prenom":"Jolle","idbenevole":"276","telephone":"0000242","email":"ja@gmail.com"},{"jourdefaut":"Mercredi","nomactivite":"Pr\u00e9paration","nomsite":"Lalande","nom":"CIE","prenom":"Ges","idbenevole":"104","telephone":"0788888888","email":"g@free.fr"}]}),
-    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
       }
   }
   else if (body.params.P_IDBENEVOLE === 1){
@@ -235,7 +235,7 @@ async function mockFetch(url, config) {
         ok: false,
         status: 404,
         json: async () => ({"error": "contact erreur"}),
-    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
       }
   }
 
@@ -244,7 +244,7 @@ async function mockFetch(url, config) {
         ok: false,
         status: 404,
         json: async () => ({"error": "contact...."}),
-      headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
       }
   }
   }
@@ -268,10 +268,81 @@ async function mockFetch(url, config) {
 		}
 	}
 
-    default: {
-      throw new Error(`Unhandled request: ${url}`)
+  // Compte engagement défaut
+  case constantes.ADDRESS + '/APP/AP_LST_ENG_BEN/': {
 
+    const body = await JSON.parse(config.body)
+
+    if (body.params.P_IDBENEVOLE === 0 || body.params.P_IDBENEVOLE === 1){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"data":[{"jourdefaut":"Lundi","nomactivite":"Distribution","nomsite":"Raisin","nomrole":"REFERENT","idengagement":"1009"},{"jourdefaut":"Lundi","nomactivite":"Tra\u00e7abilit\u00e9","nomsite":"Lalande","nomrole":"BENEVOLE","idengagement":"1672"}]}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
     }
+
+  }
+
+  // Compte info perso
+  case constantes.ADDRESS + '/APP/AP_MON_COMPTE/': {
+
+    const body = await JSON.parse(config.body)
+    if (body.params.P_IDBENEVOLE === 0 || body.params.P_IDBENEVOLE === 1){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"data":[{"nom":"FT","prenom":"Ht","email":"h@f.fr","telephone":"8888888888","idbenevole":"1005"}]}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+
+  }
+
+  // Chnagement d'infos de contact
+  case constantes.ADDRESS + '/AUT/AP_UPD_INFO_BENEVOLE/': {
+
+    const body = await JSON.parse(config.body)
+
+    if (body.params.P_IDBENEVOLE === 0){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"ok": "contact info" }),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+
+  }
+
+  // Changement pwd
+  case constantes.ADDRESS + '/AUT/AP_UPD_MOTDEPASSE/': {
+
+    const body = await JSON.parse(config.body)
+    
+    if (body.params.idBenevole == 0){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"nbMod":1}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+    else if (body.params.idBenevole == 1){ 
+      return {
+          ok: false,
+          status: 401,
+          json: async () => ({"error": "Ancien mot de passe incorrect."}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+
+  }
+
+  default: {
+    throw new Error(`Unhandled request: ${url}`)
+
+  }
 
   }
 
