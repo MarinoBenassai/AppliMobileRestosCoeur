@@ -283,7 +283,7 @@ function activiteScreen({route, navigation}) {
       setLoading(true);
       var listeDestinataire = listeID();
       setModalVisibleMail(!modalVisibleMail);
-      sendAPI('APP', 'AP_SEND_MAIL', {'P_TOKEN':token, 'P_IDDESTINATAIRE':listeDestinataire, 'P_SUJET':mailSujet, 'P_MESSAGE':mailTxt},token) //TODO
+      sendAPI('AUT', 'AP_SEND_MAIL', {'P_TOKEN':token, 'P_IDDESTINATAIRE':listeDestinataire, 'P_SUJET':mailSujet, 'P_MESSAGE':mailTxt},token) //TODO
       .then((json) =>  {setLoading(false); fctModalApp("Succés", "Le mail é bien été envoyé"); console.info("Mail à tous envoyé"); setMailTxt("")})
       .catch((error) => {setLoading(false); setMailTxt(""); handleError (error)});
     }
