@@ -21,10 +21,12 @@ describe('Compte : info de contact', () => {
 
 	const handleError = jest.fn(() => {});
 	const userID = 0;
+	const token = 0;
 	
 	context = {
 		handleError: handleError,
 		userID: userID,
+		token: token,
 	}
 
     // render
@@ -48,10 +50,12 @@ describe('Compte : info de contact', () => {
 
 	const handleError = jest.fn(() => {});
 	const userID = 0;
+	const token = 0;
 	
 	context = {
 		handleError: handleError,
 		userID: userID,
+		token: token,
 	}
 
     // render
@@ -75,10 +79,12 @@ describe('Compte : info de contact', () => {
 
 	const handleError = jest.fn(() => {});
 	const userID = 0;
+	const token = 0;
 	
 	context = {
 		handleError: handleError,
 		userID: userID,
+		token: token,
 	}
 
     // render
@@ -102,10 +108,12 @@ describe('Compte : info de contact', () => {
 
 	const handleError = jest.fn(() => {});
 	const userID = 0;
+	const token = 0;
 	
 	context = {
 		handleError: handleError,
 		userID: userID,
+		token: token,
 	}
 
     // render
@@ -130,10 +138,12 @@ describe('Compte : info de contact', () => {
 
 	const handleError = jest.fn(() => {});
 	const userID = 0;
+	const token = 0;
 	
 	context = {
 		handleError: handleError,
 		userID: userID,
+		token: token,
 	}
 
     // render
@@ -156,10 +166,12 @@ describe('Compte : info de contact', () => {
 
 	const handleError = jest.fn(() => {});
 	const userID = 0;
+	const token = 0;
 	
 	context = {
 		handleError: handleError,
 		userID: userID,
+		token: token,
 	}
 
     // render
@@ -184,10 +196,12 @@ describe('Compte : info de contact', () => {
 
 	const handleError = jest.fn(() => {});
 	const userID = 0;
+	const token = 0;
 	
 	context = {
 		handleError: handleError,
 		userID: userID,
+		token: token,
 	}
 
     // render
@@ -212,10 +226,12 @@ describe('Compte : info de contact', () => {
 
 	const handleError = jest.fn(() => {});
 	const userID = 0;
+	const token = 0;
 	
 	context = {
 		handleError: handleError,
 		userID: userID,
+		token: token,
 	}
 
     // render
@@ -245,10 +261,12 @@ describe('Compte : pwd', () => {
   
       const handleError = jest.fn(() => {});
       const userID = 0;
+      const token = 0;
       
       context = {
           handleError: handleError,
           userID: userID,
+          token: token,
       }
   
       // render
@@ -272,10 +290,12 @@ describe('Compte : pwd', () => {
   
         const handleError = jest.fn(() => {});
         const userID = 0;
+        const token = 0;
         
         context = {
             handleError: handleError,
             userID: userID,
+            token: token,
         }
     
         // render
@@ -301,10 +321,12 @@ describe('Compte : pwd', () => {
         //show.mockReset();
         const handleError = jest.fn(() => {});
         const userID = 0;
+        const token = 0;
         
         context = {
             handleError: handleError,
             userID: userID,
+            token: token,
         }
     
         // render
@@ -330,12 +352,14 @@ describe('Compte : pwd', () => {
         //show.mockReset();
         const handleError = jest.fn(() => {});
         const userID = 1;
+        const token = 1;
         const oldP = "oldP";
         const newP = "newP";
         
         context = {
             handleError: handleError,
             userID: userID,
+            token: token,
             oldP: oldP,
             newP: newP,
         }
@@ -363,12 +387,14 @@ describe('Compte : pwd', () => {
         //show.mockReset();
         const handleError = jest.fn(() => {});
         const userID = 0;
+        const token = 0;
         const oldP = "oldP";
         const newP = "newP";
         
         context = {
             handleError: handleError,
             userID: userID,
+            token: token,
             oldP: oldP,
             newP: newP,
         }

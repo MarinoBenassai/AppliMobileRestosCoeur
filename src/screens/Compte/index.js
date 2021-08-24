@@ -326,7 +326,7 @@ const compteScreen = () => {
 
 	  if( (phone != dataPerso.telephone) || (mail != dataPerso.email) ){
 
-      sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_IDBENEVOLE':userID, 'P_EMAIL':mail, 'P_TELEPHONE':phone},token)
+      sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_TOKEN':token, 'P_EMAIL':mail, 'P_TELEPHONE':phone},token)
       .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
       .catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
 

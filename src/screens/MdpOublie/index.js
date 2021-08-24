@@ -30,7 +30,7 @@ function oublieScreen({navigation}){
 			setLoading(true);
 			sendAPI('AUT', 'AP_RST_MOTDEPASSE',{'email':textEmail})
 			.then((json) => {
-				fctModalApp("succès", "Si cette adresse est associée à un compte, un mail contenant votre nouveau mot de passe vient de vous être envoyé. Votre nouveau mot de passe est " + json["mdp"] +".");
+				fctModalApp("succès", "Si cette adresse est associée à un compte, un mail contenant un lien pour réinitialiser votre mot de passe vient de vous être envoyé. Si vous n'avez rien reçu, vérifiez votre dossier de spam et réessayez dans quelques minutes.");
 				setLoading(false);
 				navigation.goBack();
 			})
