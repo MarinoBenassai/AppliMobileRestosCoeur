@@ -339,6 +339,36 @@ async function mockFetch(url, config) {
 
   }
 
+  // SynthRef
+  case constantes.ADDRESS + '/APP/AP_LST_SYN_REF/': {
+
+    const body = await JSON.parse(config.body)
+    
+    if (body.params.idBenevole == 0){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"data":[{"jourpresence":"2021-08-23 00:00:00","nomactivite":"Distribution","nomsite":"Raisin","nombre_present":"1","Tous_sites":"1","idactivite":"3","idsite":"2"},{"jourpresence":"2021-08-30 00:00:00","nomactivite":"Distribution","nomsite":"Raisin","nombre_present":"0","Tous_sites":"0","idactivite":"3","idsite":"2"}]}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+  }
+
+  // ListeUtilisateur
+  case constantes.ADDRESS + '/APP/AP_ALL_BENEVOLE/': {
+
+    const body = await JSON.parse(config.body)
+    
+    if (body.params.idBenevole == 0){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"data":[{"prenom":"Aaaaa","nom":"B","email":"bedfg@gmail.com","telephone":"0544555","idbenevole":"27"},{"prenom":"Alis","nom":"AasdI","email":"wsdn@gmail.com","telephone":"0000006","idbenevole":"1703"},{"prenom":"Adfren","nom":"ZDFS","email":"azedf@hotmail.fr","telephone":"6000000","idbenevole":"1378"}]}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+  }
+
   default: {
     throw new Error(`Unhandled request: ${url}`)
 

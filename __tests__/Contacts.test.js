@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, render, act, fireEvent, waitFor, debug } from "@testing-library/react-native";
+import { cleanup, render, fireEvent, waitFor } from "@testing-library/react-native";
 
 import Contacts from '../src/screens/Contacts';
 import {userContext} from '../src/contexts/userContext'
