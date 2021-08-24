@@ -1,122 +1,7 @@
 import constantes from './src/constantes';
+import data from './__tests__/data'
 
-const engagementInit = {
-	"data": [
-		{
-			"jourpresence": "2021-08-16 00:00:00",
-			"nomactivite": "Distribution",
-			"nomsite": "Raisin",
-			"nomrole": "REFERENT",
-			"etat": "Absent",
-			"commentaire": "",
-			"nombre_present": "4",
-			"jour": "Lundi",
-			"idpresence": "261",
-			"idactivite": "3",
-			"idsite": "2",
-			"idrole": "2"
-		},
-		{
-			"jourpresence": "2021-08-16 00:00:00",
-			"nomactivite": "Traçabilité",
-			"nomsite": "Lalande",
-			"nomrole": "BENEVOLE",
-			"etat": "Présent",
-			"commentaire": "",
-			"nombre_present": "2",
-			"jour": "Lundi",
-			"idpresence": "169",
-			"idactivite": "4",
-			"idsite": "1",
-			"idrole": "1"
-		},
-		{
-			"jourpresence": "2021-08-23 00:00:00",
-			"nomactivite": "Distribution",
-			"nomsite": "Raisin",
-			"nomrole": "REFERENT",
-			"etat": "Absent",
-			"commentaire": "",
-			"nombre_present": "3",
-			"jour": "Lundi",
-			"idpresence": "252",
-			"idactivite": "3",
-			"idsite": "2",
-			"idrole": "2"
-		},
-		{
-			"jourpresence": "2021-08-23 00:00:00",
-			"nomactivite": "Traçabilité",
-			"nomsite": "Lalande",
-			"nomrole": "BENEVOLE",
-			"etat": "Absent",
-			"commentaire": "",
-			"nombre_present": "1",
-			"jour": "Lundi",
-			"idpresence": "253",
-			"idactivite": "4",
-			"idsite": "1",
-			"idrole": "1"
-		},
-		{
-			"jourpresence": "2021-08-30 00:00:00",
-			"nomactivite": "Distribution",
-			"nomsite": "Raisin",
-			"nomrole": "REFERENT",
-			"etat": "Absent",
-			"commentaire": "",
-			"nombre_present": "3",
-			"jour": "Lundi",
-			"idpresence": "251",
-			"idactivite": "3",
-			"idsite": "2",
-			"idrole": "2"
-		},
-		{
-			"jourpresence": "2021-08-30 00:00:00",
-			"nomactivite": "Traçabilité",
-			"nomsite": "Lalande",
-			"nomrole": "BENEVOLE",
-			"etat": "Non défini",
-			"commentaire": "",
-			"nombre_present": "1",
-			"jour": "Lundi",
-			"idpresence": null,
-			"idactivite": "4",
-			"idsite": "1",
-			"idrole": "1"
-		},
-		{
-			"jourpresence": "2021-09-06 00:00:00",
-			"nomactivite": "Distribution",
-			"nomsite": "Raisin",
-			"nomrole": "REFERENT",
-			"etat": "Absent",
-			"commentaire": "congés",
-			"nombre_present": "0",
-			"jour": "Lundi",
-			"idpresence": "193",
-			"idactivite": "3",
-			"idsite": "2",
-			"idrole": "2"
-		},
-		{
-			"jourpresence": "2021-09-06 00:00:00",
-			"nomactivite": "Traçabilité",
-			"nomsite": "Lalande",
-			"nomrole": "BENEVOLE",
-			"etat": "Absent",
-			"commentaire": "congés",
-			"nombre_present": "0",
-			"jour": "Lundi",
-			"idpresence": "194",
-			"idactivite": "4",
-			"idsite": "1",
-			"idrole": "1"
-		}
-	]
-}
-
+var engagementState = data.engagement1;
 
 async function mockFetch(url, config) {
 
@@ -193,29 +78,60 @@ async function mockFetch(url, config) {
 	case constantes.ADDRESS + '/APP/AP_LST_PRE_BEN/':{
 
 		const body = await JSON.parse(config.body)
-
-    
-
-		//if (body.token !== body.params.P_IDBENEVOLE) {
-		//	throw new Error(`Unhandled request: ${url}`);
-		//}
 		
-		//switch (body.token) {
+		console.log("#############################################################################",body.token);
+		
+		switch (body.token){
 			
-		//	case '1005': {
-				
-				
-				return {
-				  ok: true,
-				  status: 200,
-				  json: async () => (engagementInit),
-				  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
-				}
-				
-				
-		//	}
+			case 0: {
+			  return {
+			    ok: true,
+			    status: 200,
+			    json: async () => (data.engagement0),
+			    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+			  }
+			}
 			
-		//}
+			case 1: {
+			  return {
+			    ok: true,
+			    status: 200,
+			    json: async () => (engagementState),
+			    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+			  }
+			}
+		}
+		
+
+
+	}
+	
+	case constantes.ADDRESS + '/APP/AP_INS_PRESENCE/':{
+		
+
+		
+		const body = await JSON.parse(config.body)
+		console.log(body);
+		if (body.params.P_IDBENEVOLE === 1005 
+		&& body.params.P_JOURPRESENCE === '2021-08-23 00:00:00'
+		&& body.params.P_IDACTIVITE === '3'
+        && body.params.P_IDSITE === '2'
+		&& body.params.P_IDROLE === '2'
+		&& body.token === 1) 
+		{
+			console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+			engagementState = data.engagement2;		
+		}
+		else {
+			throw new Error(`Incorrect request parameters`);	
+		}
+
+		return {
+		  ok: true,
+		  status: 200,
+		  json: async () => ({"data":[1]}),
+		  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},	
+		}
 
 	}
 
@@ -304,7 +220,7 @@ async function mockFetch(url, config) {
 
     const body = await JSON.parse(config.body)
 
-    if (body.params.P_IDBENEVOLE === 0){ 
+    if (body.params.P_TOKEN === 0){ 
       return {
           ok: true,
           status: 200,
@@ -338,6 +254,23 @@ async function mockFetch(url, config) {
     }
 
   }
+  	case constantes.ADDRESS + '/APP/AP_CHECK_REFERENT/':{
+		return {
+		  ok: true,
+		  status: 200,
+		  json: async () => ({"data":[{"ref":"1"}]}),
+		  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+		}
+	}
+	
+	case constantes.ADDRESS + '/APP/AP_CHECK_RESPONSABLE/':{
+		return {
+		  ok: true,
+		  status: 200,
+		  json: async () => ({"data":[{"resp":"1"}]}),
+		  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+		}
+	}
 
   // SynthRef
   case constantes.ADDRESS + '/APP/AP_LST_SYN_REF/': {

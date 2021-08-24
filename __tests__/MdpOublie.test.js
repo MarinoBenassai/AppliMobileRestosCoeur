@@ -56,7 +56,7 @@ describe('MdpOublie', () => {
 	fireEvent.changeText(getByPlaceholderText('votre@email.fr'), "a@a.a");
     fireEvent.press(getByText('ENVOYER'));
 	await waitFor(() => expect(fctModalApp).toHaveBeenCalledTimes(1));
-	expect(fctModalApp).toBeCalledWith("succès", "Si cette adresse est associée à un compte, un mail contenant votre nouveau mot de passe vient de vous être envoyé. Votre nouveau mot de passe est nouveaumotdepasse.");
+	expect(fctModalApp).toBeCalledWith("succès", "Si cette adresse est associée à un compte, un mail contenant un lien pour réinitialiser votre mot de passe vient de vous être envoyé. Si vous n'avez rien reçu, vérifiez votre dossier de spam et réessayez dans quelques minutes.");
 	  
   });
   
