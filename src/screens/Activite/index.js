@@ -28,6 +28,7 @@ function activiteScreen({route, navigation}) {
   const toast = useToast();
 
   const refBenef = useRef(null);
+  const refMailTxt = useRef(null);
 
   const [myCtrl, setMyCtrl] = useState(false);
   const [myCarret, setMyCarret] = useState(0);
@@ -473,14 +474,16 @@ function activiteScreen({route, navigation}) {
               <ImageBackground source={logoVide} resizeMode="cover" style={styles.modalContactView} imageStyle={styles.modalContactView2}>
                 <Text style={styles.modalContactTitle}>Email :</Text>
                   <TextInput
-                    //value={//mailSujet}
+                    value={mailSujet}
                     style={[styles.input, {borderWidth: 1, minWidth: 250}]}
-                    //onChangeText={setMailSujet}
+                    onChangeText={setMailSujet}
                     placeholder="Sujet"
                     autoCompleteType="off"
                     maxLength={999}
+                    onSubmitEditing={() => refMailTxt.current.focus()}
                   />
                   <TextInput
+                    ref={refMailTxt}
                     multiline
                     numberOfLines={10}
                     value={mailTxt}
