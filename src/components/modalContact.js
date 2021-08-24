@@ -69,14 +69,14 @@ const ModalContact = (props) => {
                   </View>
                 )}
               </Pressable>
-              <Pressable
+              {Device.brand && <Pressable
                 style={[styles.buttonContactMid, {marginRight: 10}]}
                 onPress={() => {props.setVisible(!props.visible); Linking.openURL(`sms:${props.phone}`);}}
               >
                 {({ pressed }) => (
                   <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>SMS</Text>
                 )}
-              </Pressable>
+              </Pressable>}
               <Pressable
                 style={[styles.buttonContactRight]}
                 onPress={() => {props.setVisible(!props.visible); Linking.openURL(`mailto:${props.mail}`);}}
