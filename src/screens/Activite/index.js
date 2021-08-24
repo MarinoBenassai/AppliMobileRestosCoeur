@@ -66,6 +66,11 @@ function activiteScreen({route, navigation}) {
   const [mail, setMail] = useState('');
   const [phone, setPhone] = useState('');
 
+  // Mail Txt
+  const [modalVisibleMail, setModalVisibleMail] = useState(false);
+  const [mailTxt, setMailTxt] = useState("");
+  const [mailSujet, setMailSujet] = useState("");
+
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID;
   const token = React.useContext(userContext).token;
@@ -75,6 +80,9 @@ function activiteScreen({route, navigation}) {
 
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
+
+  // On récupère la fonction pour gérer le modal d'informations
+  const fctModalApp = React.useContext(userContext).fctModalApp;
 
   // Fonction de sélection de l'activité
   function versListe({navigation}, liste) {
@@ -196,15 +204,18 @@ function activiteScreen({route, navigation}) {
     setBeneficiaireActivite( normalizeInputNumber(value, beneficiaireActivite) );
   };
 
-  // préparation des emails pour envoie collectif
-  const mailAll = (  ) => { 
+  // retourne la liste des ids des bénévoles
+  const listeID = () => { 
 
-    var mails = "";
+    var ids = []
     for(let d of data){
-      mails += `${d.email},`;
+      if(d.idbenevole != userID){
+        ids.push(d.idbenevole);
+      }
     }
 
-    Linking.openURL(`mailto:${mails}`);
+    console.log(ids);
+    return ids;
   };
 
   // préparation des numéro pour envoie collectif
@@ -261,11 +272,21 @@ function activiteScreen({route, navigation}) {
   const fctCommentaireAbsence = () => {
     setModalVisibleCommentaireAbsence(!modalVisibleCommentaireAbsence);
     sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment},token)
-	.then((json) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut : absent :"); console.log(json); setUpToDate(false); setComment("")})
+	.then((json) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut : absent "); setUpToDate(false); setComment("")})
 	.catch((error) => {setUpToDate(false); setComment(""); handleError (error)});
 
   }
 
+  const fctMailTxt = () => {
+    if(mailTxt != ""){
+      setLoading(true);
+      var listeDestinataire = listeID();
+      setModalVisibleMail(!modalVisibleMail);
+      sendAPI('APP', 'AP_SEND_MAIL', {'P_TOKEN':token, 'P_IDDESTINATAIRE':listeDestinataire, 'P_SUJET':mailSujet, 'P_MESSAGE':mailTxt},token) //TODO
+      .then((json) =>  {setLoading(false); fctModalApp("Succés", "Le mail é bien été envoyé"); console.info("Mail à tous envoyé"); setMailTxt("")})
+      .catch((error) => {setLoading(false); setMailTxt(""); handleError (error)});
+    }
+  }
 
   // change l'affichage
   const changeAffichage = () => {
@@ -419,17 +440,17 @@ function activiteScreen({route, navigation}) {
                     </View>
                   )}
                 </Pressable>
-                <Pressable
+                {Device.brand && <Pressable
                   style={{alignSelf: "center", padding: 10}}
                   onPress={() => {setModalVisibleMailATous(false); smsAll()}}
                 >
                   {({ pressed }) => (
                     <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>SMS</Text>
                   )}
-                </Pressable>
+                </Pressable>}
                 <Pressable
                   style={{alignSelf: "center", padding: 10}}
-                  onPress={() => {setModalVisibleMailATous(false); mailAll()}}
+                  onPress={() => {setModalVisibleMailATous(false); setModalVisibleMail(true)}}
                 >
                   {({ pressed }) => (
                     <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>MAIL</Text>
@@ -439,6 +460,66 @@ function activiteScreen({route, navigation}) {
               
             </ImageBackground>
           </View>
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisibleMail}
+          onRequestClose={() => {setModalVisibleMail(false); setMailTxt("")}}
+        >
+          <ScrollView >
+            <View style={styles.centeredView}>
+              <ImageBackground source={logoVide} resizeMode="cover" style={styles.modalContactView} imageStyle={styles.modalContactView2}>
+                <Text style={styles.modalContactTitle}>Email :</Text>
+                  <TextInput
+                    //value={//mailSujet}
+                    style={[styles.input, {borderWidth: 1, minWidth: 250}]}
+                    //onChangeText={setMailSujet}
+                    placeholder="Sujet"
+                    autoCompleteType="off"
+                    maxLength={999}
+                  />
+                  <TextInput
+                    multiline
+                    numberOfLines={10}
+                    value={mailTxt}
+                    style={[styles.input, {borderWidth: 1, minWidth: 250}]}
+                    onChangeText={setMailTxt}
+                    placeholder="votre mail"
+                    autoCompleteType="off"
+                    onSelectionChange={(event) => setMyCarret(event.nativeEvent.selection.end)}
+                    onKeyUp={(keyUp) => keyUp.keyCode == 17 && setMyCtrl(false)}
+                    onKeyPress={(keyPress) => { (!myCtrl && keyPress.keyCode == 13) && fctMailTxt();
+                                                (keyPress.keyCode == 13) && setMailTxt(mailTxt.slice(0, myCarret) + "\n" + mailTxt.slice(myCarret));
+                                                keyPress.keyCode == 17 && setMyCtrl(true)} }
+                    maxLength={999}
+                  />
+              
+                <View style={styles.modalContactButtonView}>
+                  <Pressable
+                    style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-end"}}
+                    // écrire et envoyer le commentaire
+                    onPress={() => fctMailTxt()}
+                  >
+                    {({ pressed }) => (
+                      <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", textAlign: "center", fontWeight: "bold"}]}>Valider</Text>
+                    )}
+                  </Pressable>
+
+                  <Pressable
+                    style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-start"}}
+                    onPress={() => {setModalVisibleMail(!modalVisibleMail);
+                                    setMailTxt("");}}
+                  >
+                    {({ pressed }) => (
+                      <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", textAlign: "center", fontWeight: "bold"}]}>Annuler</Text>
+                    )}
+                  </Pressable>
+                </View>
+              </ImageBackground>
+            </View>
+          </ScrollView>
         </Modal>
 
         <FlatList
