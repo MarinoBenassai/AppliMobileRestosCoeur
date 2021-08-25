@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useRef} from 'react';
 import { Modal, useWindowDimensions } from 'react-native';
-import {StyleSheet, Text, View, PixelRatio, ImageBackground, Pressable} from 'react-native';
+import {StyleSheet, Text, View, PixelRatio, ImageBackground, Pressable, ScrollView, TextInput, ActivityIndicator} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -277,7 +277,33 @@ export default function App() {
 	  setModalTexte(texte);
 	  setModalVisible(true);
   }
-  
+
+  //Loading
+  const [isLoading, setLoading] = useState(false);
+
+  //Email
+  const refMailTxt = useRef(null);
+  const [modalVisibleMail, setModalVisibleMail] = useState(false);
+  const [mailTxt, setMailTxt] = useState("");
+  const [mailSujet, setMailSujet] = useState("");
+  const [listeDestinataire, setListeDestinataire] = useState([]);
+
+  const fctMailTxt = () => {
+    if(mailTxt != ""){
+      setLoading(true);
+      setModalVisibleMail(!modalVisibleMail);
+      sendAPI('AUT', 'AP_SEND_MAIL', {'P_TOKEN':token, 'P_IDDESTINATAIRE':listeDestinataire, 'P_SUJET':mailSujet, 'P_MESSAGE':mailTxt},token) //TODO
+      .then((json) =>  {setLoading(false); fctModalApp("Succés", "Le mail à bien été envoyé"); console.info("Mail à tous envoyé"); setMailTxt(""); setMailSujet("");})
+      .catch((error) => {setLoading(false); setMailTxt(""); setMailSujet(""); handleError (error)});
+    }
+  }
+
+  const fctModalMail = ( liste ) => {
+	  setListeDestinataire(liste)
+	  setModalVisibleMail(true);
+  }
+
+  // Error
   function handleError (erreur) {
 	  if (erreur === "Invalid token"){
 		fctModalApp("Attention", "Votre session a expiré, veuillez vous reconnecter");
@@ -338,6 +364,11 @@ export default function App() {
   
   return (
 	<ToastProvider>
+		{isLoading &&
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#00ff00" />
+        </View>
+	  	}
 		<userContext.Provider value = {{
 		userID: userID,
 		token: token,
@@ -350,6 +381,7 @@ export default function App() {
 		afficherInfoBulle: afficherInfoBulle,
 		cacherInfoBulle: cacherInfoBulle,
 		fctModalApp: fctModalApp,
+		fctModalMail: fctModalMail,
 		registerForPushNotificationsAsync: registerForPushNotificationsAsync
 		}}>
 
@@ -405,6 +437,63 @@ export default function App() {
 					</ImageBackground>
 				</View>
     		</Modal>
+
+			<Modal
+				animationType="slide"
+				transparent={true}
+				visible={modalVisibleMail}
+				onRequestClose={() => {setModalVisibleMail(false); setMailTxt(""); setMailSujet("");}}
+			>
+				<ScrollView >
+					<View style={styles.centeredView}>
+						<ImageBackground source={logoVide} resizeMode="cover" style={[styles.modalContactView, {width: 600, maxWidth: "95%"}]} imageStyle={styles.modalContactView2}>
+							<Text style={styles.modalContactTitle}>Email :</Text>
+							<TextInput
+							value={mailSujet}
+							style={[styles.input, {borderWidth: 1, width:"100%"}]}
+							onChangeText={setMailSujet}
+							placeholder="Sujet"
+							autoCompleteType="off"
+							maxLength={1000}
+							onSubmitEditing={() => refMailTxt.current.focus()}
+							/>
+							<TextInput
+							ref={refMailTxt}
+							multiline
+							numberOfLines={10}
+							value={mailTxt}
+							style={[styles.input, {borderWidth: 1, width:"100%"}]}
+							onChangeText={setMailTxt}
+							placeholder="votre mail"
+							autoCompleteType="off"
+							maxLength={1000000}
+							/>
+						
+							<View style={styles.modalContactButtonView}>
+								<Pressable
+									style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-end"}}
+									// écrire et envoyer le commentaire
+									onPress={() => fctMailTxt()}
+								>
+									{({ pressed }) => (
+									<Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", textAlign: "center", fontWeight: "bold"}]}>Envoyer</Text>
+									)}
+								</Pressable>
+
+								<Pressable
+									style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-start"}}
+									onPress={() => {setModalVisibleMail(!modalVisibleMail);
+													setMailTxt(""); setMailSujet("")}}
+								>
+									{({ pressed }) => (
+									<Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", textAlign: "center", fontWeight: "bold"}]}>Annuler</Text>
+									)}
+								</Pressable>
+							</View>
+						</ImageBackground>
+					</View>
+				</ScrollView>
+			</Modal>
 
 		</userContext.Provider>
 	</ToastProvider>

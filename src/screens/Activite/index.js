@@ -28,7 +28,7 @@ function activiteScreen({route, navigation}) {
   const toast = useToast();
 
   const refBenef = useRef(null);
-  const refMailTxt = useRef(null);
+  //const refMailTxt = useRef(null);
 
   const [myCtrl, setMyCtrl] = useState(false);
   const [myCarret, setMyCarret] = useState(0);
@@ -68,9 +68,7 @@ function activiteScreen({route, navigation}) {
   const [phone, setPhone] = useState('');
 
   // Mail Txt
-  const [modalVisibleMail, setModalVisibleMail] = useState(false);
-  const [mailTxt, setMailTxt] = useState("");
-  const [mailSujet, setMailSujet] = useState("");
+  const [idDestinataire, setIdDestinataire] = useState();
 
   // On charge l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID;
@@ -82,8 +80,8 @@ function activiteScreen({route, navigation}) {
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
 
-  // On récupère la fonction pour gérer le modal d'informations
-  const fctModalApp = React.useContext(userContext).fctModalApp;
+  // On récupère la fonction pour gérer le modal d'Email
+  const fctModalMail = React.useContext(userContext).fctModalMail;
 
   // Fonction de sélection de l'activité
   function versListe({navigation}, liste) {
@@ -152,7 +150,7 @@ function activiteScreen({route, navigation}) {
         {/* Conteneur 3eme colonne */}
 
         <View style={{justifyContent: "space-evenly", marginRight: 0}}>
-          <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setmodalVisibleContact(!modalVisibleContact)} }>
+          <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setIdDestinataire(item.idbenevole); setmodalVisibleContact(!modalVisibleContact)} }>
             {({ pressed }) => (
               <Icon 
                 name='mail' 
@@ -278,17 +276,6 @@ function activiteScreen({route, navigation}) {
 
   }
 
-  const fctMailTxt = () => {
-    if(mailTxt != ""){
-      setLoading(true);
-      var listeDestinataire = listeID();
-      setModalVisibleMail(!modalVisibleMail);
-      sendAPI('AUT', 'AP_SEND_MAIL', {'P_TOKEN':token, 'P_IDDESTINATAIRE':listeDestinataire, 'P_SUJET':mailSujet, 'P_MESSAGE':mailTxt},token) //TODO
-      .then((json) =>  {setLoading(false); fctModalApp("Succés", "Le mail é bien été envoyé"); console.info("Mail à tous envoyé"); setMailTxt("")})
-      .catch((error) => {setLoading(false); setMailTxt(""); handleError (error)});
-    }
-  }
-
   // change l'affichage
   const changeAffichage = () => {
     if(affichage == "TOUT"){
@@ -316,7 +303,7 @@ function activiteScreen({route, navigation}) {
     <>
       <SafeAreaView style={styles.container}>	  
         <View style={{flex: 1}}>
-	        <ModalContact visible = {modalVisibleContact} setVisible = {setmodalVisibleContact} mail = {mail} phone = {phone}/>
+	        <ModalContact idDestinataire={idDestinataire} visible={modalVisibleContact} setVisible={setmodalVisibleContact} mail={mail} phone={phone}/>
           
           <Modal
             animationType="slide"
@@ -451,7 +438,7 @@ function activiteScreen({route, navigation}) {
                 </Pressable>}
                 <Pressable
                   style={{alignSelf: "center", padding: 10}}
-                  onPress={() => {setModalVisibleMailATous(false); setModalVisibleMail(true)}}
+                  onPress={() => {setModalVisibleMailATous(false); fctModalMail(listeID())}}
                 >
                   {({ pressed }) => (
                     <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>MAIL</Text>
@@ -463,67 +450,6 @@ function activiteScreen({route, navigation}) {
           </View>
         </Modal>
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisibleMail}
-          onRequestClose={() => {setModalVisibleMail(false); setMailTxt("")}}
-        >
-          <ScrollView >
-            <View style={styles.centeredView}>
-              <ImageBackground source={logoVide} resizeMode="cover" style={styles.modalContactView} imageStyle={styles.modalContactView2}>
-                <Text style={styles.modalContactTitle}>Email :</Text>
-                  <TextInput
-                    value={mailSujet}
-                    style={[styles.input, {borderWidth: 1, minWidth: 250}]}
-                    onChangeText={setMailSujet}
-                    placeholder="Sujet"
-                    autoCompleteType="off"
-                    maxLength={999}
-                    onSubmitEditing={() => refMailTxt.current.focus()}
-                  />
-                  <TextInput
-                    ref={refMailTxt}
-                    multiline
-                    numberOfLines={10}
-                    value={mailTxt}
-                    style={[styles.input, {borderWidth: 1, minWidth: 250}]}
-                    onChangeText={setMailTxt}
-                    placeholder="votre mail"
-                    autoCompleteType="off"
-                    onSelectionChange={(event) => setMyCarret(event.nativeEvent.selection.end)}
-                    onKeyUp={(keyUp) => keyUp.keyCode == 17 && setMyCtrl(false)}
-                    onKeyPress={(keyPress) => { (!myCtrl && keyPress.keyCode == 13) && fctMailTxt();
-                                                (keyPress.keyCode == 13) && setMailTxt(mailTxt.slice(0, myCarret) + "\n" + mailTxt.slice(myCarret));
-                                                keyPress.keyCode == 17 && setMyCtrl(true)} }
-                    maxLength={999}
-                  />
-              
-                <View style={styles.modalContactButtonView}>
-                  <Pressable
-                    style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-end"}}
-                    // écrire et envoyer le commentaire
-                    onPress={() => fctMailTxt()}
-                  >
-                    {({ pressed }) => (
-                      <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", textAlign: "center", fontWeight: "bold"}]}>Valider</Text>
-                    )}
-                  </Pressable>
-
-                  <Pressable
-                    style={{alignItems: "center", padding: 10, elevation: 2, alignSelf: "flex-start"}}
-                    onPress={() => {setModalVisibleMail(!modalVisibleMail);
-                                    setMailTxt("");}}
-                  >
-                    {({ pressed }) => (
-                      <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", textAlign: "center", fontWeight: "bold"}]}>Annuler</Text>
-                    )}
-                  </Pressable>
-                </View>
-              </ImageBackground>
-            </View>
-          </ScrollView>
-        </Modal>
 
         <FlatList
           data={visibleData}

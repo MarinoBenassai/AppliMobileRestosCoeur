@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
   modalContactView: {
     //width: "80%",
     maxWidth: 400,
+    //minWidth: "25%",
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,

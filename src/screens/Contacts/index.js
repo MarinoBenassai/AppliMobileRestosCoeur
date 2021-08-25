@@ -25,6 +25,9 @@ function contactScreen() {
   
   //récupération de l'id de l'utilisateur courrant
   const userID = React.useContext(userContext).userID
+
+  //Mails
+  const [idDestinataire, setIdDestinataire] =useState();
   
   //Handler des erreurs de serveur
   const handleError = React.useContext(userContext).handleError;
@@ -46,6 +49,7 @@ function contactScreen() {
   const fctModal = (item) => {
     setMail(item.email);
     setPhone(item.telephone);
+    setIdDestinataire(item.idbenevole);
     setModalVisible(!modalVisible);
   }
 
@@ -89,7 +93,7 @@ function contactScreen() {
   return (
     <>
     <SafeAreaView style={styles.container} >
-	    <ModalContact visible={modalVisible} setVisible={setModalVisible} mail={mail} phone={phone}/>
+	    <ModalContact visible={modalVisible} setVisible={setModalVisible} mail={mail} phone={phone}idDestinataire={idDestinataire} />
       {isLoading ? (
           <View style={styles.loading}>
           <ActivityIndicator size="large" color="#00ff00" />

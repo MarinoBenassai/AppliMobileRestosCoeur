@@ -19,6 +19,9 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
+  //Mail
+  const [idDestinataire, setIdDestinataire] = useState();
+
   // Toast
   const toast = useToast();
 
@@ -77,7 +80,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
     <View style={[styles.item, styles.BENEVOLE]}>
       {/* Conteneur 1ere colonne : info personne */}
 
-        <Pressable onPress={() => ajouterBenevole(item.idbenevole, item.nom, item.prenom)} style={{width: "75%"}}>
+        <Pressable onPress={() => ajouterBenevole(item.idbenevole, item.nom, item.prenom)} style={{width: "75%"}} testID="goBack">
         {({ pressed }) => (
           <View style={styles.colomn}>
             <Text style={{color: pressed ? 'white' : 'black', marginLeft: 30}}>{item.prenom}</Text>
@@ -89,7 +92,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
       {/* Conteneur 2eme colonne : info lieu */}
       <View style={{marginRight: 40, justifyContent: "center"}}>
-      <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setmodalVisibleContact(!modalVisibleContact);}}>
+      <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setIdDestinataire(item.idbenevole); setmodalVisibleContact(!modalVisibleContact);}}>
           {({ pressed }) => (
             <Icon 
               name='mail' 
@@ -124,7 +127,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
          <ActivityIndicator size="large" color="green" />
 	      </View>) : (
 		<>
-	    <ModalContact visible = {modalVisibleContact} setVisible = {setmodalVisibleContact} mail = {mail} phone = {phone}/>
+	    <ModalContact visible={modalVisibleContact} setVisible={setmodalVisibleContact} mail={mail} phone={phone} idDestinataire={idDestinataire}/>
 		
 		<>
 		  <View>

@@ -5,6 +5,7 @@ import {Pressable, Modal} from 'react-native';
 
 import { useToast } from "react-native-toast-notifications";
 import {normalizeInputPhone} from './normalizeInputPhone';
+import {userContext} from '../contexts/userContext';
 
 import styles from '../styles';
 import * as Clipboard from 'expo-clipboard';
@@ -15,6 +16,12 @@ import logoVide from '../../assets/logovide.png';
 
 
 const ModalContact = (props) => {
+
+  
+  // On récupère la fonction pour gérer le modal d'Email
+  const fctModalMail = React.useContext(userContext).fctModalMail;
+
+  const idDestinataire = props.idDestinataire;
 	
   const [toClipboard, setToClipboard] = useState("");
 
@@ -79,7 +86,7 @@ const ModalContact = (props) => {
               </Pressable>}
               <Pressable
                 style={[styles.buttonContactRight]}
-                onPress={() => {props.setVisible(!props.visible); Linking.openURL(`mailto:${props.mail}`);}}
+                onPress={() => {props.setVisible(!props.visible); fctModalMail([idDestinataire]);}}
               >
                 {({ pressed }) => (
                   <Text style={[styles.textContactStyle, {color:pressed?"lightgrey":"black", fontWeight: "bold"}]}>MAIL</Text>
