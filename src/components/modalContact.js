@@ -61,9 +61,9 @@ const ModalContact = (props) => {
       <View style={styles.centeredView}>
           <ImageBackground source={logoVide} resizeMode="cover" style={styles.modalContactView} imageStyle={styles.modalContactView2}>
 		        <Text style={styles.modalContactTitle}>Informations de contact</Text>
-            <View style={styles.modalContactContentView}>
-              <Text style={styles.modalText} onPress={() => {setToClipboard(props.mail); Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{props.mail}</Text>
-              <Text style={styles.modalText} onPress={() => {setToClipboard(props.phone);Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{normalizeInputPhone(props.phone)}</Text>
+            <View>
+              <Text style={styles.modalText} textAlign="center" onPress={() => {setToClipboard(props.mail); Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{props.mail}</Text>
+              <Text style={styles.modalText} textAlign="center" onPress={() => {setToClipboard(props.phone);Device.brand ? toastComponent('Copié dans le presse-papier') : alert('Copié dans le presse-papier');}}>{normalizeInputPhone(props.phone)}</Text>
             </View>
             <View style={styles.modalContactButtonView}>
               <Pressable

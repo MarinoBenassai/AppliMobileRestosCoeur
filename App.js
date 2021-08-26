@@ -292,7 +292,7 @@ export default function App() {
     if(mailTxt != ""){
       setLoading(true);
       setModalVisibleMail(!modalVisibleMail);
-      sendAPI('AUT', 'AP_SEND_MAIL', {'P_TOKEN':token, 'P_IDDESTINATAIRE':listeDestinataire, 'P_SUJET':mailSujet, 'P_MESSAGE':mailTxt},token) //TODO
+      sendAPI('APP', 'AP_SEND_MAIL', {'P_TOKEN':token, 'P_IDDESTINATAIRE':listeDestinataire, 'P_SUJET':mailSujet, 'P_MESSAGE':mailTxt},token) //TODO
       .then((json) =>  {setLoading(false); fctModalApp("Succés", "Le mail à bien été envoyé"); console.info("Mail à tous envoyé"); setMailTxt(""); setMailSujet("");})
       .catch((error) => {setLoading(false); setMailTxt(""); setMailSujet(""); handleError (error)});
     }
