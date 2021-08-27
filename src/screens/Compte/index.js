@@ -285,9 +285,9 @@ const compteScreen = () => {
 	  else {
 		setLoading(true);
 		sendAPI('AUT', 'AP_UPD_MOTDEPASSE', {'ancienMDP':oldP, 'nouveauMDP':newP, 'idBenevole':userID})
-		.then((json) => {
+    .then((json) => {
 			Device.brand ? toastComponent("Votre mot de passe a bien été modifié.", "success") : fctModalApp("succès", "Votre mot de passe a bien été modifié");
-            setLoading(false);
+      setLoading(false);
 		})
 		.catch((error) => {setLoading(false); handleError (error)});
 
@@ -327,7 +327,7 @@ const compteScreen = () => {
 	  if( (phone != dataPerso.telephone) || (mail != dataPerso.email) ){
 
       sendAPI('APP', 'AP_UPD_INFO_BENEVOLE', {'P_TOKEN':token, 'P_EMAIL':mail, 'P_TELEPHONE':phone},token)
-      .then((texte) => {if (texte != "1") {throw new Error("Erreur lors de la mise à jour de la base de données");} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
+      .then((texte) => {if (texte != "1") {throw "Erreur lors de la mise à jour de la base de données";} setPhone("");setMail("");setPersoUpToDate(false);setLoading(false)})
       .catch((error) => {setPhone("");setMail("");setPersoUpToDate(false);setLoading(false); handleError (error)});
 
       Device.brand ? toastComponent("Vos informations ont bien été mises à jour.", "success") : fctModalApp("succès", "Vos informations ont bien été mise à jour");
