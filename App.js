@@ -4,6 +4,7 @@ import { Modal, useWindowDimensions } from 'react-native';
 import {StyleSheet, Text, View, PixelRatio, ImageBackground, Pressable, ScrollView, TextInput, ActivityIndicator} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Octicons';
 import * as SecureStore from 'expo-secure-store';
@@ -33,13 +34,13 @@ import { ToastProvider } from 'react-native-toast-notifications'
 import logoVide from './assets/logovide.png';
 
 
-const engagementStack = createStackNavigator();
-const synthRefStack = createStackNavigator();
-const synthRespStack = createStackNavigator();
-const compteStack = createStackNavigator();
-const contactStack = createStackNavigator();
-const identificationStack = createStackNavigator();
-const informationStack = createStackNavigator();
+const engagementStack = createNativeStackNavigator();
+const synthRefStack = createNativeStackNavigator();
+const synthRespStack = createNativeStackNavigator();
+const compteStack = createNativeStackNavigator();
+const contactStack = createNativeStackNavigator();
+const identificationStack = createNativeStackNavigator();
+const informationStack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
@@ -195,7 +196,7 @@ export default function App() {
   
   useEffect(() => {
 	  async function splash() {
-		console.log("Show",await SplashScreen.preventAutoHideAsync());
+		await SplashScreen.preventAutoHideAsync();
 	  }
 	  splash().
 	  then(() => autoConnect())
@@ -387,17 +388,17 @@ export default function App() {
 
 			
 			<NavigationContainer>
-				<Drawer.Navigator screenOptions = {{swipeEnabled : false}}>
+				<Drawer.Navigator screenOptions = {{swipeEnabled : false, headerShown: false}}>
 					{userID === "" || userID === null ? (
-						<Drawer.Screen name="Identification" component = {identification}/>		
+						<Drawer.Screen name="IdentificationStack" component = {identification}/>		
 					) : (
 						<>
-						<Drawer.Screen name="Engagements" component={engagement} options={{ title: "Mes engagements" }} />
-						{estReferent && <Drawer.Screen name="SynthRef" component={referent} options={{ title: "Ma synthèse référent" }} />}
-						{estResponsable && <Drawer.Screen name="SynthResp" component={responsable} options={{ title: "Ma synthèse responsable" }} />}
-						<Drawer.Screen name="Compte" component={compte} options={{ title: "Mon compte" }} />
-						<Drawer.Screen name="Contacts" component={contact} options={{ title: "Mes contacts" }} />
-						<Drawer.Screen name="Informations" component={information} options={{ title: "Mes informations" }} />
+						<Drawer.Screen name="EngagementsStack" component={engagement} options={{ title: "Mes engagements" }} />
+						{estReferent && <Drawer.Screen name="SynthRefStack" component={referent} options={{ title: "Ma synthèse référent" }} />}
+						{estResponsable && <Drawer.Screen name="SynthRespStack" component={responsable} options={{ title: "Ma synthèse responsable" }} />}
+						<Drawer.Screen name="CompteStack" component={compte} options={{ title: "Mon compte" }} />
+						<Drawer.Screen name="ContactsStack" component={contact} options={{ title: "Mes contacts" }} />
+						<Drawer.Screen name="InformationsStack" component={information} options={{ title: "Mes informations" }} />
 						</>
 					)}
 				</Drawer.Navigator>
@@ -501,19 +502,25 @@ export default function App() {
   
 }
 
-const boutonMenu = ({nav}) => <Icon 
-    name='three-bars' 
-    size={30}
-    color='#000' 
-    onPress={nav.openDrawer}
-/>;
-
-const boutonLogOut = () => <Icon 
+const boutonMenu = ({nav}) => 
+	<View style={!Device.brand ? {paddingLeft: 20} : { paddingRight: 30}}>
+		<Icon 
+			name='three-bars' 
+			size={30}
+			color='#000' 
+			onPress={nav.openDrawer}
+		/>
+	</View>;
+	
+const boutonLogOut = () => 
+		<View style={!Device.brand ? { paddingRight: 20} : {}}>
+			<Icon 
               onPress={React.useContext(userContext).logoutUser}
 			  name='sign-out' 
 			  size={30}
 			  color='#000'
-            />;
+            />
+		</View>;
 
 
 function identification() {
@@ -525,8 +532,8 @@ function identification() {
   );
 }
 
-const screenOptionsBase = {headerRight: () => (boutonLogOut()), headerStyle: {backgroundColor: '#e92682'}, headerRightContainerStyle: {paddingRight: 20},};
-function screenOptionsFirstPage (nav, title) {return {title: title, headerLeft: () => (boutonMenu({nav})), headerLeftContainerStyle: {paddingLeft: 20},}}
+const screenOptionsBase = {headerRight: () => (boutonLogOut()), headerStyle: {backgroundColor: '#e92682'},};
+function screenOptionsFirstPage (nav, title) {return {title: title, headerLeft: () => (boutonMenu({nav})),}}
 
 function engagement({navigation}) {
   const nav = navigation;
