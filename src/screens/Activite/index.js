@@ -307,10 +307,10 @@ function activiteScreen({route, navigation}) {
           >
             <ScrollView >
               <View style={styles.centeredView}>
-                <ImageBackground source={logoVide} resizeMode="cover" style={styles.modalContactView} imageStyle={styles.modalContactView2}>
+                <ImageBackground source={logoVide} resizeMode="cover" style={[styles.modalContactView, {width: 500, maxWidth: "95%"}]} imageStyle={styles.modalContactView2}>
                   <Text style={styles.modalContactTitle}>Nombre de Bénéficiaire :</Text>
                   <TextInput
-                    style={styles.idInput}
+                    style={[styles.input, {borderWidth: 1, width:"100%"}]}
                     onChangeText={handleChangeNumber}
                     value={beneficiaireActivite}
                     keyboardType="numeric"
@@ -322,7 +322,7 @@ function activiteScreen({route, navigation}) {
                     ref={refBenef}
                     multiline
                     numberOfLines={3}
-                    style={[styles.idInput, {minHeight: 100}]}
+                    style={[styles.input, {borderWidth: 1, width:"100%", minHeight: 100}]}
                     onChangeText={setCommentActivite}
                     value={commentActivite}
                     onKeyUp={(keyUp) => keyUp.keyCode == 17 && setMyCtrl(false)}

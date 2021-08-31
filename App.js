@@ -3,7 +3,6 @@ import { useState, useEffect, useRef} from 'react';
 import { Modal, useWindowDimensions } from 'react-native';
 import {StyleSheet, Text, View, PixelRatio, ImageBackground, Pressable, ScrollView, TextInput, ActivityIndicator} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Octicons';
