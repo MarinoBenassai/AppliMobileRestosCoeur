@@ -33,7 +33,7 @@ export const traitementSort = function(affichage, data, visibleData) {
         return( cpyVisibleData );
     }
     else{
-      console.error("ERREUR : Affichage inconnu dans Picker");
+      // TODO : erreur
     }
 
 }

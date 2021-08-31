@@ -36,7 +36,7 @@ function contactScreen() {
   // on va chercher les informations sur la BDD
   useEffect(() => {
 	sendAPI('APP', 'AP_LST_CONTACT', {'P_IDBENEVOLE':userID},token)
-	.then((json) =>  {setData(json); console.info("Infos Contact Référent : chargées"); setLoading(false)})
+	.then((json) =>  {setData(json); setLoading(false)})
 	.catch((error) => {setLoading(false); handleError (error)});
   }, []);
 

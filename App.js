@@ -72,7 +72,6 @@ export default function App() {
   const [vertPos,setVertPos] = React.useState('up');
   
   function afficherInfoBulle (pageX, pageY, message){
-	//console.log(windowWidth,windowHeight,pageX, pageY, PixelRatio.get());//, getPixelSizeForLayoutSize(windowWidth), getPixelSizeForLayoutSize(windowHeight));
 	getCoordFromText(message, pageX, pageY);
 	setBulleVisible(true);
   }
@@ -185,7 +184,6 @@ export default function App() {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
     });
 
     return () => {
@@ -294,7 +292,7 @@ export default function App() {
       setLoading(true);
       setModalVisibleMail(!modalVisibleMail);
       sendAPI('APP', 'AP_SEND_MAIL', {'P_TOKEN':token, 'P_IDDESTINATAIRE':listeDestinataire, 'P_SUJET':mailSujet, 'P_MESSAGE':mailTxt},token) //TODO
-      .then((json) =>  {setLoading(false); fctModalApp("Succés", "Le mail à bien été envoyé"); console.info("Mail à tous envoyé"); setMailTxt(""); setMailSujet("");})
+      .then((json) =>  {setLoading(false); fctModalApp("Succés", "Le mail à bien été envoyé"); setMailTxt(""); setMailSujet("");})
       .catch((error) => {setLoading(false); setMailTxt(""); setMailSujet(""); handleError (error)});
     }
   }
@@ -343,7 +341,6 @@ export default function App() {
 		}
 
 		token = (await Notifications.getExpoPushTokenAsync()).data;
-		console.log(token);
 
 	} else {
 		fctModalApp("Attention", "Pas de notifications sur simulateur");
@@ -426,7 +423,7 @@ export default function App() {
 						<View style={styles.modalContactButtonView}>
 							<Pressable
 								style={styles.buttonAlertModal}
-								onPress={() => {setModalVisible(false);console.info("OK  App Pressed");}}
+								onPress={() => setModalVisible(false)}
 							>
 								{({ pressed }) => (
 									<View >

@@ -1,5 +1,4 @@
 export const  checkFetch = async function(response, apCode = 'APP') {
-    // console.info("response : " + response + "\n" + response.ok + "\n" + response.status);
 
     const type = response.headers.get('Content-Type');
 
@@ -17,9 +16,6 @@ export const  checkFetch = async function(response, apCode = 'APP') {
         }
         else{
             throw json.error;
-            /*alert("Il y a eu un problème lors de la connexion à la page. Veuillez rééssayer.");
-            console.error("Erreur Fetch : " + response.text());
-            return "-1";*/
         }
         
     }

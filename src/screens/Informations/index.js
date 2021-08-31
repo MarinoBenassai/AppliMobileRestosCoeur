@@ -25,7 +25,7 @@ function informationScreen({navigation}) {
   useEffect(() => {
     setLoading(true);
     sendAPI('APP', 'AP_LST_INFO', {'P_IDBENEVOLE':userID},token)
-      .then((json) =>  {setData(json); console.info("Infos Informations : chargées"); setLoading(false)})
+      .then((json) =>  {setData(json); setLoading(false)})
       .catch((error) => {setLoading(false); handleError (error)});
   }, []);
 
@@ -57,7 +57,7 @@ function informationScreen({navigation}) {
       if (supported) {
         Linking.openURL(url);
       } else {
-        console.error("Don't know how to open URI: " + url);
+        //TODO erreur
       }
     });
   };

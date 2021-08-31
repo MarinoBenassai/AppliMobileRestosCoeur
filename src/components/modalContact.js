@@ -68,7 +68,7 @@ const ModalContact = (props) => {
             <View style={styles.modalContactButtonView}>
               <Pressable
                 style={styles.buttonContactLeft}
-                onPress={() => {props.setVisible(!props.visible); console.info("OK  Contact Pressed");}}
+                onPress={() => props.setVisible(!props.visible)}
               >
                 {({ pressed }) => (
                   <View>

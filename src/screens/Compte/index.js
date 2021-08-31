@@ -59,7 +59,7 @@ const compteScreen = () => {
   // On récupère les informations d'engagement par défaut
   useEffect(() => {
 	sendAPI('APP', 'AP_LST_ENG_BEN',{'P_IDBENEVOLE':userID},token)
-	.then((json) =>  {setDataEngagementDefaut(json); console.info("Infos Engagement Défaut : chargées")})
+	.then((json) =>  setDataEngagementDefaut(json))
 	.catch((error) => handleError (error))
   }, []);
 
@@ -68,7 +68,7 @@ const compteScreen = () => {
     if (persoUpToDate === false) {
       setPersoUpToDate(true);
 	  sendAPI('APP', 'AP_MON_COMPTE',{'P_IDBENEVOLE':userID},token)
-	  .then((json) =>  {setDataPerso(json[0]); console.info("Infos Personelles : chargées"); setLoading(false)})
+	  .then((json) =>  {setDataPerso(json[0]); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
 	  }
   }, [persoUpToDate]);

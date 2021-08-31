@@ -70,7 +70,7 @@ function engagementScreen({navigation}) {
     const unsubscribe = navigation.addListener('focus', () => {
 	  setLoading(true);
 	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID},token)
-	  .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
+	  .then((json) =>  {setData(json); setUpToDate(true); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
     });
 
@@ -98,7 +98,7 @@ function engagementScreen({navigation}) {
     if(upToDate == false){
       setLoading(true);
 	  sendAPI('APP', 'AP_LST_PRE_BEN', {'P_IDBENEVOLE':userID},token)
-	  .then((json) =>  {setData(json); console.info("Infos Engagement: chargées"); setUpToDate(true); setLoading(false)})
+	  .then((json) =>  {setData(json); setUpToDate(true); setLoading(false)})
 	  .catch((error) => {setLoading(false); handleError (error)});
     }
   }, [upToDate]);
@@ -155,16 +155,14 @@ function engagementScreen({navigation}) {
 
     // Si absent
     if(statut == "Absent"){
-      console.info("Vous êtiez actuellement : 'Absent'");
       setLoading(true);
       sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site},token)
-      .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+      .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); setUpToDate(false); setLoading(false);})
       .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
     }
 
     // Si présent
     else if(statut == "Présent"){
-      console.info("Vous êtes actuellement 'Présent'");
 
       setInfoComment([ jour, activite, site ]);
       //On rend le modal visible
@@ -177,9 +175,8 @@ function engagementScreen({navigation}) {
       // Si non-défini
       else{
 		    setLoading(true);
-        console.info("Vous étiez actuellement 'Non défini'");
         sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role},token)
-        .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setLoading(false);})
+        .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); setUpToDate(false); setLoading(false);})
         .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
       }
       
@@ -204,7 +201,7 @@ function engagementScreen({navigation}) {
     setModalVisibleSet(!modalVisibleSet);
     setLoading(true);
     sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment},token)
-    .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); console.info("changement statut !"); console.log(texte); setUpToDate(false); setComment(""); setLoading(false);})
+    .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); setUpToDate(false); setComment(""); setLoading(false);})
     .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
 
     // On raffraichi et reset le commentaire pour la prochaine fois (au dessus)
