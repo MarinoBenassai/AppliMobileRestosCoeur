@@ -1,5 +1,5 @@
 import constantes from './src/constantes';
-let data = require('./__tests__/data/data');
+import data from './__tests__/data/data';
 
 var engagementState = data.engagement1;
 var compteInfoState = {"data":[{"nom":"FT","prenom":"Ht","email":"h@f.fr","telephone":"8888888888","idbenevole":"1005"}]};

@@ -10,7 +10,7 @@ afterEach(cleanup)
 describe('Contacts', () => {
 
   
-  it('Modal visible avce bonnes infos', async () => {
+  it('Modal visible avce bonnes infos', (done) => {
 	const handleError = jest.fn(() => {});
 	const userID = 0;
 	
@@ -26,11 +26,23 @@ describe('Contacts', () => {
 	);
 
 
-	await waitFor(() => expect(getAllByTestId('iconLettre')));
-    fireEvent.press(getAllByTestId('iconLettre')[0]);
-	await waitFor(() => expect(getByText("Informations de contact")));
-	expect(getByText("00 00 00 00 00"));
-	expect(getByText("veeeee@hotmail.fr"));
+	waitFor(() => expect(getAllByTestId('iconLettre')))
+	
+	.then(() => {
+		// On clique sur le bouton de contact de la première ligne et on attend l'afficahge du modal
+		fireEvent.press(getAllByTestId('iconLettre')[0]);
+		return waitFor(() => expect(getByText("Informations de contact")));
+	})
+	.then(() => {
+		
+		// On vérifie que les informations affichées par le modale sont correctes
+		expect(getByText("00 00 00 00 00"));
+		expect(getByText("veeeee@hotmail.fr"));
+		
+		done();
+	})
+	.catch((error) => done(error));
+
 	  
   });
 
@@ -49,7 +61,7 @@ describe('Contacts', () => {
 	</userContext.Provider>, {}
 	);
 
-
+	// On vérifie qu'on reçoit bien l'erreur et qu'on la traite
 	await waitFor(() => expect(handleError).toHaveBeenCalledWith("contact erreur"));
 	  
   });
