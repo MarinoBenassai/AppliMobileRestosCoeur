@@ -1,7 +1,8 @@
 import constantes from './src/constantes';
-import data from './__tests__/data/data'
+let data = require('./__tests__/data/data');
 
 var engagementState = data.engagement1;
+var compteInfoState = {"data":[{"nom":"FT","prenom":"Ht","email":"h@f.fr","telephone":"8888888888","idbenevole":"1005"}]};
 
 async function mockFetch(url, config) {
 
@@ -256,7 +257,7 @@ async function mockFetch(url, config) {
       return {
           ok: true,
           status: 200,
-          json: async () => ({"data":[{"nom":"FT","prenom":"Ht","email":"h@f.fr","telephone":"8888888888","idbenevole":"1005"}]}),
+          json: async () => (compteInfoState),
           headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
         }
     }
@@ -264,15 +265,17 @@ async function mockFetch(url, config) {
   }
 
   // Chnagement d'infos de contact
-  case constantes.ADDRESS + '/AUT/AP_UPD_INFO_BENEVOLE/': {
+  case constantes.ADDRESS + '/APP/AP_UPD_INFO_BENEVOLE/': {
 
     const body = await JSON.parse(config.body)
+	compteInfoState = {"data":[{"nom":"FT","prenom":"Ht","email":body.params.P_EMAIL,"telephone":body.params.P_TELEPHONE,"idbenevole":"1005"}]};	
 
-    if (body.params.P_TOKEN === 0){ 
+    if (body.params.P_TOKEN === 0){
+		
       return {
           ok: true,
           status: 200,
-          json: async () => ({"ok": "contact info" }),
+          json: async () => ({"data": [1]}),
           headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
         }
     }
@@ -360,5 +363,11 @@ async function mockFetch(url, config) {
 }
 
 beforeAll(() => global.fetch = jest.fn().mockImplementation(mockFetch))
+
+beforeEach(() => {
+	jest.setTimeout(30000);
+	compteInfoState = {"data":[{"nom":"FT","prenom":"Ht","email":"h@f.fr","telephone":"8888888888","idbenevole":"1005"}]};
+	engagementState = data.engagement1;
+});
 
 //beforeEach(() => global.fetch.mockImplementation(mockFetch))
