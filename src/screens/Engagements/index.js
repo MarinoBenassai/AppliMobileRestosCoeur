@@ -157,7 +157,7 @@ function engagementScreen({navigation}) {
     if(statut == "Absent"){
       setLoading(true);
       sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site},token)
-      .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); setUpToDate(false); setLoading(false);})
+      .then((texte) =>  {toastComponent("Statut : Non défini", "warning"); setUpToDate(false); setLoading(false);})
       .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
     }
 
@@ -176,7 +176,7 @@ function engagementScreen({navigation}) {
       else{
 		    setLoading(true);
         sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role},token)
-        .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); setUpToDate(false); setLoading(false);})
+        .then((texte) =>  {toastComponent("Statut : Présent", "success"); setUpToDate(false); setLoading(false);})
         .catch((error) => {setUpToDate(false); setLoading(false); handleError (error)});
       }
       
@@ -201,7 +201,7 @@ function engagementScreen({navigation}) {
     setModalVisibleSet(!modalVisibleSet);
     setLoading(true);
     sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":userID, "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment},token)
-    .then((texte) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); setUpToDate(false); setComment(""); setLoading(false);})
+    .then((texte) =>  {toastComponent("Statut : Absent", "normal"); setUpToDate(false); setComment(""); setLoading(false);})
     .catch((error) => {setUpToDate(false); setComment(""); setLoading(false); handleError (error)});
 
     // On raffraichi et reset le commentaire pour la prochaine fois (au dessus)

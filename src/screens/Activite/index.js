@@ -173,7 +173,7 @@ function activiteScreen({route, navigation}) {
     // Si absent
     if(statut == "Absent"){
       sendAPI('APP', 'AP_DEL_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site},token)
-      .then((texte) =>  {Device.brand && toastComponent("Statut : Non défini", "warning"); setUpToDate(false)})
+      .then((texte) =>  {toastComponent("Statut : Non défini", "warning"); setUpToDate(false)})
       .catch((error) => {setUpToDate(false); handleError (error)});
     }
 
@@ -191,7 +191,7 @@ function activiteScreen({route, navigation}) {
     // Si non-défini
     else{
 	  sendAPI('APP', 'AP_INS_PRESENCE', {"P_IDBENEVOLE":benevole, "P_JOURPRESENCE":jour, "P_IDACTIVITE":activite, "P_IDSITE":site, "P_IDROLE":role},token)
-	  .then((texte) =>  {Device.brand && toastComponent("Statut : Présent", "success"); setUpToDate(false)})
+	  .then((texte) =>  {toastComponent("Statut : Présent", "success"); setUpToDate(false)})
 	  .catch((error) => {setUpToDate(false); handleError (error)});
     }
   }
@@ -265,7 +265,7 @@ function activiteScreen({route, navigation}) {
   const fctCommentaireAbsence = () => {
     setModalVisibleCommentaireAbsence(!modalVisibleCommentaireAbsence);
     sendAPI('APP', 'AP_UPD_PRESENCE', {"P_IDBENEVOLE":infoComment[3], "P_JOURPRESENCE":infoComment[0], "P_IDACTIVITE":infoComment[1], "P_IDSITE":infoComment[2], "P_COMMENTAIRE":comment},token)
-	.then((json) =>  {Device.brand && toastComponent("Statut : Absent", "normal"); setUpToDate(false); setComment("")})
+	.then((json) =>  {toastComponent("Statut : Absent", "normal"); setUpToDate(false); setComment("")})
 	.catch((error) => {setUpToDate(false); setComment(""); handleError (error)});
 
   }
