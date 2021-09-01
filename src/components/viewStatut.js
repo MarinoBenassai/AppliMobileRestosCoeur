@@ -83,7 +83,7 @@ function ViewStatus(props) {
     }
     else{
         return(<View style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
-            <Pressable testID = "Non defini" onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
+            <Pressable testID = "Non défini" onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
                 {({ pressed }) => (
                     <Icon 
                         name='unverified' 

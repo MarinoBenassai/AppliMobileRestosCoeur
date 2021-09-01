@@ -15,7 +15,7 @@ jest.mock('react-native/Libraries/Modal/Modal', () => {
   return props => <Modal {...props} />
 })
 
-describe.skip('Engagement', () => {
+describe('Engagement', () => {
 	
   it('should display the list on loading', async () => {
 	  
@@ -33,7 +33,7 @@ describe.skip('Engagement', () => {
 	  </userContext.Provider>
 	);
 
-	await waitFor(() => expect(getAllByTestId("Présent")).toBeTruthy());
+	await waitFor(() => expect(getAllByTestId("Non défini")).toBeTruthy());
 	expect(getAllByTestId("Présent")).toHaveLength(3);
 	expect(getAllByTestId("Absent")).toHaveLength(3);
 	expect(getAllByTestId("Non défini")).toHaveLength(2);
@@ -47,10 +47,11 @@ describe.skip('Engagement', () => {
     const context = {
 		userID: 1005,
 		token: 1,
-	    handleError: () => {},
+	    handleError: jest.fn(() => {}),
+		cacherInfoBulle: jest.fn(() => {})
     }
 
-    const {queryByTestId, queryByText, getByPlaceholderText, getByText, getByTestId, getAllByText, getAllByTestId} = render(
+    const {queryByTestId, queryByText, getByPlaceholderText,getByDisplayValue, getByText, getByTestId, getAllByText, getAllByTestId} = render(
 	  <userContext.Provider value = {context}>
 		  <Engagements navigation={navigation}/>
 	  </userContext.Provider>
@@ -60,7 +61,7 @@ describe.skip('Engagement', () => {
 	.then(() => {
 		expect(getAllByTestId("Non défini")).toHaveLength(8);
 		expect(getAllByText("Raisin")).toHaveLength(4);
-		expect(getAllByText("30/08/2021")).toHaveLength(2);
+		expect(getAllByText("06/09/2021")).toHaveLength(2);
 		
 		//On clique sur le premier bouton "Non Défini" et on vérifie qu'il devient "Présent" 
 		fireEvent.press(getAllByTestId("Non défini")[0]);
@@ -91,22 +92,31 @@ describe.skip('Engagement', () => {
 	.then(() => {
 		//On entre le message d'absence, on clique sur le bouton valider, et on vérifie que le modal disparait
 		fireEvent.changeText(getByPlaceholderText("Raison de votre absence"),"Ceci est un test é*/°ç");
-		fireEvent.press(getByTestId("Valider"));
+		fireEvent.press(getByText("Valider"));
 		return waitFor(() => expect(queryByText("Commentaire d'Absence :")).toBeNull());
 	})
 	.then(() => {
-		//On vérifie que le bouton devient "Absent", et on vérifie que le commentaire est le bon en cliquant sur le bouton pour le modifier
-		
-		
-		
+		//On vérifie que le bouton devient "Absent", et on ouvre le modal à nouveau
+		expect(getByTestId("Absent")).toBeTruthy();
+		expect(queryByTestId("Présent")).toBeNull();
+		fireEvent.press(getByTestId("CommentaireAbsence"));
+		return waitFor(() => expect(getByText("Commentaire d'Absence :")).toBeTruthy());
+	})
+	.then(() => {
+		//On vérifie que le commentaire est le bon et on ferme le modal
+		expect(getByDisplayValue("Ceci est un test é*/°ç")).toBeTruthy();
+		fireEvent.press(getByText("Valider"));
+		return waitFor(() => expect(queryByText("Commentaire d'Absence :")).toBeNull());
+	})
+	.then(() => {
+		//On clique à nouveau sur le bouton et on vérifie qu'il retourne à l'état non défini
+		fireEvent.press(getByTestId("Absent"));
+		return waitFor(() => expect(getAllByTestId("Non défini")).toHaveLength(8));
+	})
+	.then(() => {	
+		done();
 	})
 	.catch((error) => done(error))
-	//On clique sur le bouton présent, 
-	
-	
-		
-	//expect(getByText("Ceci est un test é*/°ç"))
-	done();
 
   });
   

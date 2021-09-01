@@ -1,5 +1,5 @@
 import constantes from './src/constantes';
-import data from './__tests__/data'
+import data from './__tests__/data/data'
 
 var engagementState = data.engagement1;
 
@@ -79,8 +79,6 @@ async function mockFetch(url, config) {
 
 		const body = await JSON.parse(config.body)
 		
-		console.log("#############################################################################",body.token);
-		
 		switch (body.token){
 			
 			case 0: {
@@ -111,16 +109,66 @@ async function mockFetch(url, config) {
 
 		
 		const body = await JSON.parse(config.body)
-		console.log(body);
+
 		if (body.params.P_IDBENEVOLE === 1005 
-		&& body.params.P_JOURPRESENCE === '2021-08-23 00:00:00'
+		&& body.params.P_JOURPRESENCE === '2021-09-06 00:00:00'
 		&& body.params.P_IDACTIVITE === '3'
         && body.params.P_IDSITE === '2'
 		&& body.params.P_IDROLE === '2'
 		&& body.token === 1) 
 		{
-			console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 			engagementState = data.engagement2;		
+		}
+		else {
+			throw new Error(`Incorrect request parameters`);	
+		}
+
+		return {
+		  ok: true,
+		  status: 200,
+		  json: async () => ({"data":[1]}),
+		  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},	
+		}
+
+	}
+	
+	case constantes.ADDRESS + '/APP/AP_UPD_PRESENCE/':{
+		
+		const body = await JSON.parse(config.body)
+
+		if (body.params.P_IDBENEVOLE === 1005 
+		&& body.params.P_JOURPRESENCE === '2021-09-06 00:00:00'
+		&& body.params.P_IDACTIVITE === '3'
+        && body.params.P_IDSITE === '2'
+		&& body.params.P_COMMENTAIRE === "Ceci est un test é*/°ç"
+		&& body.token === 1) 
+		{
+			engagementState = data.engagement3;		
+		}
+		else {
+			throw new Error(`Incorrect request parameters`);	
+		}
+
+		return {
+		  ok: true,
+		  status: 200,
+		  json: async () => ({"data":[1]}),
+		  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},	
+		}
+
+	}
+
+	case constantes.ADDRESS + '/APP/AP_DEL_PRESENCE/':{
+		
+		const body = await JSON.parse(config.body)
+
+		if (body.params.P_IDBENEVOLE === 1005 
+		&& body.params.P_JOURPRESENCE === '2021-09-06 00:00:00'
+		&& body.params.P_IDACTIVITE === '3'
+        && body.params.P_IDSITE === '2'
+		&& body.token === 1) 
+		{
+			engagementState = data.engagement4;		
 		}
 		else {
 			throw new Error(`Incorrect request parameters`);	

@@ -7,7 +7,7 @@ jest.mock("../src/components/sendAPI.js");
 
 afterEach(cleanup)
 
-describe('SynthRef', () => {
+describe.skip('SynthRef', () => {
 
   function navigation(){
       const addListener = (nom, fct) => {
