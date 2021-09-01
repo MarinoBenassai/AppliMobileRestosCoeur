@@ -106,19 +106,23 @@ async function mockFetch(url, config) {
 	
 	case constantes.ADDRESS + '/APP/AP_INS_PRESENCE/':{
 		
-
-		
 		const body = await JSON.parse(config.body)
-
 		if (body.params.P_IDBENEVOLE === 1005 
 		&& body.params.P_JOURPRESENCE === '2021-09-06 00:00:00'
 		&& body.params.P_IDACTIVITE === '3'
-        && body.params.P_IDSITE === '2'
+    && body.params.P_IDSITE === '2'
 		&& body.params.P_IDROLE === '2'
 		&& body.token === 1) 
 		{
 			engagementState = data.engagement2;		
 		}
+    else if(body.params.P_IDBENEVOLE == 27
+      && body.params.P_JOURPRESENCE == "2021-08-27"
+      && body.params.P_IDACTIVITE == "1"
+      && body.params.P_IDSITE == '1'
+		  && body.params.P_IDROLE == '1'){
+      // juste pour éviter le else
+    }
 		else {
 			throw new Error(`Incorrect request parameters`);	
 		}
@@ -335,19 +339,16 @@ async function mockFetch(url, config) {
     }
   }
 
-  // ListeUtilisateur
+  // Liste Bénévole
   case constantes.ADDRESS + '/APP/AP_ALL_BENEVOLE/': {
 
     const body = await JSON.parse(config.body)
-    
-    if (body.params.idBenevole == 0){ 
-      return {
-          ok: true,
-          status: 200,
-          json: async () => ({"data":[{"prenom":"Aaaaa","nom":"B","email":"bedfg@gmail.com","telephone":"0544555","idbenevole":"27"},{"prenom":"Alis","nom":"AasdI","email":"wsdn@gmail.com","telephone":"0000006","idbenevole":"1703"},{"prenom":"Adfren","nom":"ZDFS","email":"azedf@hotmail.fr","telephone":"6000000","idbenevole":"1378"}]}),
-          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
-        }
-    }
+    return {
+        ok: true,
+        status: 200,
+        json: async () => ({"data":[{"prenom":"Aaaaa","nom":"Aa","email":"bedfg@gmail.com","telephone":"0544555","idbenevole":"27"},{"prenom":"Alis","nom":"AasdI","email":"wsdn@gmail.com","telephone":"0000006","idbenevole":"1703"},{"prenom":"Adfren","nom":"ZDFS","email":"azedf@hotmail.fr","telephone":"6000000","idbenevole":"1378"}]}),
+        headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+      }
   }
 
   default: {
