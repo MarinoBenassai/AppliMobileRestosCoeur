@@ -1,6 +1,6 @@
 export default {
 	
-	//Pour tester l'affichage de la liste. 3 Présences, 3 Absences, 2 Non def
+	//Pour tester l'affichage de la liste d'Engagement. 3 Présences, 3 Absences, 2 Non def
 	engagement0 : {
 		"data": [
 			{
@@ -109,7 +109,7 @@ export default {
 			}
 		]},
 	
-	//Pour tester le fonctionnement des boutons. Etat de base, avant tout appui. 8 non def
+	//Pour tester le fonctionnement des boutons d'Engagement. Etat de base, avant tout appui. 8 non def
 	engagement1 : {
 		"data": [
 			{
@@ -218,7 +218,7 @@ export default {
 			}
 		]},
 	
-	//Pour tester le fonctionnement des boutons. Etat après appui sur le premier bouton 1 fois. 7 non def, 1 présent
+	//Pour tester le fonctionnement des boutons d'Engagement. Etat après appui sur le premier bouton 1 fois. 7 non def, 1 présent
 	engagement2 : {
 		"data": [
 			{
@@ -328,7 +328,7 @@ export default {
 		]},
 
 	
-	//Pour tester le fonctionnement des boutons. Etat après 2 appuis sur le premier bouton. 7 non def, 1 absent
+	//Pour tester le fonctionnement des boutons d'Engagement. Etat après 2 appuis sur le premier bouton. 7 non def, 1 absent
 	engagement3 : {
 		"data": [
 			{
@@ -437,7 +437,7 @@ export default {
 			}
 		]},		
 	
-	//Pour tester le fonctionnement des boutons. Etat après 3 appuis sur le premier bouton. 8 non def
+	//Pour tester le fonctionnement des boutons d'Engagement. Etat après 3 appuis sur le premier bouton. 8 non def
 	engagement4 : {
 		"data": [
 			{
