@@ -90,7 +90,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
 
       {/* Conteneur 2eme colonne : info lieu */}
       <View style={{marginRight: 40, justifyContent: "center"}}>
-      <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setIdDestinataire(item.idbenevole); setmodalVisibleContact(!modalVisibleContact);}}>
+      <Pressable onPress={() => {setMail(item.email); setPhone(item.telephone); setIdDestinataire(item.idbenevole); setmodalVisibleContact(!modalVisibleContact);}} testID="iconLettre">
           {({ pressed }) => (
             <Icon 
               name='mail' 
