@@ -9,6 +9,12 @@ import {setString} from "../__mocks__/expo-clipboard";
 
 jest.mock("expo-clipboard");
 
+jest.mock('react-native/Libraries/Linking/Linking', () => ({
+    openURL: jest.fn(() => Promise.reject('some error reason'))
+  }));
+
+import {Linking} from 'react-native';
+
 afterEach(cleanup)
 
 describe('ListeUtilisateur', () => {
@@ -62,8 +68,7 @@ describe('ListeUtilisateur', () => {
 	  
   });
 
-  
-  it('Information de contact', async () => {
+  it('Montrer informations de contact', async () => {
 	const handleError = jest.fn(() => {});
 	const liste = [];
     const IDActivite = 1;
@@ -96,11 +101,122 @@ describe('ListeUtilisateur', () => {
 	expect(getByText("05 44 55 5"));
 	expect(getByText("bedfg@gmail.com"));
 
-    fireEvent.press(getByText("05 44 55 5"));
+  });
 
-    await waitFor(() => expect(setString).toBeCalledTimes(1));
+  it('ModalContact : Copy to clipboard', async () => {
+	const handleError = jest.fn(() => {});
+	const liste = [];
+    const IDActivite = 1;
+    const IDSite = 1;
+    const IDJour = "2021-08-27";
+
+    const goBack = jest.fn();
+    
+    const props = ({ navigation: { goBack }, route: { params: { IDActivite, IDSite, IDJour, liste } } });
+
+    context = {
+        handleError: handleError,
+        liste: liste,
+    }
+    
+    const { getAllByTestId, getByText, getByPlaceholderText, getByDisplayValue} = render(
+    <userContext.Provider value = {context}>
+        <ListeUtilisateur {...props} />
+    </userContext.Provider>, {}
+    );
+
+
+    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
+
+    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+
+    await waitFor(() => expect(getAllByTestId('iconLettre')));
+    fireEvent.press(getAllByTestId('iconLettre')[0]);
+	await waitFor(() => expect(getByText("Informations de contact")));
+
+    fireEvent.press(getByText("05 44 55 5"));
+    fireEvent.press(getByText("bedfg@gmail.com"));
+
+    await waitFor(() => expect(setString).toBeCalledTimes(2));
+
+  });
+
+  it('Modal Contact : Envoie de Mail', async () => {
+	const handleError = jest.fn(() => {});
+	const liste = [];
+    const IDActivite = 1;
+    const IDSite = 1;
+    const IDJour = "2021-08-27";
+
+    const goBack = jest.fn();
+
+    const fctModalMail = jest.fn();
+    
+    const props = ({ navigation: { goBack }, route: { params: { IDActivite, IDSite, IDJour, liste } } });
+
+    context = {
+        handleError: handleError,
+        liste: liste,
+        fctModalMail: fctModalMail,
+    }
+    
+    const { getAllByTestId, getByText, getByPlaceholderText, getByDisplayValue} = render(
+    <userContext.Provider value = {context}>
+        <ListeUtilisateur {...props} />
+    </userContext.Provider>, {}
+    );
+
+
+    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
+
+    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+
+    await waitFor(() => expect(getAllByTestId('iconLettre')));
+    fireEvent.press(getAllByTestId('iconLettre')[0]);
+	await waitFor(() => expect(getByText("Informations de contact")));
+
+    fireEvent.press(getByText("MAIL"));
+    expect(fctModalMail).toBeCalledTimes(1);
 
   });
   
+
+  it.only('Modal Contact : Envoie de SMS', async () => {
+	const handleError = jest.fn(() => {});
+	const liste = [];
+    const IDActivite = 1;
+    const IDSite = 1;
+    const IDJour = "2021-08-27";
+
+    const goBack = jest.fn();
+
+    
+    
+    const props = ({ navigation: { goBack }, route: { params: { IDActivite, IDSite, IDJour, liste } } });
+
+    context = {
+        handleError: handleError,
+        liste: liste,
+    }
+    
+    const { getAllByTestId, getByText, getByPlaceholderText, getByDisplayValue} = render(
+    <userContext.Provider value = {context}>
+        <ListeUtilisateur {...props} />
+    </userContext.Provider>, {}
+    );
+
+
+    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
+
+    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+
+    await waitFor(() => expect(getAllByTestId('iconLettre')));
+    fireEvent.press(getAllByTestId('iconLettre')[0]);
+	await waitFor(() => expect(getByText("Informations de contact")));
+
+    fireEvent.press(getByText("SMS"));
+    expect(Linking.openURL).toBeCalledTimes(1);
+
+  });
   
 });
