@@ -1,19 +1,16 @@
 import React from 'react';
+import {Linking} from 'react-native';
+
 import { cleanup, render, fireEvent, waitFor } from "@testing-library/react-native";
 
 import ListeUtilisateur from '../src/screens/ListeUtilisateur';
-import {userContext} from '../src/contexts/userContext'
-jest.mock("../src/components/sendAPI.js");
 
+import {userContext} from '../src/contexts/userContext'
 import {setString} from "../__mocks__/expo-clipboard";
 
+jest.mock("../src/components/sendAPI.js");
 jest.mock("expo-clipboard");
 
-jest.mock('react-native/Libraries/Linking/Linking', () => ({
-    openURL: jest.fn(() => Promise.reject('some error reason'))
-  }));
-
-import {Linking} from 'react-native';
 
 afterEach(cleanup)
 
@@ -32,7 +29,7 @@ describe('ListeUtilisateur', () => {
     jest.setTimeout(10000);
   });
   
-  it('ListeUtilisateur', async () => {
+  it('ListeUtilisateur', (done) => {
 	const handleError = jest.fn(() => {});
 	const liste = [];
     const IDActivite = 1;
@@ -55,20 +52,29 @@ describe('ListeUtilisateur', () => {
 	);
 
 
-    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
-
-    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
- 
-    const backButton = await waitFor(() => getAllByTestId('goBack')[0]);
+    waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :')))
+	
+	.then(() => {
+		fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+	 
+		return waitFor(() => getAllByTestId('goBack')[0]);
+    })
+	.then((backButton) => {
+		fireEvent.press(backButton);
+		
+		return waitFor(() => expect(goBack).toBeCalledTimes(1));
+	})
+  	.then(() => {
+		done();
+	})
+	.catch((error) => done(error));
     
-    fireEvent.press(backButton);
-  
-    await waitFor(() => expect(goBack).toBeCalledTimes(1));
 
 	  
   });
 
-  it('Montrer informations de contact', async () => {
+  
+  it('Informations de contact', (done) => {
 	const handleError = jest.fn(() => {});
 	const liste = [];
     const IDActivite = 1;
@@ -91,19 +97,29 @@ describe('ListeUtilisateur', () => {
     );
 
 
-    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
-
-    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
-
-    await waitFor(() => expect(getAllByTestId('iconLettre')));
-    fireEvent.press(getAllByTestId('iconLettre')[0]);
-	await waitFor(() => expect(getByText("Informations de contact")));
-	expect(getByText("05 44 55 5"));
-	expect(getByText("bedfg@gmail.com"));
+    waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :')))
+	.then(() => {
+		fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+		return waitFor(() => expect(getAllByTestId('iconLettre')));
+	})
+	.then(() => {
+		fireEvent.press(getAllByTestId('iconLettre')[0]);
+	    return waitFor(() => expect(getByText("Informations de contact")));
+    })
+	.then(() => {
+	    return	waitFor(() => expect(getByText("bedfg@gmail.com")));
+    })
+    .then(() => {
+	    return	waitFor(() => expect(getByText("05 44 55 5")));
+    })
+	.then(() => {
+		done();
+	})
+	.catch((error) => done(error));
 
   });
 
-  it('ModalContact : Copy to clipboard', async () => {
+  it('ModalContact : Copy to clipboard', (done) => {
 	const handleError = jest.fn(() => {});
 	const liste = [];
     const IDActivite = 1;
@@ -125,23 +141,29 @@ describe('ListeUtilisateur', () => {
     </userContext.Provider>, {}
     );
 
-
-    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
-
-    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
-
-    await waitFor(() => expect(getAllByTestId('iconLettre')));
-    fireEvent.press(getAllByTestId('iconLettre')[0]);
-	await waitFor(() => expect(getByText("Informations de contact")));
-
-    fireEvent.press(getByText("05 44 55 5"));
-    fireEvent.press(getByText("bedfg@gmail.com"));
-
-    await waitFor(() => expect(setString).toBeCalledTimes(2));
+    waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :')))
+	.then(() => {
+		fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+		return waitFor(() => expect(getAllByTestId('iconLettre')));
+	})
+	.then(() => {
+		fireEvent.press(getAllByTestId('iconLettre')[0]);
+	    return waitFor(() => expect(getByText("Informations de contact")));
+    })
+	.then(() => {
+        fireEvent.press(getByText("05 44 55 5"));
+        fireEvent.press(getByText("bedfg@gmail.com"));
+	    return	waitFor(() => expect(setString).toBeCalledTimes(2));
+    })
+	.then(() => {
+		done();
+	})
+	.catch((error) => done(error));
 
   });
 
-  it('Modal Contact : Envoie de Mail', async () => {
+
+  it('Modal Contact : Envoie de Mail', (done) => {
 	const handleError = jest.fn(() => {});
 	const liste = [];
     const IDActivite = 1;
@@ -166,22 +188,28 @@ describe('ListeUtilisateur', () => {
     </userContext.Provider>, {}
     );
 
-
-    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
-
-    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
-
-    await waitFor(() => expect(getAllByTestId('iconLettre')));
-    fireEvent.press(getAllByTestId('iconLettre')[0]);
-	await waitFor(() => expect(getByText("Informations de contact")));
-
-    fireEvent.press(getByText("MAIL"));
-    expect(fctModalMail).toBeCalledTimes(1);
+    waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :')))
+	.then(() => {
+		fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+		return waitFor(() => expect(getAllByTestId('iconLettre')));
+	})
+	.then(() => {
+		fireEvent.press(getAllByTestId('iconLettre')[0]);
+	    return waitFor(() => expect(getByText("Informations de contact")));
+    })
+	.then(() => {
+        fireEvent.press(getByText("MAIL"));
+	    return	waitFor(() => expect(fctModalMail).toBeCalledTimes(1));
+    })
+	.then(() => {
+		done();
+	})
+	.catch((error) => done(error));
 
   });
   
 
-  it.only('Modal Contact : Envoie de SMS', async () => {
+  it('Modal Contact : Envoie de SMS', (done) => {
 	const handleError = jest.fn(() => {});
 	const liste = [];
     const IDActivite = 1;
@@ -190,8 +218,6 @@ describe('ListeUtilisateur', () => {
 
     const goBack = jest.fn();
 
-    
-    
     const props = ({ navigation: { goBack }, route: { params: { IDActivite, IDSite, IDJour, liste } } });
 
     context = {
@@ -205,17 +231,23 @@ describe('ListeUtilisateur', () => {
     </userContext.Provider>, {}
     );
 
-
-    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
-
-    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
-
-    await waitFor(() => expect(getAllByTestId('iconLettre')));
-    fireEvent.press(getAllByTestId('iconLettre')[0]);
-	await waitFor(() => expect(getByText("Informations de contact")));
-
-    fireEvent.press(getByText("SMS"));
-    expect(Linking.openURL).toBeCalledTimes(1);
+    waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :')))
+	.then(() => {
+		fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+		return waitFor(() => expect(getAllByTestId('iconLettre')));
+	})
+	.then(() => {
+		fireEvent.press(getAllByTestId('iconLettre')[0]);
+	    return waitFor(() => expect(getByText("Informations de contact")));
+    })
+	.then(() => {
+        fireEvent.press(getByText("SMS"));
+	    return	waitFor(() => expect(Linking.openURL).toBeCalledTimes(1));
+    })
+	.then(() => {
+		done();
+	})
+	.catch((error) => done(error));
 
   });
   
