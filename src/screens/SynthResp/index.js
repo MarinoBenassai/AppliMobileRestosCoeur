@@ -153,7 +153,7 @@ function responsableScreen({navigation}) {
     else{
       return (<View>
                 <Text style={styles.item}>
-                  Il semblerait que vous ne soyez responsable d'aucune activité pour le moment.
+                  Il semblerait que vous ne soyez responsable d'aucune activité pour les 5 jours à venir.
                 </Text>
               </View>);
 

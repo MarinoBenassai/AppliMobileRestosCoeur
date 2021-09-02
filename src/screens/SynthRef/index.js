@@ -122,7 +122,7 @@ function referentScreen({navigation}) {
   // Div Synthese //TODO: à débuger
   function Synthese() {
 
-    if (visibleData.length != 0 || true){
+    if (visibleData.length != 0){
       return  (<View style={{flex: 1}}>
           <>
             {/*Header de la liste*/}

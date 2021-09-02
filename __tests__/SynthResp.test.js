@@ -1,15 +1,15 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from "@testing-library/react-native";
 
-import SynthRef from '../src/screens/SynthRef';
+import SynthResp from '../src/screens/SynthResp';
 import {userContext} from '../src/contexts/userContext'
 jest.mock("../src/components/sendAPI.js");
 
 
-describe('SynthRef', () => {
+describe('SynthResp', () => {
 
 
-  it('SynthRef', (done) => {
+  it('SynthResp', (done) => {
 	const handleError = jest.fn(() => {});
 	const userID = 0;
 
@@ -22,7 +22,7 @@ describe('SynthRef', () => {
 	
     const { getAllByTestId, getAllByText } = render(
 	<userContext.Provider value = {context}>
-		<SynthRef navigation={navigation}/>
+		<SynthResp navigation={navigation}/>
 	</userContext.Provider>, {}
 	);
 

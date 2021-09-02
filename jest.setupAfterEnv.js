@@ -330,9 +330,22 @@ async function mockFetch(url, config) {
   // SynthRef
   case constantes.ADDRESS + '/APP/AP_LST_SYN_REF/': {
 
-    const body = await JSON.parse(config.body)
-    
-    if (body.params.idBenevole == 0){ 
+    const body = await JSON.parse(config.body);
+    if (body.params.P_IDBENEVOLE == 0){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"data":[{"jourpresence":"2021-08-23 00:00:00","nomactivite":"Distribution","nomsite":"Raisin","nombre_present":"1","Tous_sites":"1","idactivite":"3","idsite":"2"},{"jourpresence":"2021-08-30 00:00:00","nomactivite":"Distribution","nomsite":"Raisin","nombre_present":"0","Tous_sites":"0","idactivite":"3","idsite":"2"}]}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+  }
+
+  // SynthResp
+  case constantes.ADDRESS + '/APP/AP_LST_SYN_RESP/': {
+
+    const body = await JSON.parse(config.body);
+    if (body.params.P_IDBENEVOLE == 0){ 
       return {
           ok: true,
           status: 200,
@@ -345,7 +358,7 @@ async function mockFetch(url, config) {
   // Liste Bénévole
   case constantes.ADDRESS + '/APP/AP_ALL_BENEVOLE/': {
 
-    const body = await JSON.parse(config.body)
+    const body = await JSON.parse(config.body);
     return {
         ok: true,
         status: 200,

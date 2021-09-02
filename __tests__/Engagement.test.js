@@ -18,7 +18,7 @@ describe('Engagement', () => {
 	
   it('should display the list on loading', async () => {
 	  
-	 const navigation = {addListener : (arg1,arg2) => {arg2()}};
+	const navigation = {addListener : (arg1,arg2) => {arg2()}};
   
     const context = {
 		userID: 1005,
