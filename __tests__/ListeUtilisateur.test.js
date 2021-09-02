@@ -26,7 +26,7 @@ describe('ListeUtilisateur', () => {
     jest.setTimeout(10000);
   });
   
-  it('ListeUtilisateur', async () => {
+  it('ListeUtilisateur', (done) => {
 	const handleError = jest.fn(() => {});
 	const liste = [];
     const IDActivite = 1;
@@ -49,21 +49,29 @@ describe('ListeUtilisateur', () => {
 	);
 
 
-    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
-
-    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
- 
-    const backButton = await waitFor(() => getAllByTestId('goBack')[0]);
+    waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :')))
+	
+	.then(() => {
+		fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+	 
+		return waitFor(() => getAllByTestId('goBack')[0]);
+    })
+	.then((backButton) => {
+		fireEvent.press(backButton);
+		
+		return waitFor(() => expect(goBack).toBeCalledTimes(1));
+	})
+  	.then(() => {
+		done();
+	})
+	.catch((error) => done(error));
     
-    fireEvent.press(backButton);
-  
-    await waitFor(() => expect(goBack).toBeCalledTimes(1));
 
 	  
   });
 
   
-  it('Information de contact', async () => {
+  it('Information de contact', (done) => {
 	const handleError = jest.fn(() => {});
 	const liste = [];
     const IDActivite = 1;
@@ -86,19 +94,28 @@ describe('ListeUtilisateur', () => {
     );
 
 
-    await waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :'))); 
+    waitFor(() => expect(getByPlaceholderText('Prénom du bénévole à ajouter :')))
+	.then(() => {
+		fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
 
-    fireEvent.changeText(getByPlaceholderText('Prénom du bénévole à ajouter :'), 'Aa');
+		return waitFor(() => expect(getAllByTestId('iconLettre')));
+	})
+	.then(() => {
+		fireEvent.press(getAllByTestId('iconLettre')[0]);
+	return waitFor(() => expect(getByText("Informations de contact")));
+    })
+	.then(() => {
+		expect(getByText("05 44 55 5"));
+		expect(getByText("bedfg@gmail.com"));
 
-    await waitFor(() => expect(getAllByTestId('iconLettre')));
-    fireEvent.press(getAllByTestId('iconLettre')[0]);
-	await waitFor(() => expect(getByText("Informations de contact")));
-	expect(getByText("05 44 55 5"));
-	expect(getByText("bedfg@gmail.com"));
+		fireEvent.press(getByText("05 44 55 5"));
 
-    fireEvent.press(getByText("05 44 55 5"));
-
-    await waitFor(() => expect(setString).toBeCalledTimes(1));
+	return	waitFor(() => expect(setString).toBeCalledTimes(1));
+    })
+	.then(() => {
+		done();
+	})
+	.catch((error) => done(error));
 
   });
   
