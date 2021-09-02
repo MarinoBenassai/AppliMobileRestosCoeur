@@ -9,7 +9,7 @@ jest.mock("../src/components/sendAPI.js");
 describe('SynthRef', () => {
 
 
-  it('SynthRef', (done) => {
+  it('Référent', (done) => {
 	const handleError = jest.fn(() => {});
 	const userID = 0;
 
@@ -42,10 +42,35 @@ describe('SynthRef', () => {
 	})
 	.catch((error) => done(error));
 
-	  
   });
 
-  
+
+  it('Bénévole', (done) => {
+	const handleError = jest.fn(() => {});
+	const userID = 1;
+
+	const navigation = {addListener : (arg1,arg2) => {arg2()}};
+
+	context = {
+		handleError: handleError,
+		userID: userID,
+	}
+	
+    const { getAllByTestId, getAllByText } = render(
+	<userContext.Provider value = {context}>
+		<SynthRef navigation={navigation}/>
+	</userContext.Provider>, {}
+	);
+
+
+	waitFor(() => expect(getAllByText(/Il semblerait/)))
+	.then(() => {
+		done();
+	})
+	.catch((error) => done(error));
+
+	  
+  });
   
   
 });

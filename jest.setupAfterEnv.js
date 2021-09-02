@@ -339,6 +339,15 @@ async function mockFetch(url, config) {
           headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
         }
     }
+    else if (body.params.P_IDBENEVOLE == 1){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"data":[]}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+    
   }
 
   // SynthResp
@@ -350,6 +359,28 @@ async function mockFetch(url, config) {
           ok: true,
           status: 200,
           json: async () => ({"data":[{"jourpresence":"2021-08-23 00:00:00","nomactivite":"Distribution","nomsite":"Raisin","nombre_present":"1","Tous_sites":"1","idactivite":"3","idsite":"2"},{"jourpresence":"2021-08-30 00:00:00","nomactivite":"Distribution","nomsite":"Raisin","nombre_present":"0","Tous_sites":"0","idactivite":"3","idsite":"2"}]}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+    else if (body.params.P_IDBENEVOLE == 1){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"data":[]}),
+          headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+        }
+    }
+  }
+
+  // Informations
+  case constantes.ADDRESS + '/APP/AP_LST_INFO/': {
+
+    const body = await JSON.parse(config.body);
+    if (body.params.P_IDBENEVOLE == 0){ 
+      return {
+          ok: true,
+          status: 200,
+          json: async () => ({"data":[{"idactivite":"99","idrole":"99","commentaire":"Coll\u00e9giale : Liste de tous les b\u00e9n\u00e9voles","lien":"https:\/\/docs.googdeffg"},{"idactivite":"99","idrole":"99","commentaire":"Coll\u00e9giale : \u00e9tat des pr\u00e9sences","lien":"https:\/\/docs.going"}]}),
           headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
         }
     }
