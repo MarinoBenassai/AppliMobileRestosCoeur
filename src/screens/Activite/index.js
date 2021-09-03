@@ -111,7 +111,7 @@ function activiteScreen({route, navigation}) {
 	  setLoading(true);
       // Update la liste
 	  sendAPI('APP', 'AP_LST_PRE_EQU', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour},token)
-      .then((json) =>  {setData(json); setLoading(false); setUpToDate(true)})
+      .then((json) =>  {setData(json); setLoading(false); setUpToDate(true);})
       .catch((error) => {setLoading(false); setUpToDate(true); handleError (error)});
 
       // Update commentaire d'activité (dans le fetch au dessus)
@@ -228,7 +228,7 @@ function activiteScreen({route, navigation}) {
 
   Linking.canOpenURL(url).then((supported) => {
     if (!supported) {
-      //TOTO : erreur
+      //TODO : erreur
     } else {
       Linking.openURL(url).then(() => {
       });
@@ -472,7 +472,7 @@ function activiteScreen({route, navigation}) {
 
                     <View style={[styles.item, styles.activite, {justifyContent: "space-evenly"}]}>
 
-                      <Pressable onPress={() =>  {
+                      <Pressable testID = "infoActivite" onPress={() =>  {
                         sendAPI('APP', 'AP_LST_SUIVI_ACTIVITE', {'P_IDACTIVITE':IDActivite, 'P_IDSITE':IDSite, 'P_JOUR':IDJour},token)
                         .then((json) =>  {if( json.length != 0 ){
                           setInfoActivite(1);
@@ -495,7 +495,7 @@ function activiteScreen({route, navigation}) {
                           )}
                       </Pressable>
 
-                      <Pressable onPress={() => setModalVisibleMailATous(true)}>
+                      <Pressable testID = "mailAll" onPress={() => setModalVisibleMailATous(true)}>
                         {({ pressed }) => (
                           <Icon 
                             name='megaphone' 
@@ -505,7 +505,7 @@ function activiteScreen({route, navigation}) {
                         )}
                       </Pressable>
 
-                      <Pressable onPress={() => versListe({navigation}, data)}>
+                      <Pressable testID = "ajoutBenevole" onPress={() => versListe({navigation}, data)}>
                         {({ pressed }) => (
                           <Icon 
                             name='plus'
@@ -515,7 +515,7 @@ function activiteScreen({route, navigation}) {
                         )}
                       </Pressable>
 
-                      <Pressable onPress={() => changeAffichage()}>
+                      <Pressable testID = "changeAffichage" onPress={() => changeAffichage()}>
                         {({ pressed }) => (
                           <Icon 
                             name={icone}

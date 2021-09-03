@@ -43,6 +43,7 @@ function ViewStatus(props) {
         </View>);
     }
     else if( (status == "Absent") && ((role == "2") || id1 == id2) ) {
+
         return(<View style={{ justifyContent:"center", flexDirection: align, alignSelf: "center"}}>
             <Pressable testID = "CommentaireAbsence" onPress={() => {fctCommentaire();cacherInfoBulle();}}
 			onHoverIn = {() => {refBoutonComentaire.current.measure((x, y, width, height, pageX, pageY) => afficherInfoBulle(pageX, pageY,commentaire));}}
@@ -72,7 +73,7 @@ function ViewStatus(props) {
         </View>);
     }
     else if(status == "Absent") {
-        return(<View  style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
+        return(<View testID = "Absent" style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
             <Icon 
                 name='x' 
                 size={size}
@@ -82,6 +83,7 @@ function ViewStatus(props) {
         </View>);
     }
     else{
+
         return(<View style={{justifyContent: "center", flexDirection: align, alignSelf: "center"}}>
             <Pressable testID = "Non défini" onPress={(role=="2" || id1 == id2) ? fctStatut : ()=>{}}>
                 {({ pressed }) => (

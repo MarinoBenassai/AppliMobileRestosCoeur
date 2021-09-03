@@ -3,6 +3,8 @@ import data from './__tests__/data/data';
 
 var engagementState = data.engagement1;
 var compteInfoState = {"data":[{"nom":"FT","prenom":"Ht","email":"h@f.fr","telephone":"8888888888","idbenevole":"1005"}]};
+var activiteBState = data.activiteB0;
+var activiteRState = data.activiteR0;
 
 async function mockFetch(url, config) {
 
@@ -108,15 +110,37 @@ async function mockFetch(url, config) {
 	case constantes.ADDRESS + '/APP/AP_INS_PRESENCE/':{
 		
 		const body = await JSON.parse(config.body)
+		
 		if (body.params.P_IDBENEVOLE === 1005 
 		&& body.params.P_JOURPRESENCE === '2021-09-06 00:00:00'
 		&& body.params.P_IDACTIVITE === '3'
-    && body.params.P_IDSITE === '2'
+		&& body.params.P_IDSITE === '2'
 		&& body.params.P_IDROLE === '2'
 		&& body.token === 1) 
 		{
 			engagementState = data.engagement2;		
 		}
+		
+		else if (body.params.P_IDBENEVOLE === '485'
+		&& body.params.P_JOURPRESENCE === '2021-09-06'
+		&& body.params.P_IDACTIVITE === '4'
+		&& body.params.P_IDSITE === '1'
+		&& body.params.P_IDROLE === '1'
+		&& body.token === 1) 
+		{
+			activiteBState = data.activiteB1;		
+		}
+		
+		else if (body.params.P_IDBENEVOLE === '1500'
+		&& body.params.P_JOURPRESENCE === '2021-09-06'
+		&& body.params.P_IDACTIVITE === '4'
+		&& body.params.P_IDSITE === '1'
+		&& body.params.P_IDROLE === '1'
+		&& body.token === 2) 
+		{
+			activiteRState = data.activiteR1;		
+		}
+		
     else if(body.params.P_IDBENEVOLE == 27
       && body.params.P_JOURPRESENCE == "2021-08-27"
       && body.params.P_IDACTIVITE == "1"
@@ -150,6 +174,24 @@ async function mockFetch(url, config) {
 		{
 			engagementState = data.engagement3;		
 		}
+		else if (body.params.P_IDBENEVOLE === '485'
+		&& body.params.P_JOURPRESENCE === '2021-09-06'
+		&& body.params.P_IDACTIVITE === '4'
+        && body.params.P_IDSITE === '1'
+		&& body.params.P_COMMENTAIRE === "Ceci est un test é*##°ç"
+		&& body.token === 1) 
+		{
+			activiteBState = data.activiteB2;		
+		}
+		else if (body.params.P_IDBENEVOLE === '1500'
+		&& body.params.P_JOURPRESENCE === '2021-09-06'
+		&& body.params.P_IDACTIVITE === '4'
+        && body.params.P_IDSITE === '1'
+		&& body.params.P_COMMENTAIRE === "Ceci est un autre test !!//..??"
+		&& body.token === 2) 
+		{
+			activiteRState = data.activiteR2;		
+		}
 		else {
 			throw new Error(`Incorrect request parameters`);	
 		}
@@ -175,6 +217,25 @@ async function mockFetch(url, config) {
 		{
 			engagementState = data.engagement4;		
 		}
+		
+		if (body.params.P_IDBENEVOLE === '485' 
+		&& body.params.P_JOURPRESENCE === '2021-09-06'
+		&& body.params.P_IDACTIVITE === '4'
+        && body.params.P_IDSITE === '1'
+		&& body.token === 1) 
+		{
+			activiteBState = data.activiteB0;		
+		}
+		
+		if (body.params.P_IDBENEVOLE === '1500' 
+		&& body.params.P_JOURPRESENCE === '2021-09-06'
+		&& body.params.P_IDACTIVITE === '4'
+        && body.params.P_IDSITE === '1'
+		&& body.token === 2) 
+		{
+			activiteRState = data.activiteR0;		
+		}
+		
 		else {
 			throw new Error(`Incorrect request parameters`);	
 		}
@@ -397,6 +458,47 @@ async function mockFetch(url, config) {
         headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
       }
   }
+
+  //Activite
+
+	case constantes.ADDRESS + '/APP/AP_LST_PRE_EQU/':{
+
+		const body = await JSON.parse(config.body)
+		
+		switch (body.token){
+			
+			case 0: {
+			  return {
+			    ok: true,
+			    status: 200,
+			    json: async () => (data.activite0),
+			    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+			  }
+			}
+			
+			case 1: {
+			  return {
+			    ok: true,
+			    status: 200,
+			    json: async () => (activiteBState),
+			    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+			  }
+			}
+			
+			case 2: {
+
+			  return {
+			    ok: true,
+			    status: 200,
+			    json: async () => (activiteRState),
+			    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+			  }
+			}
+		}
+		
+
+
+	}
 
   default: {
     throw new Error(`Unhandled request: ${url}`)
