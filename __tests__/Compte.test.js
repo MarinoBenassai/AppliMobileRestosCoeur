@@ -473,45 +473,44 @@ describe('Compte : pwd', () => {
       });
 
 
-      it('ModeAffichange : ne plante pas', (done) => {
-
+      it('coverage sans test de modeAffichage', (done) => {
+        //show.mockReset();
         const handleError = jest.fn(() => {});
         const userID = 0;
         const token = 0;
+        const oldP = "oldP";
+        const newP = "newP";
         
         context = {
             handleError: handleError,
             userID: userID,
             token: token,
+            oldP: oldP,
+            newP: newP,
         }
     
         // render
-        const { getAllByTestId, getByText, getAllByText } = render(
+        const { getAllByPlaceholderText, getByText, getByPlaceholderText } = render(
         <userContext.Provider value = {context}>
             <Compte />
         </userContext.Provider>, {}
         );
+    
+        waitFor(() => expect(getAllByPlaceholderText('******')))
+		.then(() => {
+			// Seul ligne utile, le reste ser à avoir la bonne structure de texte
+            fireEvent.press(getByText(/Activité/));
 
-        waitFor(() => expect(getByText(/Activité/)))
-        .then(() => {
-            var old = getAllByText(/Distribution|Traçabilité/);
-			fireEvent.press(getByText(/Activité/));
-            //var neww = getAllByText(/Distribution|Traçabilité/);
+			fireEvent.changeText(getAllByPlaceholderText('******')[0], "0704");
+			fireEvent.changeText(getAllByPlaceholderText('******')[1], "07070000");
+			fireEvent.changeText(getAllByPlaceholderText('******')[2], "07070000");
+			fireEvent.press(getByText('Valider Mot de Passe'));
+
             
-            // ne sert à rien, juste pour pas que le test plante. L'ordre n'étant pas préservé
-            // on ne regarde que s'il n'y a pas d'erreur dans le script (et donc s'il se lance sans planter)
-			waitFor(() => expect(old.map(e => e.props.children)).toEqual(getAllByText(/Distribution|Traçabilité/).map(e => e.props.children)));
+		
+			//On vérifie que le toast de confirmation est appelé correctement
+			return waitFor(() => expect(show).toHaveBeenCalledWith("Votre mot de passe a bien été modifié.", {"animationType": "zoom-in", "duration": 2000, "offset": 30, "position": "bottom", "type": "success"}  ));
         })
-        /* .then(() => {
-            var old = getAllByText(/Distribution|Traçabilité/);
-			fireEvent.press(getByText(/Activité/));
-            var neww = getAllByText(/Distribution|Traçabilité/);
-
-            console.log(old.map(e => e.props.children));
-            console.log(neww.map(e => e.props.children));
-
-			return waitFor(() => expect(old.map(e => e.props.children)).not.toEqual(getAllByText(/Distribution|Traçabilité/).map(e => e.props.children)));
-        }) */
 		.then(() => {
 			done();
 		})
