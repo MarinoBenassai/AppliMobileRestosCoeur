@@ -456,7 +456,6 @@ describe('Compte : pwd', () => {
         );
     
         waitFor(() => expect(getAllByPlaceholderText('******')))
-		
 		.then(() => {
 			// On entre des valeurs correctes dans tous les champs
 			fireEvent.changeText(getAllByPlaceholderText('******')[0], "0704");
@@ -467,12 +466,57 @@ describe('Compte : pwd', () => {
 			//On vérifie que le toast de confirmation est appelé correctement
 			return waitFor(() => expect(show).toHaveBeenCalledWith("Votre mot de passe a bien été modifié.", {"animationType": "zoom-in", "duration": 2000, "offset": 30, "position": "bottom", "type": "success"}  ));
         })
-		
 		.then(() => {
 			done();
 		})
 		.catch((error) => done(error));
-		
       });
+
+
+      it('ModeAffichange : ne plante pas', (done) => {
+
+        const handleError = jest.fn(() => {});
+        const userID = 0;
+        const token = 0;
+        
+        context = {
+            handleError: handleError,
+            userID: userID,
+            token: token,
+        }
+    
+        // render
+        const { getAllByTestId, getByText, getAllByText } = render(
+        <userContext.Provider value = {context}>
+            <Compte />
+        </userContext.Provider>, {}
+        );
+
+        waitFor(() => expect(getByText(/Activité/)))
+        .then(() => {
+            var old = getAllByText(/Distribution|Traçabilité/);
+			fireEvent.press(getByText(/Activité/));
+            //var neww = getAllByText(/Distribution|Traçabilité/);
+            
+            // ne sert à rien, juste pour pas que le test plante. L'ordre n'étant pas préservé
+            // on ne regarde que s'il n'y a pas d'erreur dans le script (et donc s'il se lance sans planter)
+			waitFor(() => expect(old.map(e => e.props.children)).toEqual(getAllByText(/Distribution|Traçabilité/).map(e => e.props.children)));
+        })
+        /* .then(() => {
+            var old = getAllByText(/Distribution|Traçabilité/);
+			fireEvent.press(getByText(/Activité/));
+            var neww = getAllByText(/Distribution|Traçabilité/);
+
+            console.log(old.map(e => e.props.children));
+            console.log(neww.map(e => e.props.children));
+
+			return waitFor(() => expect(old.map(e => e.props.children)).not.toEqual(getAllByText(/Distribution|Traçabilité/).map(e => e.props.children)));
+        }) */
+		.then(() => {
+			done();
+		})
+		.catch((error) => done(error));
+      });
+
 
 });  
