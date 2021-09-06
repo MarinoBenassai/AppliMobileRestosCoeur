@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, FlatList, Text, View, ScrollView, ImageBackground} from 'react-native';
 import {SafeAreaView, Pressable, Modal, TextInput} from 'react-native';
-import {Linking} from 'react-native';
+import {Linking, Platform} from 'react-native';
 
 import {traitementFilter} from '../../components/pickerActivite';
 import {userContext} from '../../contexts/userContext';
@@ -228,10 +228,9 @@ function activiteScreen({route, navigation}) {
 
   Linking.canOpenURL(url).then((supported) => {
     if (!supported) {
-      //TODO : erreur
+      throw "L'envoi de SMS n'est pas supporté sur cet appareil";
     } else {
-      Linking.openURL(url).then(() => {
-      });
+      Linking.openURL(url);
     }
   }).catch();
 }
@@ -495,7 +494,7 @@ function activiteScreen({route, navigation}) {
                           )}
                       </Pressable>
 
-                      <Pressable testID = "mailAll" onPress={() => setModalVisibleMailATous(true)}>
+                      <Pressable testID = "messageAll" onPress={() => setModalVisibleMailATous(true)}>
                         {({ pressed }) => (
                           <Icon 
                             name='megaphone' 
@@ -608,12 +607,9 @@ function activiteScreen({route, navigation}) {
 const normalizeInputNumber = (value, previousValue) => {
   
   if (!value || value == 0 ) return '0';
-  const currentValue = value.replace(/[^\d]/g, '');
+  const currentValue = value.replace(/[^\d]/g, '').replace(/^0+/g, '');
 
-  if(previousValue == 0  && currentValue.length>1){
-    return currentValue.replace(/0/g, '');
-  }
-  else if( currentValue.length === 0 ){
+  if( currentValue.length === 0 ){
     return '0';
   }
   else {
@@ -624,7 +620,7 @@ const normalizeInputNumber = (value, previousValue) => {
 
 // On exporte la fonction principale
 export default activiteScreen;
-
+export {normalizeInputNumber};
 
 // Style
 /* const pickerSelectStyles = StyleSheet.create({

@@ -5,6 +5,7 @@ var engagementState = data.engagement1;
 var compteInfoState = {"data":[{"nom":"FT","prenom":"Ht","email":"h@f.fr","telephone":"8888888888","idbenevole":"1005"}]};
 var activiteBState = data.activiteB0;
 var activiteRState = data.activiteR0;
+var infoActiviteState = {"data":[]};
 
 async function mockFetch(url, config) {
 
@@ -141,13 +142,13 @@ async function mockFetch(url, config) {
 			activiteRState = data.activiteR1;		
 		}
 		
-    else if(body.params.P_IDBENEVOLE == 27
-      && body.params.P_JOURPRESENCE == "2021-08-27"
-      && body.params.P_IDACTIVITE == "1"
-      && body.params.P_IDSITE == '1'
-		  && body.params.P_IDROLE == '1'){
-      // juste pour éviter le else
-    }
+		else if(body.params.P_IDBENEVOLE == 27
+		  && body.params.P_JOURPRESENCE == "2021-08-27"
+		  && body.params.P_IDACTIVITE == "1"
+		  && body.params.P_IDSITE == '1'
+			  && body.params.P_IDROLE == '1'){
+		  // juste pour éviter le else
+		}
 		else {
 			throw new Error(`Incorrect request parameters`);	
 		}
@@ -495,11 +496,79 @@ async function mockFetch(url, config) {
 			  }
 			}
 		}
-		
+	}
+	
+	
+	case constantes.ADDRESS + '/APP/AP_LST_SUIVI_ACTIVITE/':{
 
+		const body = await JSON.parse(config.body)
+		
+		switch (body.token){
+			
+			case 0: {
+			  return {
+			    ok: true,
+			    status: 200,
+			    json: async () => (infoActiviteState),
+			    headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},
+			  }
+			}
+		}
+	}
+
+	case constantes.ADDRESS + '/APP/AP_INS_SUIVI_ACTIVITE/':{
+		
+		const body = await JSON.parse(config.body)
+
+		if (body.params.P_JOUR === "2021-09-06"
+		&& body.params.P_IDACTIVITE === '4'
+		&& body.params.P_IDSITE === '1'
+		&& body.params.P_NOMBREBENEFICIAIRE === '42'
+		&& body.params.P_COMMENTAIRE === 'Ceci est un test **//è&)'
+		&& body.token === 0) 
+		{
+			infoActiviteState = {"data": [{"nombre_beneficiaire": "42","commentaire": "Ceci est un test **//è&)"}]};		
+		}
+		
+		else {
+			throw new Error(`Incorrect request parameters`);	
+		}
+
+		return {
+		  ok: true,
+		  status: 200,
+		  json: async () => ({"data":[1]}),
+		  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},	
+		}
 
 	}
 
+	case constantes.ADDRESS + '/APP/AP_UPD_SUIVI_ACTIVITE/':{
+		const body = await JSON.parse(config.body)
+
+		if (body.params.P_JOUR === "2021-09-06"
+		&& body.params.P_IDACTIVITE === '4'
+		&& body.params.P_IDSITE === '1'
+		&& body.params.P_NOMBREBENEFICIAIRE === '42'
+		&& body.params.P_COMMENTAIRE === 'Ceci est un autre test ..~~µµ'
+		&& body.token === 0) 
+		{
+			infoActiviteState = {"data": [{"nombre_beneficiaire": "42","commentaire": "Ceci est un autre test ..~~µµ"}]};		
+		}
+		
+		else {
+			throw new Error(`Incorrect request parameters`);	
+		}
+
+		return {
+		  ok: true,
+		  status: 200,
+		  json: async () => ({"data":[1]}),
+		  headers: {get: function(x) {if (x === 'Content-Type') return "application/json"}},	
+		}
+
+	}
+	
   default: {
     throw new Error(`Unhandled request: ${url}`)
 

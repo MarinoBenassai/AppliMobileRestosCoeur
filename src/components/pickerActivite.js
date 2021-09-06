@@ -1,7 +1,7 @@
 // on met à jour la liste visible
-export const traitementSort = function(affichage, data, visibleData) {
+/*export const traitementSort = function(affichage, data, visibleData) {
 
-    /* const ligneInit = ligne; */
+    // const ligneInit = ligne; 
     const cpyVisibleData = [...visibleData];
 
     if( affichage === "ACTIVITE" ){
@@ -36,7 +36,7 @@ export const traitementSort = function(affichage, data, visibleData) {
       // TODO : erreur
     }
 
-}
+}*/
 
 export const traitementFilter = function(affichage, visibleData) {
 
