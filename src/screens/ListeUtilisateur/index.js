@@ -122,7 +122,7 @@ function listeUtilisateurScreen({route, navigation: { goBack }}) {
     <SafeAreaView style={styles.container}>
     {isLoading ? (
         <View style={styles.loading}>
-         <ActivityIndicator size="large" color="green" />
+         <ActivityIndicator size="large" color="#e92682" />
 	      </View>) : (
 		<>
 	    <ModalContact visible={modalVisibleContact} setVisible={setmodalVisibleContact} mail={mail} phone={phone} idDestinataire={idDestinataire}/>

@@ -69,7 +69,7 @@ function informationScreen({navigation}) {
     <SafeAreaView style={styles.container}>
       {isLoading ? (
           <View style={styles.loading}>
-            <ActivityIndicator size="large" color="#00ff00" />
+            <ActivityIndicator size="large" color="#e92682" />
           </View>) : (
       <>
 

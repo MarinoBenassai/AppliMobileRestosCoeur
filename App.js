@@ -248,10 +248,11 @@ export default function App() {
     setToken(token);
   }
   
+  
   async function logout() {
+    setLoading(true);
 	const device = await Device.getDeviceTypeAsync();
 	const tokennotif = await registerForPushNotificationsAsync(device);
-	
 	sendAPI('APP','AP_LOGOUT',{'P_TOKEN':token,'P_TOKENNOTIF':tokennotif}, token)
 	.then((data) => {
 		setUserID("");
@@ -261,7 +262,8 @@ export default function App() {
 			SecureStore.deleteItemAsync('token');
 		}
 	})
-	.catch((error) => handleError(error));
+	.then(() => setLoading(false))
+	.catch((error) => {setLoading(false);handleError(error);})
   }
 
 
@@ -361,11 +363,6 @@ export default function App() {
   
   return (
 	<ToastProvider>
-		{isLoading &&
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color="#00ff00" />
-        </View>
-	  	}
 		<userContext.Provider value = {{
 		userID: userID,
 		token: token,
@@ -379,7 +376,7 @@ export default function App() {
 		cacherInfoBulle: cacherInfoBulle,
 		fctModalApp: fctModalApp,
 		fctModalMail: fctModalMail,
-		registerForPushNotificationsAsync: registerForPushNotificationsAsync
+		registerForPushNotificationsAsync: registerForPushNotificationsAsync,
 		}}>
 
 			
@@ -399,6 +396,11 @@ export default function App() {
 					)}
 				</Drawer.Navigator>
 			</NavigationContainer>
+			{isLoading &&
+			<View style={styles.loading}>
+			  <ActivityIndicator size="large" color="#e92682" />
+			</View>
+			}
 			{(bulleVisible &&
 			<View pointerEvents="none" style={stylesBulle.bullePlacer}>
 				<View pointerEvents="none" style={stylesBulle.bulle}>
