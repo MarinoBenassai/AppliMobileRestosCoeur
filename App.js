@@ -33,6 +33,9 @@ import { ToastProvider } from 'react-native-toast-notifications'
 import logoVide from './assets/logovide.png';
 
 
+SplashScreen.preventAutoHideAsync()
+  .catch(console.warn);
+
 const engagementStack = createNativeStackNavigator();
 const synthRefStack = createNativeStackNavigator();
 const synthRespStack = createNativeStackNavigator();
@@ -53,7 +56,6 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
-	
   const [userID,setUserID] = React.useState(null);
   const [token, setToken] = React.useState(null);
   const [estReferent, setReferent] = React.useState(true);
@@ -192,11 +194,7 @@ export default function App() {
   }, []);
   
   useEffect(() => {
-	  async function splash() {
-		await SplashScreen.preventAutoHideAsync();
-	  }
-	  splash().
-	  then(() => autoConnect())
+	   autoConnect()
 	  .catch((error) => handleError(error));
   }, []);
   
@@ -378,8 +376,6 @@ export default function App() {
 		fctModalMail: fctModalMail,
 		registerForPushNotificationsAsync: registerForPushNotificationsAsync,
 		}}>
-
-			
 			<NavigationContainer>
 				<Drawer.Navigator screenOptions = {{swipeEnabled : false, headerShown: false}}>
 					{userID === "" || userID === null ? (
