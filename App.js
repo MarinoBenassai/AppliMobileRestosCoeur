@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/Octicons';
+import { StatusBar } from 'expo-status-bar';
 import * as SecureStore from 'expo-secure-store';
 import * as Device from 'expo-device';
 import * as SplashScreen from 'expo-splash-screen';
@@ -31,10 +32,6 @@ import constantes from './src/constantes';
 import { ToastProvider } from 'react-native-toast-notifications'
 
 import logoVide from './assets/logovide.png';
-
-
-SplashScreen.preventAutoHideAsync()
-  .catch(console.warn);
 
 const engagementStack = createNativeStackNavigator();
 const synthRefStack = createNativeStackNavigator();
@@ -489,7 +486,7 @@ export default function App() {
 					</View>
 				</ScrollView>
 			</Modal>
-
+		<StatusBar translucent= {true} />
 		</userContext.Provider>
 	</ToastProvider>
   );

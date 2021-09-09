@@ -53,7 +53,7 @@ export const traitementFilter = function(affichage, visibleData) {
         return( visibleData.filter( (l) => ( l.etat == "Non défini" ) ) );
       }
       else{
-        console.error("ERREUR : Affichage inconnu dans useEffect");
+        //console.error("ERREUR : Affichage inconnu dans useEffect");
       }
 
 }
