@@ -105,12 +105,6 @@ export default function IdScreen({navigation}) {
 	  <Pressable title = "mdp" onPress = {() => navigation.navigate("Oublie")} >
 		<Text style={styles.idTexte}>Mot de passe oublié ?</Text>
 	  </Pressable>
-	  	
-    <Button
-	  onPress = {() => {changeID(constantes.IDDebug); changeToken(constantes.IDDebug)}}
-	  title="PASSER"
-	  color="#041584"
-    />
     </View>
 	{loading &&
     <View style={styles.loading}>

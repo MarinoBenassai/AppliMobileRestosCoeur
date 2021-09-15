@@ -96,7 +96,7 @@ function contactScreen() {
 	    <ModalContact visible={modalVisible} setVisible={setModalVisible} mail={mail} phone={phone}idDestinataire={idDestinataire} />
       {isLoading ? (
           <View style={styles.loading}>
-          <ActivityIndicator size="large" color="##e92682" />
+          <ActivityIndicator size="large" color="#e92682" />
           </View>) : (
       <>
 

@@ -1,9 +1,10 @@
 import 'react-native-gesture-handler';
 import { registerRootComponent } from 'expo';
 import * as SplashScreen from 'expo-splash-screen';
-
+import { setStatusBarTranslucent } from 'expo-status-bar';
 import App from './App';
 
+setStatusBarTranslucent(true);
 SplashScreen.preventAutoHideAsync()
   .catch();
 
